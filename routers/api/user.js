@@ -2,9 +2,11 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const auth = require('../../middleware/auth');
-const User = require('../../models/User');
 const router = new express.Router();
 
+const User = require('../../models/User');
+const getInitials = require('../../utils/getInitials')
+const getRandomColor = require('../../utils/getRandomColor')
 
 //Register User
 router.post('/', async (req, res) => {
@@ -23,7 +25,9 @@ router.post('/', async (req, res) => {
     const newUser = new User({
       name,
       email,
-      password
+      password,
+      initials: getInitials(name),
+      color: getRandomColor()
     })
 
     const hashedPassword = await new Promise((resolve, reject) => {
@@ -36,18 +40,14 @@ router.post('/', async (req, res) => {
     newUser.password = hashedPassword;
     const user = await newUser.save()
 
-    jwt.sign({ id: user._id }, process.env.jwtSecret, (err, token) => {
-      if (err) throw Error;
+    jwt.sign({ id: user._id }, process.env.JWT_SECRET, (err, token) => {
+      if (err) throw new Error(err);
       res.status(201).json({
         token,
-        user: {
-          _id: user._id,
-          name: user.name
-        }
+        user
       })
     })
   } catch (err) {
-    console.log(err)
     res.status(500).send('Something went wrong')
   }
 })
@@ -74,28 +74,36 @@ router.post('/login', async (req, res) => {
       return res.status(401).send('Invalid credentials')
     }
 
-    jwt.sign({ id: existingUser._id }, process.env.jwtSecret, (err, token) => {
-      if (err) throw Error;
+    jwt.sign({ id: existingUser._id }, process.env.JWT_SECRET, (err, token) => {
+      if (err) throw Error(err);
 
       res.status(200).json({
         token,
-        user: {
-          _id: existingUser._id,
-          name: existingUser.name
-        }
+        user: existingUser
       })
     })
   } catch (err) {
+    console.log(err)
     res.status(500).send('Something went wrong')
   }
 
 })
 
 router.get('/', auth, async (req, res) => {
-
   try {
     if (req.user) {
       return res.status(200).send({ token: req.token, user: req.user })
+    }
+  } catch (err) {
+    res.status(401).send('Authorization failed')
+  }
+})
+
+router.get('/all', auth, async (req, res) => {
+  try {
+    if (req.user) {
+      const users = await User.find();
+      res.status(200).send(users)
     }
   } catch (err) {
     res.status(401).send('Authorization failed')

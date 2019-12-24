@@ -26,6 +26,10 @@ const userSchema = new mongoose.Schema({
   initials: {
     type: String
   },
+  color: {
+    type: String,
+    default: '#0b61d9'
+  },
   projects: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -34,13 +38,13 @@ const userSchema = new mongoose.Schema({
   ]
 }, { id: false })
 
-userSchema.set('toObject', { virtuals: true });
-userSchema.set('toJSON', { virtuals: true });
+// userSchema.set('toObject', { virtuals: true });
+// userSchema.set('toJSON', { virtuals: true });
 
 userSchema.methods.toJSON = function () {
-  const { _id, name } = this;
+  const { _id, name, initials, color } = this;
 
-  return { _id, name }
+  return { _id, name, initials, color }
 }
 
 const User = mongoose.model('User', userSchema);
