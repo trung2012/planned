@@ -1,0 +1,5 @@
+@mixin shrinkLabel {
+  transform: translateY(-1.4rem);
+  font-size: 1.3rem;
+  color: rgb(73, 73, 73);
+}

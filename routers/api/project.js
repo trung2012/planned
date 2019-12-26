@@ -27,9 +27,6 @@ router.post('/create', auth, async (req, res) => {
 
       const project = await newProject.save();
 
-      req.user.projects.push(project._id);
-      await req.user.save();
-
       res.status(201).send(project)
     }
   } catch (err) {
@@ -69,6 +66,21 @@ router.delete('/', auth, async (req, res) => {
     }
   } catch (err) {
     res.status(500).send('Internal Server Error. Please try again')
+  }
+})
+
+router.post('/members', auth, async (req, res) => {
+  try {
+    const { projectId, memberId } = req.body;
+
+    if (req.user) {
+      const project = await Project.findById(projectId.toString())
+      project.members.push(memberId)
+      await project.save()
+      res.send(project)
+    }
+  } catch (err) {
+    res.status(500).send('Internal Server Error')
   }
 })
 

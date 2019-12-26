@@ -30,12 +30,7 @@ router.post('/', async (req, res) => {
       color: getRandomColor()
     })
 
-    const hashedPassword = await new Promise((resolve, reject) => {
-      bcrypt.hash(newUser.password, 10, (err, hash) => {
-        if (err) reject(err)
-        resolve(hash)
-      })
-    })
+    const hashedPassword = await bcrypt.hash(newUser.password, 10)
 
     newUser.password = hashedPassword;
     const user = await newUser.save()
@@ -89,6 +84,28 @@ router.post('/login', async (req, res) => {
 
 })
 
+router.put('/password', auth, async (req, res) => {
+  try {
+    const { user } = req;
+    const { oldPassword, newPassword } = req.body;
+    const isMatch = await bcrypt.compare(oldPassword, user.password)
+
+    if (!user) {
+      return res.status(404).send('Not Authorized')
+    }
+
+    if (!isMatch) {
+      return res.status(400).send('Incorrect password. Please try again')
+    }
+
+    user.password = await bcrypt.hash(newPassword, 10);
+    await user.save();
+    res.send('Password updated successfully')
+  } catch (err) {
+    res.status(500).send('Internal Server Error')
+  }
+})
+
 router.get('/', auth, async (req, res) => {
   try {
     if (req.user) {
@@ -102,8 +119,10 @@ router.get('/', auth, async (req, res) => {
 router.get('/all', auth, async (req, res) => {
   try {
     if (req.user) {
-      const users = await User.find();
-      res.status(200).send(users)
+      const users = await User.find().populate('projects');
+      return res.status(200).send(users)
+    } else {
+      throw new Error('Invalid request')
     }
   } catch (err) {
     res.status(401).send('Authorization failed')

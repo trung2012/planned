@@ -1,0 +1,22 @@
+.custom-button {
+  background: rgb(18,133,240); /* Old browsers */
+  background: -moz-linear-gradient(top,  rgba(18,133,240,1) 0%, rgba(13,104,207,1) 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(top,  rgba(18,133,240,1) 0%,rgba(13,104,207,1) 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom,  rgba(18,133,240,1) 0%,rgba(13,104,207,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1285f0', endColorstr='#0d68cf',GradientType=0 ); /* IE6-9 */
+  color: #fff;
+  text-transform: uppercase;
+  border: 1px solid #fff;
+  border-radius: .4rem;
+  padding: 1rem 4rem;
+  cursor: pointer;
+
+  @media screen and (min-width: 600px) {
+    &:hover,
+    &:active {
+      color: #0569dbe5;
+      background: #fff;
+      border: 1px solid #0569dbe5;
+    }
+  }
+}

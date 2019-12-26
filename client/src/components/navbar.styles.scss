@@ -1,0 +1,53 @@
+@import '../sass/variables';
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background-color: $color-gray-dark;
+  color: #fff;
+
+  &__logo-container {
+    display: flex;
+    align-items: center;
+  }
+
+  &__logo {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  &__logo-text {
+    font-size: 2rem;
+    padding-left: 1rem;
+  }
+
+  &__navigation {
+    display: flex;
+    align-items: center;
+
+    &--profile-pic {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 3.5rem;
+      width: 3.5rem;
+      color: #fff;
+      background-color: orangered;
+      padding: .9rem;
+      margin-left: 2rem;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform .2s;
+
+      &:active {
+        transform: scale(.95);
+      }
+
+      &:hover {
+        opacity: .8;
+      }
+    }
+  }
+}

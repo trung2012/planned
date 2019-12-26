@@ -29,17 +29,17 @@ const userSchema = new mongoose.Schema({
   color: {
     type: String,
     default: '#0b61d9'
-  },
-  projects: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Project'
-    }
-  ]
+  }
 }, { id: false })
 
-// userSchema.set('toObject', { virtuals: true });
-// userSchema.set('toJSON', { virtuals: true });
+userSchema.virtual('projects', {
+  ref: 'Project',
+  localField: '_id',
+  foreignField: 'members'
+});
+
+userSchema.set('toObject', { virtuals: true });
+userSchema.set('toJSON', { virtuals: true });
 
 userSchema.methods.toJSON = function () {
   const { _id, name, initials, color } = this;
