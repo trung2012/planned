@@ -1,0 +1,17 @@
+.project-overview {
+  padding: 0 4rem;
+
+  &__header {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 4rem;
+    padding: .5rem;
+  }
+
+  &__heading {
+    font-weight: 300;
+    margin-bottom: 3rem;
+  }
+}

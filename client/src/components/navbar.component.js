@@ -1,12 +1,13 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 
-import { Context as AuthContext } from '../context/AuthContext';
+import { AuthContext } from '../context/AuthContext';
 
 import logo from '../assets/logo.png';
 import './navbar.styles.scss';
 
 const NavBar = () => {
-  const { state } = useContext(AuthContext);
+  const { authState: { user }, signOut } = useContext(AuthContext);
+  const [showProfileOptions, setShowProfileOptions] = useState(false);
 
   return (
     <nav className='navbar'>
@@ -16,15 +17,30 @@ const NavBar = () => {
       </div>
       <div className='navbar__navigation'>
         {
-          state.user &&
-          <>
+          user &&
+          <React.Fragment>
             <div className='navbar__navigation--welcome-message'>
-              Welcome, {state.user.name}
+              Welcome, {user.name}
             </div>
-            <div className='navbar__navigation--profile-pic'>
-              {state.user.initials}
+            <div
+              className='navbar__navigation--profile-pic'
+              style={{ backgroundColor: `${user.color}` }}
+              onClick={() => setShowProfileOptions(!showProfileOptions)}
+            >
+              {user.initials}
             </div>
-          </>
+            {
+              showProfileOptions &&
+              <React.Fragment>
+                <div className='overlay' onClick={() => setShowProfileOptions(false)}></div>
+                <div className='navbar__navigation--profile-options'>
+                  <div className='profile-options-item'>My account</div>
+                  <div className='profile-options-item'>Change Password</div>
+                  <div className='profile-options-item' onClick={signOut}>Sign out</div>
+                </div>
+              </React.Fragment>
+            }
+          </React.Fragment>
         }
       </div>
     </nav>

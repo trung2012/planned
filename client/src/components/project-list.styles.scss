@@ -1,0 +1,11 @@
+@import '../sass/variables';
+
+.project-list {
+  display: flex;
+  flex-wrap: wrap;
+
+  .no-project {
+    font-weight: 300;
+    color: $color-gray-dark;
+  }
+}

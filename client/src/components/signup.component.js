@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Context } from '../context/AuthContext';
+import { AuthContext } from '../context/AuthContext';
 
 import FormInput from './form-input.component';
 import CustomButton from './custom-button.component';
@@ -8,7 +8,7 @@ import ErrorDisplay from './error-display.component';
 import './signup.styles.scss';
 
 const SignUp = ({ history }) => {
-  const { state, signUp, clearErrorMessage } = useContext(Context);
+  const { authState, signUp, clearErrorMessage } = useContext(AuthContext);
 
   const [userCredentials, setUserCredentials] = useState({ displayName: '', email: '', password: '', confirmPassword: '' })
   const [errorMessage, setErrorMessage] = useState(null);
@@ -19,7 +19,7 @@ const SignUp = ({ history }) => {
     setUserCredentials({ ...userCredentials, [name]: value })
   }
 
-  const handleSubmit = async event => {
+  const handleSubmit = event => {
     event.preventDefault();
 
     if (password !== confirmPassword) {
@@ -29,10 +29,7 @@ const SignUp = ({ history }) => {
       return setErrorMessage('Passwords need to be at least 8 characters long');
     }
 
-    await signUp({ displayName, email, password });
-    if (state.user) {
-      history.push('/');
-    }
+    signUp({ displayName, email, password }, () => { history.push('/') });
   }
 
   const onFocus = () => {
@@ -48,7 +45,7 @@ const SignUp = ({ history }) => {
           errorMessage && <ErrorDisplay text={errorMessage} />
         }
         {
-          state.errorMessage && <ErrorDisplay text={state.errorMessage} />
+          authState.errorMessage && <ErrorDisplay text={authState.errorMessage} />
         }
         <form className='sign-up-form' onSubmit={handleSubmit}>
           <FormInput

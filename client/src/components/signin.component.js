@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Context } from '../context/AuthContext';
+import { AuthContext } from '../context/AuthContext';
 import { useHistory } from 'react-router-dom';
 
 import FormInput from './form-input.component';
@@ -10,7 +10,7 @@ import './signin.styles.scss';
 
 const SignIn = () => {
   const history = useHistory();
-  const { state, signIn, clearErrorMessage } = useContext(Context);
+  const { authState, signIn, clearErrorMessage } = useContext(AuthContext);
 
   const [userCredentials, setUserCredentials] = useState({ email: '', password: '' })
   const { email, password } = userCredentials;
@@ -30,7 +30,7 @@ const SignIn = () => {
       <div className='content-container'>
         <h1 className='sign-in-title'>Sign in</h1>
         {
-          state.errorMessage && <ErrorDisplay text={state.errorMessage} />
+          authState.errorMessage && <ErrorDisplay text={authState.errorMessage} />
         }
         <form className='sign-in-form' onSubmit={handleSubmit}>
           <FormInput

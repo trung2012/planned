@@ -10,6 +10,7 @@
   border-radius: .4rem;
   padding: 1rem 4rem;
   cursor: pointer;
+  transition: all .1s;
 
   @media screen and (min-width: 600px) {
     &:hover,
@@ -17,6 +18,10 @@
       color: #0569dbe5;
       background: #fff;
       border: 1px solid #0569dbe5;
+    }
+
+    &:active {
+      transform: scale(.98);
     }
   }
 }

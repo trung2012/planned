@@ -7,6 +7,7 @@
   padding: 1rem 1.5rem;
   background-color: $color-gray-dark;
   color: #fff;
+  margin-bottom: 8rem;
 
   &__logo-container {
     display: flex;
@@ -19,7 +20,7 @@
   }
 
   &__logo-text {
-    font-size: 2rem;
+    font-size: 1.8rem;
     padding-left: 1rem;
   }
 
@@ -29,6 +30,7 @@
 
     &--profile-pic {
       display: flex;
+      position: relative;
       justify-content: center;
       align-items: center;
       height: 3.5rem;
@@ -39,6 +41,7 @@
       margin-left: 2rem;
       border-radius: 50%;
       cursor: pointer;
+      letter-spacing: 1px;
       transition: transform .2s;
 
       &:active {
@@ -49,5 +52,38 @@
         opacity: .8;
       }
     }
+
+    &--profile-options {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      top: 5rem;
+      right: 3rem;
+      background-color: #fff;
+      color: $color-gray-dark;
+      width: 18rem;
+      padding: 1rem .5rem;
+      box-shadow: 0 0 1rem rgba(#333, .3);
+      border-radius: 2px;
+      z-index: 2;
+    }
   }
+}
+
+.profile-options-item {
+  padding: .5rem 2rem;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: $color-gray-light;
+  }
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1; 
 }
