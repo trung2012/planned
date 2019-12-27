@@ -21,15 +21,24 @@
     padding: 1rem;
 
     &--top {
+      flex: 1;
       display: flex;
       justify-content: space-between;
-      margin-bottom: .5rem;
     }
   }
 
   &__name,
   &__description {
     flex: 1 1;
+  }
+
+  &__name {
+    color: $color-gray-dark;
+  }
+
+  &__description {
+    font-size: 1.4rem;
+    color: #838383;
   }
 
   &__options {
@@ -39,6 +48,7 @@
     letter-spacing: .2rem;
     padding: 0 .2rem;
     color: $color-gray-dark;
+    z-index: 1;
     cursor: pointer;
 
     &:hover {

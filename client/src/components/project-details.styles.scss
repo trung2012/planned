@@ -1,0 +1,23 @@
+@import '../sass/variables';
+
+.project-details {
+
+  &__main-content {
+    display: flex;
+    padding-left: 2rem;
+  }
+
+  &__lists {
+    display: flex;
+    flex-wrap: nowrap;
+  }
+}
+
+.add-list {
+  font-size: inherit;
+  font-weight: bold;
+  color: $color-green;
+  border: none;
+  background-color: transparent;
+  padding: .5rem;
+}

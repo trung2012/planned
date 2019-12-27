@@ -1,0 +1,23 @@
+@import '../sass/variables';
+
+.board-list {
+  width: 30rem;
+  background-color: $color-gray-light;
+  padding: 1rem;
+  margin: 0 1rem;
+  border-radius: .1rem;
+
+  &__add-task {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background-color: #fff;
+    margin-bottom: 2rem;
+    box-shadow: 0px 3.2px 7.2px 0px rgba(0, 0, 0, 0.18), 0px 0.6px 1.8px 0px rgba(0, 0, 0, 0.11);
+  }
+
+  &__name {
+    font-size: 1.7rem;
+    margin-bottom: 1.5rem;
+  }
+}

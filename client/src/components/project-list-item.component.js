@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import { Link } from 'react-router-dom';
 
 import Modal from './modal.component';
 import MoreOptions from './more-options.component';
@@ -24,21 +25,27 @@ const ProjectListItem = ({ project }) => {
 
   return (
     <div className='project-list-item'>
-      <div className='project-list-item__picture' style={{ backgroundColor: `${project.color}` }}>{project.name.substring(0, 1).toUpperCase()}</div>
+      <Link
+        to={`/projects/${project._id}`}
+        className='project-list-item__picture'
+        style={{ backgroundColor: `${project.color}` }}
+      >
+        {project.name.substring(0, 1).toUpperCase()}
+      </Link>
       <div className='project-list-item__content'>
         <div className='project-list-item__content--top'>
-          <div className='project-list-item__name'>{project.name}</div>
+          <Link to={`/projects/${project._id}`} className='project-list-item__name'>{project.name}</Link>
           <span className='project-list-item__options' onClick={() => setShowProjectOptions(!showProjectOptions)}>
             ...
           </span>
         </div>
-        <div className='project-list-item__description'>
+        <Link to={`/projects/${project._id}`} className='project-list-item__description'>
           {
             project.description.length > 30 ?
               project.description.substring(0, 30) + '...'
               : project.description
           }
-        </div>
+        </Link>
       </div>
       {
         showProjectOptions &&

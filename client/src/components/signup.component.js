@@ -81,7 +81,7 @@ const SignUp = ({ history }) => {
           <div className='buttons-container'>
             <CustomButton text='Sign Up' />
           </div>
-          <div className='more-options'>
+          <div className='more-auth-options'>
             <span>Already have an account?</span>
             <span
               className='register-link'

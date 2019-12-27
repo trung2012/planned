@@ -1,0 +1,16 @@
+.board-task {
+  padding: 1rem;
+  background-color: #fff;
+  margin-bottom: 1rem;
+
+  &__content {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .task-options {
+    letter-spacing: .3rem;
+  }
+}

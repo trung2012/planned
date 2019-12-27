@@ -11,7 +11,7 @@ const ProjectDelete = ({ confirm, dismiss }) => {
         Are you sure you want to delete this project?
             </p>
       <div className='project-delete__buttons'>
-        <CustomButton text='Delete' onClick={confirm} />
+        <CustomButton text='Delete' buttonType='danger' onClick={confirm} />
         <CustomButton text='Cancel' onClick={dismiss} />
       </div>
     </React.Fragment>
