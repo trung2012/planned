@@ -9,6 +9,11 @@ const NavBar = () => {
   const { authState: { user }, signOut } = useContext(AuthContext);
   const [showProfileOptions, setShowProfileOptions] = useState(false);
 
+  const handleSignOut = event => {
+    signOut();
+    setShowProfileOptions(false);
+  }
+
   return (
     <nav className='navbar'>
       <div className='navbar__logo-container'>
@@ -36,7 +41,7 @@ const NavBar = () => {
                 <div className='navbar__navigation--profile-options'>
                   <div className='profile-options-item'>My account</div>
                   <div className='profile-options-item'>Change Password</div>
-                  <div className='profile-options-item' onClick={signOut}>Sign out</div>
+                  <div className='profile-options-item' onClick={handleSignOut}>Sign out</div>
                 </div>
               </React.Fragment>
             }
