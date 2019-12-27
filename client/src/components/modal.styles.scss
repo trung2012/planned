@@ -5,9 +5,7 @@
   flex-direction: column;
   position: fixed;
   min-width: 45rem;
-  width: 30%;
-  min-height: 16rem;
-  height: 40vh;
+  min-height: 20rem;
   box-shadow: 0 0 1rem rgb(184, 183, 183);
   border-radius: .3rem;
   padding: .5rem;
@@ -45,8 +43,8 @@
 
   &__content {
     display: flex;
-    flex-direction: column;
     flex: 1;
+    flex-direction: column;
     color: $color-gray-dark;
     padding: 0 3rem;
   }
@@ -63,12 +61,6 @@
     &:hover {
       color: red;
     }
-  }
-
-  &__buttons {
-    display: flex;
-    justify-content: space-evenly;
-    margin-bottom: 3rem;
   }
 
 }

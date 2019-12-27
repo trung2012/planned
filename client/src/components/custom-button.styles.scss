@@ -4,7 +4,33 @@
   background: linear-gradient(to bottom, #29323c, #485563); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   color: #fff;
   text-transform: uppercase;
-  border: 1px solid #fff;
+  border: none;
+  border: 1px solid transparent;
+  border-radius: .4rem;
+  padding: 1rem 4rem;
+  cursor: pointer;
+  transition: all .1s;
+
+  @media screen and (min-width: 600px) {
+    &:hover,
+    &:active {
+      opacity: .7;
+    }
+
+    &:active {
+      transform: scale(.98);
+    }
+  }
+}
+
+.danger {
+  background: #FF416C;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to bottom, #FF416C, #FF4B2B);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to bottom, #FF416C, #FF4B2B); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  color: #fff;
+  text-transform: uppercase;
+  border: none;
+  border: 1px solid transparent;
   border-radius: .4rem;
   padding: 1rem 4rem;
   cursor: pointer;

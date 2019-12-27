@@ -48,9 +48,9 @@ router.get('/all', auth, async (req, res) => {
   }
 })
 
-router.delete('/', auth, async (req, res) => {
+router.delete('/:_id', auth, async (req, res) => {
   try {
-    const { _id } = req.body;
+    const { _id } = req.params;
     const project = await Project.findById(_id.toString())
 
     if (!project) {

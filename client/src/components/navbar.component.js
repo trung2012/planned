@@ -1,5 +1,7 @@
 import React, { useContext, useState } from 'react';
+import { Link } from 'react-router-dom';
 
+import MoreOptions from './more-options.component';
 import { AuthContext } from '../context/AuthContext';
 
 import logo from '../assets/logo.png';
@@ -16,10 +18,10 @@ const NavBar = () => {
 
   return (
     <nav className='navbar'>
-      <div className='navbar__logo-container'>
+      <Link to='/' className='navbar__logo-container'>
         <img className='navbar__logo' src={logo} alt='logo' />
         <span className='navbar__logo-text'>Planned</span>
-      </div>
+      </Link>
       <div className='navbar__navigation'>
         {
           user &&
@@ -36,14 +38,13 @@ const NavBar = () => {
             </div>
             {
               showProfileOptions &&
-              <React.Fragment>
-                <div className='overlay' onClick={() => setShowProfileOptions(false)}></div>
-                <div className='navbar__navigation--profile-options'>
-                  <div className='profile-options-item'>My account</div>
-                  <div className='profile-options-item'>Change Password</div>
-                  <div className='profile-options-item' onClick={handleSignOut}>Sign out</div>
+              <MoreOptions dismiss={() => setShowProfileOptions(false)}>
+                <div className='more-options'>
+                  <div className='more-options-item'>My account</div>
+                  <div className='more-options-item'>Change Password</div>
+                  <div className='more-options-item' onClick={handleSignOut}>Sign out</div>
                 </div>
-              </React.Fragment>
+              </MoreOptions>
             }
           </React.Fragment>
         }

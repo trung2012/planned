@@ -1,6 +1,7 @@
 @import '../sass/variables';
 
 .project-list-item {
+  position: relative;
   flex: 0 0 34rem;
   display: flex;
   margin: .5rem 1rem;
@@ -32,8 +33,17 @@
   }
 
   &__options {
+    font-size: 2rem;
+    font-weight: 400;
+    line-height: .3;
+    letter-spacing: .2rem;
+    padding: 0 .2rem;
     color: $color-gray-dark;
     cursor: pointer;
+
+    &:hover {
+      background-color: $color-gray-light;
+    }
   }
 
   &__picture {
@@ -45,5 +55,10 @@
     width: 6rem;
     height: 6rem;
     margin: 1.5rem;
+  }
+
+  .more-options {
+    top: 3rem;
+    right: 0;
   }
 }

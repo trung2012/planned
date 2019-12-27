@@ -7,9 +7,10 @@ import Modal from './modal.component';
 import './project-overview.styles.scss';
 import Spinner from './spinner.component';
 import CustomButton from './custom-button.component';
+import ProjectAddForm from './project-add-form.component';
 
 const ProjectOverview = () => {
-  const { state: projectState, fetchProjects } = useContext(ProjectContext);
+  const { projectState, fetchProjects } = useContext(ProjectContext);
   const { projects } = projectState;
   const [showCreateProjectModal, setShowCreateProjectModal] = useState(false);
 
@@ -24,13 +25,10 @@ const ProjectOverview = () => {
           showCreateProjectModal &&
           <Modal
             modalTitle='Create project'
-            modalDismiss={() => setShowCreateProjectModal(false)}
+            dismiss={() => setShowCreateProjectModal(false)}
             confirmText='Create'
           >
-            <form className='project-add-form'>
-              <input type='text' className='project-add-form__name' placeholder='Project Name' />
-              <textarea type='text' className='project-add-form__description' placeholder='Description' />
-            </form>
+            <ProjectAddForm dismiss={() => setShowCreateProjectModal(false)} />
           </Modal>
         }
         <div className='project-overview__header'>

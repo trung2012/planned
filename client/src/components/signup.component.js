@@ -8,10 +8,8 @@ import ErrorDisplay from './error-display.component';
 import './signup.styles.scss';
 
 const SignUp = ({ history }) => {
-  const { authState, signUp, clearErrorMessage } = useContext(AuthContext);
-
+  const { authState, signUp, addAuthError, clearErrorMessage } = useContext(AuthContext);
   const [userCredentials, setUserCredentials] = useState({ displayName: '', email: '', password: '', confirmPassword: '' })
-  const [errorMessage, setErrorMessage] = useState(null);
   const { email, password, confirmPassword, displayName } = userCredentials;
 
   const handleChange = event => {
@@ -23,10 +21,10 @@ const SignUp = ({ history }) => {
     event.preventDefault();
 
     if (password !== confirmPassword) {
-      return setErrorMessage('Passwords do not match. Please try again!');
+      return addAuthError('Passwords do not match. Please try again!');
     }
     if (password.length < 8) {
-      return setErrorMessage('Passwords need to be at least 8 characters long');
+      return addAuthError('Passwords need to be at least 8 characters long');
     }
 
     signUp({ displayName, email, password }, () => { history.push('/') });
@@ -34,16 +32,12 @@ const SignUp = ({ history }) => {
 
   const onFocus = () => {
     clearErrorMessage();
-    setErrorMessage(null);
   }
 
   return (
     <div className='sign-up-page'>
       <div className='content-container'>
         <h1 className='sign-up-title'>Sign up</h1>
-        {
-          errorMessage && <ErrorDisplay text={errorMessage} />
-        }
         {
           authState.errorMessage && <ErrorDisplay text={authState.errorMessage} />
         }

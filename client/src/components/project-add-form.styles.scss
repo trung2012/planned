@@ -1,0 +1,40 @@
+@import '../sass/variables';
+
+.project-add-form {
+  display: flex;
+  flex-direction: column;
+
+  &__name,
+  &__description {
+    font-family: inherit;
+    font-size: inherit;
+    padding: 0 0 .5rem .5rem;
+    width: 100%;
+    outline: none;
+  }
+
+  &__name {
+    color: #333;
+    font-size: 2.2rem;
+    font-weight: 100;
+    border: none;
+    border-bottom: 1px solid rgba($color-gray-dark,.7);
+    border-width: thin;
+    margin-bottom: 3rem;
+  }
+
+  &__description {
+    flex: 0 0 14rem;
+    border: none;
+    padding-top: .5rem;
+    padding-left: 1rem;
+    background-color: $color-gray-extra-light;
+    margin-bottom: 3rem;
+  }
+
+  &__buttons {    
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 3rem;
+  }
+}

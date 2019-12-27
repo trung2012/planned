@@ -1,6 +1,8 @@
 import React, { useCallback, useReducer } from 'react';
 import axios from 'axios';
 
+import { generateRequestConfig } from '../utils/generateRequestConfig';
+
 const authReducer = (state, action) => {
   switch (action.type) {
     case 'load_user':
@@ -28,18 +30,11 @@ export const AuthProvider = ({ children }) => {
   });
 
   const loadUser = useCallback(async (callback) => {
-    const token = localStorage.getItem('token');
-
-    if (token) {
+    const requestConfig = generateRequestConfig();
+    if (requestConfig) {
       try {
-        const requestConfig = {
-          headers: {
-            Authorization: 'Bearer ' + token,
-            'Content-Type': 'application/json'
-          }
-        }
         const response = await axios.get('/api/users', requestConfig);
-        dispatch({ type: 'load_user', payload: { token, user: response.data.user } });
+        dispatch({ type: 'load_user', payload: { token: response.data.token, user: response.data.user } });
         if (callback) {
           callback();
         }
@@ -92,8 +87,12 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: 'signout' });
   };
 
+  const addAuthError = async (errorMessage) => {
+    dispatch({ type: 'add_auth_error', payload: errorMessage });
+  }
+
   return (
-    <AuthContext.Provider value={{ authState, signIn, signOut, signUp, clearErrorMessage, loadUser }}>
+    <AuthContext.Provider value={{ authState, signIn, signOut, signUp, addAuthError, clearErrorMessage, loadUser }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,0 +1,26 @@
+@import '../sass/variables';
+
+.more-options {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  top: 5rem;
+  right: 3rem;
+  background-color: #fff;
+  color: $color-gray-dark;
+  width: 18rem;
+  padding: 1rem .5rem;
+  box-shadow: 0 0 1rem rgba(#333, .3);
+  border-radius: 2px;
+  z-index: 2;
+}
+
+.more-options-item {
+  padding: .5rem 2rem;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: $color-gray-light;
+  }
+}
