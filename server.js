@@ -9,8 +9,7 @@ const userRouter = require('./routers/api/user');
 const projectRouter = require('./routers/api/project');
 
 const List = require('./models/List');
-const Task = require('./models/Task');
-const Comment = require('./models/Comment');
+const Project = require('./models/Project');
 
 const app = express();
 const server = http.createServer(app);
@@ -29,6 +28,49 @@ io.on('connection', (socket) => {
   socket.on('join', (projectId) => {
     socket.join(projectId);
     console.log('joined project')
+  })
+
+  socket.on('initial_data', async projectId => {
+    const project = await Project.findById(projectId.toString());
+    await project.populate({
+      path: 'lists',
+      populate: {
+        path: 'tasks',
+        model: 'Task'
+      }
+    })
+      .populate('members')
+      .execPopulate();
+
+    const data = {
+      currentProject: {
+        name: project.name,
+        description: project.description,
+        color: project.color,
+        owner: project.owner
+      },
+      lists: project.lists,
+      members: project.members
+    };
+
+    console.log(data)
+
+    socket.emit('data_updated', data);
+  })
+
+  socket.on('add_list', async ({ name, projectId }) => {
+    try {
+      const newList = new List({
+        name,
+        project: projectId
+      })
+
+      const list = await newList.save();
+      socket.emit('list_added', list)
+      socket.broadcast.to(projectId).emit('data_updated');
+    } catch (err) {
+      socket.emit('new_error', 'Something went wrong with our server');
+    }
   })
 
   socket.on('leave', (projectId) => {

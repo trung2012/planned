@@ -24,7 +24,6 @@ const projectSchema = new mongoose.Schema({
   lists: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'List'
     }
   ],
   owner: {

@@ -5,13 +5,11 @@
   flex: 0 0 34rem;
   display: flex;
   margin: .5rem 1rem;
-  box-shadow: 0px 3.2px 7.2px 0px rgba(0, 0, 0, 0.18), 0px 0.6px 1.8px 0px rgba(0, 0, 0, 0.11);
+  box-shadow: $box-shadow-primary;
   cursor: pointer;
 
   &:hover {
-    box-shadow: 0px 0px 0.1px 1px #edebe9, 
-                0px 6.4px 14.4px 0px rgba(0, 0, 0, 0.18), 
-                0px 1.2px 3.6px 0px rgba(0, 0, 0, 0.11);
+    box-shadow: $box-shadow-primary-hover;
   }
   
   &__content {
@@ -42,17 +40,11 @@
   }
 
   &__options {
-    font-size: 2rem;
-    font-weight: 400;
-    line-height: .3;
-    letter-spacing: .2rem;
-    padding: 0 .2rem;
-    color: $color-gray-dark;
-    z-index: 1;
-    cursor: pointer;
+    width: 1.5em;
+    height: 1.5em;
 
     &:hover {
-      background-color: $color-gray-light;
+      background-color: $color-gray-extra-light;
     }
   }
 

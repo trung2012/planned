@@ -1,83 +1,15 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect, useCallback, useContext } from 'react';
 import io from 'socket.io-client';
 import { useParams } from 'react-router-dom';
 
+import BoardLists from './board-lists.component';
+import { BoardContext } from '../context/BoardContext';
 import './project-details.styles.scss';
-import BoardList from './board-list.component';
 
 const ProjectDetails = () => {
+  console.log('render')
+  const { fetchBoardData, addBoardError, addList } = useContext(BoardContext);
   const { projectId } = useParams();
-  const [lists, setLists] = useState([
-    {
-      _id: '1',
-      name: 'Test',
-      project: projectId,
-      tasks: [
-        {
-          _id: '11',
-          title: 'Test',
-          description: 'Test',
-          progress: 'Not Started',
-          priority: 'Low',
-          due: null
-        },
-        {
-          _id: '12',
-          title: 'Test 2',
-          description: 'Test 2',
-          progress: 'Not Started',
-          priority: 'High',
-          due: null
-        }
-      ]
-    },
-    {
-      _id: '2',
-      name: 'Test 2',
-      project: projectId,
-      tasks: [
-        {
-          _id: '21',
-          title: 'Test',
-          description: 'Test',
-          progress: 'Not Started',
-          priority: 'Low',
-          due: null
-        },
-        {
-          _id: '22',
-          title: 'Test 2',
-          description: 'Test 2',
-          progress: 'Not Started',
-          priority: 'High',
-          due: null
-        }
-      ]
-    },
-    {
-      _id: '3',
-      name: 'Test 3',
-      project: projectId,
-      tasks: [
-        {
-          _id: '31',
-          title: 'Test',
-          description: 'Test',
-          progress: 'Not Started',
-          priority: 'Low',
-          due: null
-        },
-        {
-          _id: '32',
-          title: 'Test 2',
-          description: 'Test 2',
-          progress: 'Not Started',
-          priority: 'High',
-          due: null
-        }
-      ]
-    }
-  ]);
   const token = localStorage.getItem('token');
   const socket = useCallback(io('http://localhost:5000/', {
     transports: ['websocket'],
@@ -90,15 +22,33 @@ const ProjectDetails = () => {
       socket.emit('initial_data', projectId);
     }
 
-    // fetchData();
+    fetchData();
 
+    socket.on('data_updated', data => {
+      fetchBoardData(data);
+    })
+
+    socket.on('list_added', newList => {
+      addList(newList)
+    })
+
+    socket.on('new_error', errorMessage => {
+      addBoardError(errorMessage);
+    })
 
     return () => {
       socket.emit('leave', projectId);
+      socket.off('data_updated')
       socket.disconnect();
     }
 
-  }, [socket, projectId])
+  }, [
+    socket,
+    projectId,
+    addList,
+    addBoardError,
+    fetchBoardData
+  ])
 
   return (
     <div className='project-details'>
@@ -106,19 +56,7 @@ const ProjectDetails = () => {
         {/* <div className='project-list-item__picture' style={{ backgroundColor: `${project.color}` }}>{project.name.substring(0, 1).toUpperCase()}</div> */}
       </header>
       <div className='project-details__main-content'>
-        <div className='project-details__lists'>
-          {
-            lists.length > 0 &&
-            lists.map(list => {
-              return (
-                <BoardList key={list._id} list={list} />
-              );
-            })
-          }
-        </div>
-        <div className='project-details__add'>
-          <button className='add-list'>Add new list</button>
-        </div>
+        <BoardLists socket={socket} />
       </div>
     </div>
   );

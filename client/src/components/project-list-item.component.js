@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 
+import { ReactComponent as Options } from '../assets/options.svg';
 import Modal from './modal.component';
 import MoreOptions from './more-options.component';
 import { ProjectContext } from '../context/ProjectContext';
@@ -35,9 +36,7 @@ const ProjectListItem = ({ project }) => {
       <div className='project-list-item__content'>
         <div className='project-list-item__content--top'>
           <Link to={`/projects/${project._id}`} className='project-list-item__name'>{project.name}</Link>
-          <span className='project-list-item__options' onClick={() => setShowProjectOptions(!showProjectOptions)}>
-            ...
-          </span>
+          <Options className='project-list-item__options' onClick={() => setShowProjectOptions(!showProjectOptions)} />
         </div>
         <Link to={`/projects/${project._id}`} className='project-list-item__description'>
           {
