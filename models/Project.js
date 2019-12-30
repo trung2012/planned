@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const List = require('./List');
+const Task = require('./Task');
 
 const projectSchema = new mongoose.Schema({
   name: {
@@ -24,12 +26,25 @@ const projectSchema = new mongoose.Schema({
   lists: [
     {
       type: mongoose.Schema.Types.ObjectId,
+      ref: 'List'
     }
   ],
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     required: true
   }
+})
+
+projectSchema.pre('remove', async function (next) {
+  const project = this;
+
+  project.lists.forEach(async list => {
+    await Task.deleteMany({ list: list._id })
+  })
+
+  await List.deleteMany({ project: project._id });
+
+  next();
 })
 
 const Project = mongoose.model('Project', projectSchema);

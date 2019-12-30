@@ -11,7 +11,7 @@ const authReducer = (state, action) => {
       return { ...state, errorMessage: action.payload };
     case 'signin':
       return { errorMessage: null, token: action.payload.token, user: action.payload.user };
-    case 'clear_error_message':
+    case 'clear_auth_error_message':
       return { ...state, errorMessage: null };
     case 'signout':
       return { token: null, errorMessage: null, user: null };
@@ -43,10 +43,6 @@ export const AuthProvider = ({ children }) => {
       }
     }
   }, [])
-
-  const clearErrorMessage = () => {
-    dispatch({ type: 'clear_error_message' });
-  };
 
   const signUp = async ({ displayName, email, password }, callback) => {
     try {
@@ -82,17 +78,21 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const signOut = async () => {
+  const signOut = () => {
     localStorage.removeItem('token');
     dispatch({ type: 'signout' });
   };
 
-  const addAuthError = async (errorMessage) => {
+  const addAuthError = (errorMessage) => {
     dispatch({ type: 'add_auth_error', payload: errorMessage });
   }
 
+  const clearAuthErrorMessage = () => {
+    dispatch({ type: 'clear_auth_error_message' });
+  };
+
   return (
-    <AuthContext.Provider value={{ authState, signIn, signOut, signUp, addAuthError, clearErrorMessage, loadUser }}>
+    <AuthContext.Provider value={{ authState, signIn, signOut, signUp, addAuthError, clearAuthErrorMessage, loadUser }}>
       {children}
     </AuthContext.Provider>
   );

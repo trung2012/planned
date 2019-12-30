@@ -7,22 +7,20 @@
   margin: 0 1rem;
   border-radius: .1rem;
 
-  &__add-task {
+  &__header {
     display: flex;
-    align-items: center;
-    padding: .75rem;
-    background-color: #fff;
-    margin-bottom: 3rem;
-    box-shadow: $box-shadow-primary;
-    cursor: pointer;
+    justify-content: space-between;
+
+    .options-icon {
+      opacity: 0;
+    }
 
     &:hover {
-      box-shadow: $box-shadow-primary-hover;
+      .options-icon {
+        opacity: 1;
+      }
     }
 
-    &:active {
-      opacity: .8;
-    }
   }
 
   &__name {

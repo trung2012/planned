@@ -1,0 +1,23 @@
+@import '../sass/variables';
+
+.board-task-add {
+  &__form {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    box-shadow: $box-shadow-primary;
+    z-index: 2;
+    
+    &--top {
+      padding: 1.25rem;
+
+      & > * {
+        margin: 1rem 0;
+      }
+    }
+
+    &:hover {
+      box-shadow: $box-shadow-primary-hover;
+    }
+  }
+}

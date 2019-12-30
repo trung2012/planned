@@ -7,12 +7,13 @@ const listSchema = new mongoose.Schema({
   },
   project: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Project'
+    ref: 'Project',
+    required: true
   },
   tasks: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Ticket'
+      ref: 'Task'
     }
   ]
 }, { id: false })

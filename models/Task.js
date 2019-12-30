@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const taskSchema = new mongoose.Schema({
-  title: {
+  name: {
     type: String,
     required: true,
   },
@@ -10,16 +10,20 @@ const taskSchema = new mongoose.Schema({
   },
   list: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'List'
+    ref: 'List',
+    required: true
+  },
+  project: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Project',
+    required: true
   },
   progress: {
     type: String,
-    required: true,
     default: 'Not started'
   },
   priority: {
     type: String,
-    require: true,
     default: 'Low'
   },
   due: {
@@ -27,6 +31,10 @@ const taskSchema = new mongoose.Schema({
   },
   note: {
     type: String
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now()
   },
   updatedAt: {
     type: Date,

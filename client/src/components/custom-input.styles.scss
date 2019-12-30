@@ -1,0 +1,11 @@
+@import '../sass/variables';
+
+.custom-input {
+  border: none;
+  font-family: inherit;
+  font-size: inherit;
+  padding: .5rem 1rem;
+  padding-left: 1rem;
+  background-color: $color-gray-extra-light;
+  width: 100%;
+}

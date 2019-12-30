@@ -1,0 +1,24 @@
+@import '../sass/variables';
+
+.board-tasks {
+  
+  &__add-button {
+    display: flex;
+    align-items: center;
+    padding: .75rem;
+    background-color: #fff;
+    margin-bottom: 3rem;
+    box-shadow: $box-shadow-primary;
+    cursor: pointer;
+  
+    &:hover {
+      box-shadow: $box-shadow-primary-hover;
+    }
+  
+    &:active {
+      opacity: .8;
+    }
+  }
+  
+}
+

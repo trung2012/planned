@@ -23,7 +23,12 @@ const projectReducer = (state, action) => {
     case 'add_project_error':
       return {
         ...state,
-        error: action.payload
+        errorMessage: action.payload
+      }
+    case 'clear_project_error_message':
+      return {
+        ...state,
+        errorMessage: null
       }
     default:
       return state;
@@ -85,9 +90,13 @@ export const ProjectProvider = ({ children }) => {
     dispatch({ type: 'add_project_error', payload: errorMessage });
   }
 
+  const clearProjectErrorMessage = () => {
+    dispatch({ type: 'clear_project_error_message' });
+  };
+
   return (
     <ProjectContext.Provider
-      value={{ projectState, fetchProjects, createProject, deleteProject, addProjectError }}
+      value={{ projectState, fetchProjects, createProject, deleteProject, addProjectError, clearProjectErrorMessage }}
     >
       {children}
     </ProjectContext.Provider>

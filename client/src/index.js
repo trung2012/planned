@@ -7,17 +7,20 @@ import { AuthProvider } from './context/AuthContext';
 import { ProjectProvider } from './context/ProjectContext';
 import * as serviceWorker from './serviceWorker';
 import { BoardProvider } from './context/BoardContext';
+import { SocketProvider } from './context/SocketContext';
 
 ReactDOM.render(
-  <BoardProvider>
-    <AuthProvider>
-      <ProjectProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </ProjectProvider>
-    </AuthProvider>
-  </BoardProvider>, document.getElementById('root'));
+  <SocketProvider>
+    <BoardProvider>
+      <AuthProvider>
+        <ProjectProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </ProjectProvider>
+      </AuthProvider>
+    </BoardProvider>
+  </SocketProvider>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

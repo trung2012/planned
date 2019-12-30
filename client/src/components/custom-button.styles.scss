@@ -1,3 +1,5 @@
+@import '../sass/variables';
+
 .custom-button {
   background: #485563;  /* fallback for old browsers */
   background: -webkit-linear-gradient(to bottom, #232526, #414345);  /* Chrome 10-25, Safari 5.1-6 */
@@ -6,7 +8,7 @@
   text-transform: uppercase;
   border: none;
   border: 1px solid transparent;
-  border-radius: .4rem;
+  border-radius: .3rem;
   padding: 1rem 4rem;
   cursor: pointer;
   transition: all .1s;
@@ -31,7 +33,7 @@
   text-transform: uppercase;
   border: none;
   border: 1px solid transparent;
-  border-radius: .4rem;
+  border-radius: .3rem;
   padding: 1rem 4rem;
   cursor: pointer;
   transition: all .1s;
@@ -40,6 +42,28 @@
     &:hover,
     &:active {
       opacity: .7;
+    }
+
+    &:active {
+      transform: scale(.98);
+    }
+  }
+}
+
+.submit-task {
+  background-color: $color-green;
+  color: #fff;
+  text-transform: uppercase;
+  border: none;
+  border: 1px solid transparent;
+  padding: 1rem 4rem;
+  cursor: pointer;
+  transition: all .1s;
+
+  @media screen and (min-width: 600px) {
+    &:hover,
+    &:active {
+      opacity: .9;
     }
 
     &:active {

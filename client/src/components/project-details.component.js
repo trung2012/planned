@@ -1,20 +1,15 @@
-import React, { useEffect, useCallback, useContext } from 'react';
-import io from 'socket.io-client';
+import React, { useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 
 import BoardLists from './board-lists.component';
 import { BoardContext } from '../context/BoardContext';
 import './project-details.styles.scss';
+import { SocketContext } from '../context/SocketContext';
 
 const ProjectDetails = () => {
-  console.log('render')
-  const { fetchBoardData, addBoardError, addList } = useContext(BoardContext);
+  const socket = useContext(SocketContext);
+  const { fetchBoardData, addBoardError, addList, addTask } = useContext(BoardContext);
   const { projectId } = useParams();
-  const token = localStorage.getItem('token');
-  const socket = useCallback(io('http://localhost:5000/', {
-    transports: ['websocket'],
-    query: `token=${token}`
-  }), []);
 
   useEffect(() => {
     socket.emit('join', projectId);
@@ -29,7 +24,11 @@ const ProjectDetails = () => {
     })
 
     socket.on('list_added', newList => {
-      addList(newList)
+      addList(newList);
+    })
+
+    socket.on('task_added', newTask => {
+      addTask(newTask);
     })
 
     socket.on('new_error', errorMessage => {
@@ -39,16 +38,20 @@ const ProjectDetails = () => {
     return () => {
       socket.emit('leave', projectId);
       socket.off('data_updated')
-      socket.disconnect();
+      socket.off('list_added')
+      socket.off('task_added')
+      socket.off('new_error')
     }
 
-  }, [
-    socket,
-    projectId,
-    addList,
-    addBoardError,
-    fetchBoardData
-  ])
+  },
+    [
+      socket,
+      projectId,
+      addList,
+      addBoardError,
+      addTask,
+      fetchBoardData
+    ])
 
   return (
     <div className='project-details'>
@@ -56,7 +59,7 @@ const ProjectDetails = () => {
         {/* <div className='project-list-item__picture' style={{ backgroundColor: `${project.color}` }}>{project.name.substring(0, 1).toUpperCase()}</div> */}
       </header>
       <div className='project-details__main-content'>
-        <BoardLists socket={socket} />
+        <BoardLists />
       </div>
     </div>
   );

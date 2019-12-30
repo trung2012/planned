@@ -2,7 +2,6 @@
 
 .board-list-add {
   width: 30rem;
-  z-index: 2;
 
   &__input {
     border: none;
@@ -11,5 +10,6 @@
     padding: .5rem 1rem;
     padding-left: 1rem;
     background-color: $color-gray-extra-light;
+    width: 100%;
   }
 }
