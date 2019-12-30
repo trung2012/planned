@@ -14,6 +14,12 @@ const Task = require('./models/Task');
 
 const app = express();
 const server = http.createServer(app);
+app.use(cors());
+app.use(express.json());
+
+app.use('/api/users', userRouter);
+app.use('/api/projects', projectRouter);
+
 const io = socketIO(server);
 
 ////////////////////////////
@@ -63,18 +69,6 @@ io.on('connection', (socket) => {
     }
   })
 
-  socket.on('delete_task', async ({ taskId, projectId }) => {
-    try {
-      const deleted = await Task.findByIdAndDelete(taskId);
-
-      socket.emit('task_deleted', deleted);
-      socket.broadcast.to(projectId).emit('data_updated');
-    } catch (err) {
-      socket.emit('new_error', 'Internal Server Error. Please try again');
-    }
-
-  })
-
   socket.on('add_list', async ({ name, projectId }) => {
     try {
       const newList = new List({
@@ -83,14 +77,42 @@ io.on('connection', (socket) => {
       })
 
       const list = await newList.save();
-      const project = await Project.findById(projectId);
+
+      const project = await Project.findById(list.project);
       project.lists.push(list._id);
       await project.save();
 
-      socket.emit('list_added', list)
-      socket.broadcast.to(projectId).emit('data_updated');
+      io.in(projectId).emit('list_added', list)
+      //io.in(projectId).emit('data_updated');
     } catch (err) {
       socket.emit('new_error', 'Internal Server Error. Please try again');
+    }
+  })
+
+  socket.on('delete_list', async ({ listId, projectId }) => {
+    try {
+      const list = await List.findById(listId);
+
+      await list.remove();
+
+      io.in(projectId).emit('list_deleted', list);
+      //io.in(projectId).emit('data_updated');
+    } catch (err) {
+      console.log(err)
+      socket.emit('new_error', 'Error deleting list');
+    }
+  })
+
+  socket.on('edit_list_name', async ({ listId, listName, projectId }) => {
+    try {
+      const list = await List.findById(listId);
+      list.name = listName;
+      await list.save();
+
+      io.in(projectId).emit('list_name_updated', list);
+      //io.in(projectId).emit('data_updated');
+    } catch (err) {
+      socket.emit('new_error', 'Error updating list name');
     }
   })
 
@@ -102,16 +124,29 @@ io.on('connection', (socket) => {
       })
 
       const task = await newTask.save();
-
       const list = await List.findById(task.list);
       list.tasks.push(task._id);
       await list.save();
 
-      socket.emit('task_added', task);
-      socket.broadcast.to(projectId).emit('data_updated');
+      io.in(projectId).emit('task_added', task);
+      //io.in(projectId).emit('data_updated');
 
     } catch (err) {
-      socket.emit('new_error', 'Internal Server Error. Please try again');
+      console.log(err)
+      socket.emit('new_error', 'Error adding task');
+    }
+  })
+
+  socket.on('delete_task', async ({ taskId, projectId }) => {
+    try {
+      const task = await Task.findById(taskId);
+      await task.remove();
+
+      io.in(projectId).emit('task_deleted', task);
+      //io.in(projectId).emit('data_updated');
+    } catch (err) {
+      console.log(err)
+      socket.emit('new_error', 'Error deleting task');
     }
   })
 
@@ -126,12 +161,6 @@ io.on('connection', (socket) => {
 });
 
 ////////////////////////////
-
-app.use(cors());
-app.use(express.json());
-
-app.use('/api/users', userRouter);
-app.use('/api/projects', projectRouter);
 
 const PORT = process.env.PORT || 5000;
 

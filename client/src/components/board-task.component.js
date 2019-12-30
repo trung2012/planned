@@ -1,9 +1,10 @@
 import React, { useState, useContext } from 'react';
+import { useParams } from 'react-router-dom';
 
 import MoreOptions from './more-options.component';
 import { ReactComponent as Options } from '../assets/options.svg';
 import { SocketContext } from '../context/SocketContext';
-import { useParams } from 'react-router-dom';
+
 import './board-task.styles.scss';
 
 const BoardTask = ({ task }) => {
@@ -13,6 +14,7 @@ const BoardTask = ({ task }) => {
 
   const handleDeleteClick = () => {
     socket.emit('delete_task', { taskId: task._id, projectId });
+    setShowTaskOptions(false);
   }
 
   return (

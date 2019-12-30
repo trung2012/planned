@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
-import './board-list-add.styles.scss';
+import './board-list-name-form.styles.scss';
 import CustomInput from './custom-input.component';
 
-const BoardListAdd = ({ submit }) => {
-  const [newListName, setNewListName] = useState('');
+const BoardListNameForm = ({ submit, dismiss, name = '' }) => {
+  const [newListName, setNewListName] = useState(name);
 
   const handleSubmit = event => {
     event.preventDefault();
@@ -14,11 +14,16 @@ const BoardListAdd = ({ submit }) => {
   return (
     <React.Fragment>
       <div className='overlay' onClick={handleSubmit}></div>
-      <form className='board-list-add' onSubmit={handleSubmit}>
+      <form className='board-list-name-form' onSubmit={handleSubmit}>
         <CustomInput
           placeholder='Enter list name'
           value={newListName}
           onChange={(event) => setNewListName(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === 'Escape') {
+              dismiss()
+            }
+          }}
           autoFocus
         />
       </form>
@@ -26,4 +31,4 @@ const BoardListAdd = ({ submit }) => {
   );
 }
 
-export default BoardListAdd;
+export default BoardListNameForm;

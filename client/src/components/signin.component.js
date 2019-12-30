@@ -10,7 +10,7 @@ import './signin.styles.scss';
 
 const SignIn = () => {
   const history = useHistory();
-  const { authState, signIn, clearErrorMessage } = useContext(AuthContext);
+  const { authState, signIn, clearAuthErrorMessage } = useContext(AuthContext);
 
   const [userCredentials, setUserCredentials] = useState({ email: '', password: '' })
   const { email, password } = userCredentials;
@@ -40,7 +40,7 @@ const SignIn = () => {
             required
             handleChange={handleChange}
             label='email'
-            onFocus={() => clearErrorMessage()}
+            onFocus={() => clearAuthErrorMessage()}
           />
           <FormInput
             name='password'
@@ -49,7 +49,7 @@ const SignIn = () => {
             required
             handleChange={handleChange}
             label='password'
-            onFocus={() => clearErrorMessage()}
+            onFocus={() => clearAuthErrorMessage()}
           />
           <div className='buttons-container'>
             <CustomButton text='Sign in' />
@@ -60,7 +60,7 @@ const SignIn = () => {
               className='register-link'
               onClick={() => {
                 history.push('/signup');
-                clearErrorMessage();
+                clearAuthErrorMessage();
               }
               }
             >

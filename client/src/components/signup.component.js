@@ -8,7 +8,7 @@ import ErrorDisplay from './error-display.component';
 import './signup.styles.scss';
 
 const SignUp = ({ history }) => {
-  const { authState, signUp, addAuthError, clearErrorMessage } = useContext(AuthContext);
+  const { authState, signUp, addAuthError, clearAuthErrorMessage } = useContext(AuthContext);
   const [userCredentials, setUserCredentials] = useState({ displayName: '', email: '', password: '', confirmPassword: '' })
   const { email, password, confirmPassword, displayName } = userCredentials;
 
@@ -31,7 +31,7 @@ const SignUp = ({ history }) => {
   }
 
   const onFocus = () => {
-    clearErrorMessage();
+    clearAuthErrorMessage();
   }
 
   return (
@@ -87,7 +87,7 @@ const SignUp = ({ history }) => {
               className='register-link'
               onClick={() => {
                 history.push('/signin');
-                clearErrorMessage();
+                clearAuthErrorMessage();
               }
               }
             >

@@ -2,9 +2,7 @@ import React, { useCallback, useReducer } from 'react';
 
 const initialState = {
   currentProject: {},
-  lists: {},
-  tasks: {},
-  listsOrder: [],
+  lists: [],
   members: [],
   errorMessage: null
 }
@@ -15,6 +13,22 @@ const boardReducer = (state, action) => {
       return {
         ...state,
         lists: [...state.lists, action.payload]
+      }
+    case 'delete_list':
+      return {
+        ...state,
+        lists: state.lists.filter(list => list._id !== action.payload._id)
+      }
+    case 'update_list_name':
+      return {
+        ...state,
+        lists: state.lists.map(list => {
+          if (list._id === action.payload._id) {
+            return action.payload;
+          } else {
+            return list;
+          }
+        })
       }
     case 'add_task':
       return {
@@ -32,11 +46,10 @@ const boardReducer = (state, action) => {
     case 'delete_task':
       return {
         ...state,
-        lists: state.list.map(list => {
+        lists: state.lists.map(list => {
           if (list._id === action.payload.list) {
-            let newList = [...list];
-            newList.tasks = newList.tasks.filter(task => task._id !== action.payload._id);
-            return newList;
+            let newTasks = list.tasks.filter(task => task._id !== action.payload._id);
+            return { ...list, tasks: newTasks };
           } else {
             return list;
           }
@@ -77,21 +90,30 @@ export const BoardProvider = ({ children }) => {
     dispatch({ type: 'add_list', payload: list });
   }, [])
 
+  const deleteList = useCallback(list => {
+    dispatch({ type: 'delete_list', payload: list });
+  }, [])
+
+  const updateListName = useCallback(list => {
+    dispatch({ type: 'update_list_name', payload: list });
+  }, [])
+
   const addTask = useCallback(task => {
     dispatch({ type: 'add_task', payload: task });
+  }, [])
+
+  const deleteTask = useCallback(task => {
+    dispatch({ type: 'delete_task', payload: task });
   }, [])
 
   const addBoardError = useCallback((errorMessage) => {
     dispatch({ type: 'add_board_error', payload: errorMessage });
   }, [])
 
-  const deleteTask = (task) => {
-    dispatch({ type: 'delete_task', payload: task });
-  }
 
-  const clearBoardErrorMessage = () => {
+  const clearBoardError = useCallback(() => {
     dispatch({ type: 'clear_board_error_message' });
-  };
+  }, []);
 
   const clearBoard = () => {
     dispatch({ type: 'clear_board' })
@@ -105,9 +127,11 @@ export const BoardProvider = ({ children }) => {
         addBoardError,
         addList,
         addTask,
-        clearBoardErrorMessage,
+        clearBoardError,
         fetchBoardData,
-        deleteTask
+        deleteTask,
+        deleteList,
+        updateListName
       }}
     >
       {children}

@@ -8,8 +8,12 @@
   border-radius: .1rem;
 
   &__header {
+    position: relative;
     display: flex;
     justify-content: space-between;
+    margin-bottom: 1.5rem;
+    font-size: 1.6rem;
+    font-weight: 500;
 
     .options-icon {
       opacity: 0;
@@ -21,12 +25,16 @@
       }
     }
 
+    .more-options {
+      top: 0;
+      right: 0;
+    }
+
   }
 
   &__name {
-    font-size: 1.6rem;
-    font-weight: 500;
-    margin-bottom: 1.5rem;
+    flex: 1;
+    cursor: text;
   }
 }
 

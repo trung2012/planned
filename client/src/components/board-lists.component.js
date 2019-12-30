@@ -3,7 +3,7 @@ import React, { useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { SocketContext } from '../context/SocketContext';
 import { BoardContext } from '../context/BoardContext';
-import BoardListAdd from './board-list-add.component';
+import BoardListNameForm from './board-list-name-form.component';
 import BoardList from './board-list.component';
 import './board-lists.styles.scss';
 
@@ -14,7 +14,7 @@ const BoardLists = () => {
   const { lists } = boardState;
   const [showListAdd, setShowListAdd] = useState(false);
 
-  const handleAddDismiss = (listName = '') => {
+  const handleAddSubmit = (listName = '') => {
     if (listName.length > 0) {
       socket.emit('add_list', {
         name: listName,
@@ -40,7 +40,7 @@ const BoardLists = () => {
 
       {
         showListAdd ?
-          <BoardListAdd submit={handleAddDismiss} />
+          <BoardListNameForm submit={handleAddSubmit} dismiss={() => setShowListAdd(false)} />
           :
           <button className='add-list' onClick={() => setShowListAdd(true)}>
             Add new list

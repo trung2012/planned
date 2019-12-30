@@ -8,7 +8,15 @@ import { SocketContext } from '../context/SocketContext';
 
 const ProjectDetails = () => {
   const socket = useContext(SocketContext);
-  const { fetchBoardData, addBoardError, addList, addTask } = useContext(BoardContext);
+  const {
+    fetchBoardData,
+    addBoardError,
+    addList,
+    addTask,
+    deleteTask,
+    deleteList,
+    updateListName
+  } = useContext(BoardContext);
   const { projectId } = useParams();
 
   useEffect(() => {
@@ -27,8 +35,20 @@ const ProjectDetails = () => {
       addList(newList);
     })
 
+    socket.on('list_deleted', deletedList => {
+      deleteList(deletedList);
+    })
+
+    socket.on('list_name_updated', list => {
+      updateListName(list);
+    })
+
     socket.on('task_added', newTask => {
       addTask(newTask);
+    })
+
+    socket.on('task_deleted', deletedTask => {
+      deleteTask(deletedTask);
     })
 
     socket.on('new_error', errorMessage => {
@@ -50,7 +70,10 @@ const ProjectDetails = () => {
       addList,
       addBoardError,
       addTask,
-      fetchBoardData
+      fetchBoardData,
+      deleteTask,
+      deleteList,
+      updateListName
     ])
 
   return (
