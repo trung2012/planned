@@ -4,7 +4,7 @@
   font-size: 1.4rem;
   width: 30rem;
   padding: .75rem;
-  margin: 0 1rem;
+  margin: 0 2rem 0 1rem;
   border-radius: .1rem;
 
   &__header {
@@ -26,7 +26,7 @@
     }
 
     .more-options {
-      top: 0;
+      top: 3rem;
       right: 0;
     }
 
@@ -34,6 +34,7 @@
 
   &__name {
     flex: 1;
+    padding: .5rem 1rem;
     cursor: text;
   }
 }

@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import FormInput from './form-input.component';
 import CustomButton from './custom-button.component';
@@ -10,6 +10,8 @@ import './signin.styles.scss';
 
 const SignIn = () => {
   const history = useHistory();
+  const location = useLocation();
+  let { from } = location.state || { from: { pathname: "/" } };
   const { authState, signIn, clearAuthErrorMessage } = useContext(AuthContext);
 
   const [userCredentials, setUserCredentials] = useState({ email: '', password: '' })
@@ -22,7 +24,7 @@ const SignIn = () => {
 
   const handleSubmit = event => {
     event.preventDefault();
-    signIn({ email, password }, () => history.push('/'));
+    signIn({ email, password }, () => history.replace(from));
   }
 
   return (

@@ -28,7 +28,7 @@ const ProjectListItem = ({ project }) => {
     <div className='project-list-item'>
       <Link
         to={`/projects/${project._id}`}
-        className='project-list-item__picture'
+        className='project-picture'
         style={{ backgroundColor: `${project.color}` }}
       >
         {project.name.substring(0, 1).toUpperCase()}

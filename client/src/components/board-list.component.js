@@ -33,6 +33,12 @@ const BoardList = ({ list }) => {
           showListOptions &&
           <MoreOptions dismiss={() => setShowListOptions(false)}>
             <div className='more-options'>
+              <div className='more-options-item' onClick={() => {
+                setShowListOptions(false);
+                setShowListNameEdit(true);
+              }}>
+                Rename
+              </div>
               <div className='more-options-item' onClick={handleDeleteClick}>Delete</div>
             </div>
           </MoreOptions>

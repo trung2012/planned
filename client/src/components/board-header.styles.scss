@@ -1,0 +1,14 @@
+@import '../sass/variables';
+@import '../sass/components';
+
+.board-header {
+  display: flex;
+  padding: 1rem 2rem;
+  background-color: $color-gray-light;
+  
+  &__project-options {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+}

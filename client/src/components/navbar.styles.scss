@@ -1,11 +1,12 @@
 @import '../sass/variables';
+@import '../sass/components';
 
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1.1rem 1.5rem;
-  margin-bottom: 8rem;
+  margin-bottom: 2rem;
   color: #fff;
   background-color: $color-gray-dark;
 
@@ -27,12 +28,12 @@
   }
 
   &__logo {
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 2rem;
+    height: 2rem;
   }
 
   &__logo-text {
-    font-size: 1.8rem;
+    font-size: 1.7rem;
     padding-left: 1rem;
   }
 
@@ -65,13 +66,4 @@
       }
     }
   }
-}
-
-.overlay {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 1;
 }

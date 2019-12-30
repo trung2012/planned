@@ -1,12 +1,14 @@
 import React, { useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 
-import BoardLists from './board-lists.component';
 import { BoardContext } from '../context/BoardContext';
-import './project-details.styles.scss';
 import { SocketContext } from '../context/SocketContext';
+import BoardLists from './board-lists.component';
+import BoardHeader from './board-header.component';
+import './project-details.styles.scss';
 
 const ProjectDetails = () => {
+  console.log('render')
   const socket = useContext(SocketContext);
   const {
     fetchBoardData,
@@ -78,9 +80,7 @@ const ProjectDetails = () => {
 
   return (
     <div className='project-details'>
-      <header className='project-details__header'>
-        {/* <div className='project-list-item__picture' style={{ backgroundColor: `${project.color}` }}>{project.name.substring(0, 1).toUpperCase()}</div> */}
-      </header>
+      <BoardHeader />
       <div className='project-details__main-content'>
         <BoardLists />
       </div>

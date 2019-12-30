@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { Route, Switch, Redirect, useHistory } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 
 import { AuthContext } from './context/AuthContext';
 import SignUp from './components/signup.component';
@@ -10,12 +10,11 @@ import PrivateRoute from './components/private-route.component';
 import ProjectDetails from './components/project-details.component';
 
 const App = () => {
-  const history = useHistory();
   const { loadUser } = useContext(AuthContext);
 
   useEffect(() => {
-    loadUser((history.push('/')));
-  }, [loadUser, history])
+    loadUser();
+  }, [loadUser])
 
   return (
     <div className="App">
