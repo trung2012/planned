@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import UserProfilePicture from './user-profile-picture.component';
 import MoreOptions from './more-options.component';
 import { AuthContext } from '../context/AuthContext';
 
@@ -29,13 +30,11 @@ const NavBar = () => {
             <div className='navbar__navigation--welcome-message'>
               Welcome, {user.name}
             </div>
-            <div
-              className='navbar__navigation--profile-pic'
-              style={{ backgroundColor: `${user.color}` }}
+            <UserProfilePicture
+              backgroundColor={user.color}
+              initials={user.initials}
               onClick={() => setShowProfileOptions(!showProfileOptions)}
-            >
-              {user.initials}
-            </div>
+            />
             {
               showProfileOptions &&
               <MoreOptions dismiss={() => setShowProfileOptions(false)}>

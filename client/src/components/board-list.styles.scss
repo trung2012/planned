@@ -12,8 +12,6 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 1.5rem;
-    font-size: 1.6rem;
-    font-weight: 500;
 
     .options-icon {
       opacity: 0;
@@ -34,6 +32,8 @@
 
   &__name {
     flex: 1;
+    font-size: 1.5rem;
+    font-weight: 500;
     padding: .5rem 1rem;
     cursor: text;
   }

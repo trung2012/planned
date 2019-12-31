@@ -38,9 +38,7 @@ const projectSchema = new mongoose.Schema({
 projectSchema.pre('remove', async function (next) {
   const project = this;
 
-  project.lists.forEach(async list => {
-    await Task.deleteMany({ list: list._id })
-  })
+  await Task.deleteMany({ project: project._id })
 
   await List.deleteMany({ project: project._id });
 

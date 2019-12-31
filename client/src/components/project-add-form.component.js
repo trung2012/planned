@@ -39,6 +39,7 @@ const ProjectAddForm = ({ dismiss }) => {
             event.preventDefault();
           }
         }}
+        maxLength={27}
       />
       <textarea
         name='projectDescription'
@@ -47,6 +48,7 @@ const ProjectAddForm = ({ dismiss }) => {
         placeholder='Description'
         value={projectDescription}
         onChange={handleChange}
+        maxLength={60}
       />
       <div className='project-add-form__buttons'>
         <CustomButton text='Create' onClick={handleSubmit} />

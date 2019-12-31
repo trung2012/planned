@@ -1,0 +1,14 @@
+@import '../sass/variables';
+
+.board-members-dropdown-item {
+  display: flex;  
+  padding: 1rem;
+
+  &:hover {
+    background-color: $color-gray-extra-light;
+  }
+
+  &__user-name {
+    margin-left: 1rem;
+  }
+}

@@ -2,6 +2,7 @@ const express = require('express')
 const auth = require('../../middleware/auth');
 const router = new express.Router();
 
+const List = require('../../models/List');
 const Project = require('../../models/Project');
 const getRandomColor = require('../../utils/getRandomColor')
 
@@ -27,9 +28,17 @@ router.post('/create', auth, async (req, res) => {
 
       const project = await newProject.save();
 
+      const defaultList = new List({
+        name: 'To Do',
+        project: project._id
+      })
+
+      await defaultList.save();
+
       res.status(201).send(project)
     }
   } catch (err) {
+    console.log(err)
     res.status(500).send('Internal Server Error. Please try again')
   }
 })

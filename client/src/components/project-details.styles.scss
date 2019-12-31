@@ -1,10 +1,10 @@
 @import '../sass/variables';
 
-.project-details {
-
+.project-details {  
+  padding: .5rem 2rem;
+  
   &__main-content {
     display: flex;
     align-items: flex-start;
-    padding-left: 2rem;
   }
 }

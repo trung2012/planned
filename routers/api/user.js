@@ -118,8 +118,17 @@ router.get('/', auth, async (req, res) => {
 
 router.get('/all', auth, async (req, res) => {
   try {
+    const skip = parseInt(req.query.skip);
+    const limit = parseInt(req.query.limit);
+    const options = req.query.name ? { 'name': { $regex: req.query.name, $options: 'i' } } : null;
+
     if (req.user) {
-      const users = await User.find().populate('projects');
+      const users = await User.find(options)
+        .limit(limit)
+        .skip(skip)
+        .populate({
+          path: 'projects',
+        });
       return res.status(200).send(users)
     } else {
       throw new Error('Invalid request')

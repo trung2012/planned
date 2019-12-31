@@ -1,12 +1,12 @@
 import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 
+import { ProjectContext } from '../context/ProjectContext';
 import { ReactComponent as Options } from '../assets/options.svg';
 import Modal from './modal.component';
 import MoreOptions from './more-options.component';
-import { ProjectContext } from '../context/ProjectContext';
+import ItemDelete from './item-delete.component';
 import './project-list-item.styles.scss';
-import ProjectDelete from './project-delete.component';
 
 
 const ProjectListItem = ({ project }) => {
@@ -61,7 +61,11 @@ const ProjectListItem = ({ project }) => {
           modalTitle='Delete project'
           dismiss={() => setShowDeleteModal(false)}
         >
-          <ProjectDelete confirm={handleDeleteProject} dismiss={() => setShowDeleteModal(false)} />
+          <ItemDelete
+            confirm={handleDeleteProject}
+            dismiss={() => setShowDeleteModal(false)}
+            type='project'
+          />
         </Modal>
       }
     </div >

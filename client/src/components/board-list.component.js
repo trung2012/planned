@@ -2,9 +2,11 @@ import React, { useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { SocketContext } from '../context/SocketContext';
+import Modal from './modal.component';
 import BoardTasks from './board-tasks.component';
 import MoreOptions from './more-options.component';
 import BoardListNameForm from './board-list-name-form.component';
+import ItemDelete from './item-delete.component';
 import { ReactComponent as OptionsIcon } from '../assets/options.svg';
 import './board-list.styles.scss';
 
@@ -13,10 +15,11 @@ const BoardList = ({ list }) => {
   const socket = useContext(SocketContext);
   const [showListOptions, setShowListOptions] = useState(false);
   const [showListNameEdit, setShowListNameEdit] = useState(false);
+  const [showListDeleteConfirm, setShowListDeleteConfirm] = useState(false);
 
   const handleDeleteClick = () => {
     socket.emit('delete_list', { listId: list._id, projectId });
-    setShowListOptions(false);
+    setShowListDeleteConfirm(false);
   }
 
   const handleEditName = (listName) => {
@@ -39,7 +42,13 @@ const BoardList = ({ list }) => {
               }}>
                 Rename
               </div>
-              <div className='more-options-item' onClick={handleDeleteClick}>Delete</div>
+              <div className='more-options-item' onClick={() => {
+                setShowListDeleteConfirm(true)
+                setShowListOptions(false);
+              }}
+              >
+                Delete
+              </div>
             </div>
           </MoreOptions>
         }
@@ -51,6 +60,19 @@ const BoardList = ({ list }) => {
               <h4 className='board-list__name' onClick={() => setShowListNameEdit(true)}>{list.name}</h4>
               <OptionsIcon className='options-icon' onClick={() => setShowListOptions(true)} />
             </React.Fragment>
+        }
+        {
+          showListDeleteConfirm &&
+          <Modal
+            modalTitle='Delete project'
+            dismiss={() => setShowListDeleteConfirm(false)}
+          >
+            <ItemDelete
+              confirm={handleDeleteClick}
+              dismiss={() => setShowListDeleteConfirm(false)}
+              type='list'
+            />
+          </Modal>
         }
       </div>
       <BoardTasks list={list} />

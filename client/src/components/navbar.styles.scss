@@ -5,7 +5,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.1rem 1.5rem;
+  padding: 1rem 1.5rem;
   margin-bottom: 2rem;
   color: #fff;
   background-color: $color-gray-dark;
@@ -40,30 +40,9 @@
   &__navigation {
     display: flex;
     align-items: center;
-
-    &--profile-pic {
-      display: flex;
-      position: relative;
-      justify-content: center;
-      align-items: center;
-      height: 3.5rem;
-      width: 3.5rem;
-      color: #fff;
-      background-color: orangered;
-      padding: .9rem;
-      margin-left: 2rem;
-      border-radius: 50%;
-      cursor: pointer;
-      letter-spacing: 1px;
-      transition: transform .2s;
-
-      &:active {
-        transform: scale(.95);
-      }
-
-      &:hover {
-        opacity: .8;
-      }
+    
+    &--welcome-message {
+      margin-right: 2rem;
     }
   }
 }

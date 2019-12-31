@@ -1,0 +1,15 @@
+.board-members-display {  
+  display: flex;
+  align-items: center;
+  padding: .75rem;
+  cursor: pointer;
+
+  &__member {
+    margin: 0 .2rem;
+  }
+}
+
+.remaining-members-count {
+  font-size: 1.6rem;
+  margin-left: .3rem;
+}

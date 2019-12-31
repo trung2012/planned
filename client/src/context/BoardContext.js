@@ -9,6 +9,11 @@ const initialState = {
 
 const boardReducer = (state, action) => {
   switch (action.type) {
+    case 'fetch_board_data':
+      return {
+        ...initialState,
+        ...action.payload
+      };
     case 'add_list':
       return {
         ...state,
@@ -54,11 +59,6 @@ const boardReducer = (state, action) => {
             return list;
           }
         })
-      }
-    case 'fetch_board_data':
-      return {
-        ...state,
-        ...action.payload
       }
     case 'add_board_error':
       return {
