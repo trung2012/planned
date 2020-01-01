@@ -2,10 +2,11 @@
 
 .board-list {
   font-size: 1.4rem;
-  width: 30rem;
+  min-width: 30rem;
   padding: .75rem;
   margin: 0 2rem 0 1rem;
   border-radius: .1rem;
+  flex-shrink: 0;
 
   &__header {
     position: relative;

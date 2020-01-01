@@ -11,6 +11,11 @@
   animation: fadeFromTop .2s;
   z-index: 100;
 
+  &__list {
+    margin-top: 1rem;
+    overflow-y: auto;
+  }
+
   h3 {
     font-size: 1.8rem;
     font-weight: 500;

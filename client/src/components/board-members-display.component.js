@@ -4,7 +4,7 @@ import UserProfilePicture from './user-profile-picture.component';
 
 import './board-members-display.styles.scss';
 
-const BoardMembersDisplay = ({ members }) => {
+const BoardMembersDisplay = ({ members, showMembersDropdown }) => {
   return (
     <div className='board-members-display'>
       {
@@ -25,7 +25,7 @@ const BoardMembersDisplay = ({ members }) => {
             );
           })
       }
-      <span className='remaining-members-count'>
+      <span className='remaining-members-count' onClick={showMembersDropdown}>
         {members.length > 4 && `+ ${members.length - 4}`}
       </span>
     </div>

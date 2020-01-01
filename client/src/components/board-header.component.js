@@ -32,7 +32,7 @@ const BoardHeader = () => {
           <div className='board-header__project-options__nav__item'>Chart</div>
         </div>
         <div className='board-header__project-options--filters'>
-          <BoardMembersDisplay members={members} />
+          <BoardMembersDisplay members={members} showMembersDropdown={() => setShowMembersListDropdown(!showMembersListDropdown)} />
           <div className='project-filters'>
             <div className='project-filters__item project-filters__item--members' onClick={() => setShowMembersListDropdown(!showMembersListDropdown)}>
               <span>Members</span>

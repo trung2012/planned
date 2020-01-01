@@ -8,7 +8,6 @@ import BoardHeader from './board-header.component';
 import './project-details.styles.scss';
 
 const ProjectDetails = () => {
-  console.log('render')
   const socket = useContext(SocketContext);
   const {
     fetchBoardData,

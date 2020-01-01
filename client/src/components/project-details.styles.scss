@@ -1,7 +1,9 @@
 @import '../sass/variables';
 
-.project-details {  
-  padding: .5rem 2rem;
+.project-details {
+  padding: .5rem 2rem;  
+  height: calc(100vh - 75px);
+  overflow-x: auto;
   
   &__main-content {
     display: flex;
