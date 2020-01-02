@@ -11,7 +11,7 @@ import ProjectAddForm from './project-add-form.component';
 
 const ProjectOverview = () => {
   const { projectState, fetchProjects } = useContext(ProjectContext);
-  const { projects } = projectState;
+  const { projects, isLoading } = projectState;
   const [showCreateProjectModal, setShowCreateProjectModal] = useState(false);
 
   useEffect(() => {
@@ -19,7 +19,8 @@ const ProjectOverview = () => {
   }, [fetchProjects])
 
   return (
-    projects ?
+    isLoading ? <Spinner />
+      :
       <div className='project-overview'>
         {
           showCreateProjectModal &&
@@ -37,7 +38,6 @@ const ProjectOverview = () => {
         </div>
         <ProjectList projects={projects} />
       </div>
-      : <Spinner />
   );
 }
 

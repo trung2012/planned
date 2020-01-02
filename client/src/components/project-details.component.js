@@ -6,23 +6,27 @@ import { SocketContext } from '../context/SocketContext';
 import BoardLists from './board-lists.component';
 import BoardHeader from './board-header.component';
 import './project-details.styles.scss';
+import Spinner from './spinner.component';
 
 const ProjectDetails = () => {
   const socket = useContext(SocketContext);
   const {
+    boardState,
     fetchBoardData,
+    fetchBoardDataStart,
     addBoardError,
     addList,
     addTask,
     deleteTask,
     deleteList,
-    updateListName
+    updateListName,
   } = useContext(BoardContext);
   const { projectId } = useParams();
 
   useEffect(() => {
     socket.emit('join', projectId);
     const fetchData = () => {
+      fetchBoardDataStart();
       socket.emit('initial_data', projectId);
     }
 
@@ -58,10 +62,13 @@ const ProjectDetails = () => {
 
     return () => {
       socket.emit('leave', projectId);
-      socket.off('data_updated')
-      socket.off('list_added')
-      socket.off('task_added')
-      socket.off('new_error')
+      socket.off('data_updated');
+      socket.off('list_added');
+      socket.off('list_deleted');
+      socket.off('list_name_updated');
+      socket.off('task_added');
+      socket.off('task_deleted');
+      socket.off('new_error');
     }
 
   },
@@ -72,6 +79,7 @@ const ProjectDetails = () => {
       addBoardError,
       addTask,
       fetchBoardData,
+      fetchBoardDataStart,
       deleteTask,
       deleteList,
       updateListName
@@ -79,10 +87,17 @@ const ProjectDetails = () => {
 
   return (
     <div className='project-details'>
-      <BoardHeader />
-      <div className='project-details__main-content'>
-        <BoardLists />
-      </div>
+      {
+        boardState.isLoading ?
+          <Spinner />
+          :
+          <React.Fragment>
+            <BoardHeader />
+            <div className='project-details__main-content'>
+              <BoardLists />
+            </div>
+          </React.Fragment>
+      }
     </div>
   );
 }

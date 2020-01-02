@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 
 import { ProjectContext } from '../context/ProjectContext';
-import { ReactComponent as Options } from '../assets/options.svg';
+import { ReactComponent as OptionsIcon } from '../assets/options.svg';
 import Modal from './modal.component';
 import MoreOptions from './more-options.component';
 import ItemDelete from './item-delete.component';
@@ -36,12 +36,12 @@ const ProjectListItem = ({ project }) => {
       <div className='project-list-item__content'>
         <div className='project-list-item__content--top'>
           <Link to={`/projects/${project._id}`} className='project-list-item__name'>{project.name}</Link>
-          <Options className='project-list-item__options' onClick={() => setShowProjectOptions(!showProjectOptions)} />
+          <OptionsIcon className='options-icon' onClick={() => setShowProjectOptions(!showProjectOptions)} />
         </div>
         <Link to={`/projects/${project._id}`} className='project-list-item__description'>
           {
-            project.description.length > 30 ?
-              project.description.substring(0, 30) + '...'
+            project.description.length > 32 ?
+              project.description.substring(0, 32) + '...'
               : project.description
           }
         </Link>
@@ -49,10 +49,8 @@ const ProjectListItem = ({ project }) => {
       {
         showProjectOptions &&
         <MoreOptions dismiss={() => setShowProjectOptions(false)}>
-          <div className='more-options'>
-            <div className='more-options-item' onClick={handleDeleteClick}>Delete</div>
-            <div className='more-options-item'>Add to favorite</div>
-          </div>
+          <div className='more-options-item' onClick={handleDeleteClick}>Delete</div>
+          <div className='more-options-item'>Add to favorite</div>
         </MoreOptions>
       }
       {

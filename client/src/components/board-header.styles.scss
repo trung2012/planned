@@ -39,8 +39,8 @@
     width: 100%;
 
     &__nav {
+      flex: 1 0 15rem;
       display: flex;
-      padding-top: 1rem;
       margin-left: 3rem;
 
       &__item,

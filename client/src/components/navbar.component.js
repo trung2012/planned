@@ -38,11 +38,9 @@ const NavBar = () => {
             {
               showProfileOptions &&
               <MoreOptions dismiss={() => setShowProfileOptions(false)}>
-                <div className='more-options'>
-                  <div className='more-options-item'>My account</div>
-                  <div className='more-options-item'>Change Password</div>
-                  <div className='more-options-item' onClick={handleSignOut}>Sign out</div>
-                </div>
+                <div className='more-options-item'>My account</div>
+                <div className='more-options-item'>Change Password</div>
+                <div className='more-options-item' onClick={handleSignOut}>Sign out</div>
               </MoreOptions>
             }
           </React.Fragment>

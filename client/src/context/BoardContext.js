@@ -1,19 +1,36 @@
 import React, { useCallback, useReducer } from 'react';
+import axios from 'axios';
+
+import { generateRequestConfig } from '../utils/generateRequestConfig';
 
 const initialState = {
   currentProject: {},
   lists: [],
   members: [],
-  errorMessage: null
+  memberIds: [],
+  users: [],
+  errorMessage: null,
+  isLoading: false
 }
 
 const boardReducer = (state, action) => {
   switch (action.type) {
-    case 'fetch_board_data':
+    case 'fetching_data':
+      return {
+        ...state,
+        isLoading: true,
+      }
+    case 'fetch_board_data_complete':
       return {
         ...initialState,
-        ...action.payload
+        ...action.payload,
+        isLoading: false
       };
+    case 'fetch_user_complete':
+      return {
+        ...state,
+        users: action.payload.filter(user => !state.memberIds.includes(user._id))
+      }
     case 'add_list':
       return {
         ...state,
@@ -65,7 +82,7 @@ const boardReducer = (state, action) => {
         ...state,
         errorMessage: action.payload
       }
-    case 'clear_board_error_message':
+    case 'clear_board_error':
       return {
         ...state,
         errorMessage: null
@@ -82,8 +99,27 @@ export const BoardContext = React.createContext();
 export const BoardProvider = ({ children }) => {
   const [boardState, dispatch] = useReducer(boardReducer, initialState);
 
+  const fetchBoardDataStart = useCallback(() => {
+    dispatch({ type: 'fetching_data' });
+  }, [])
+
   const fetchBoardData = useCallback((data) => {
-    dispatch({ type: 'fetch_board_data', payload: data });
+    dispatch({ type: 'fetch_board_data_complete', payload: data });
+  }, [])
+
+  const fetchUsers = useCallback(async (userName, callback) => {
+    const requestConfig = generateRequestConfig();
+    if (requestConfig) {
+      try {
+        const response = await axios.get(`/api/users/all?name=${userName}`, requestConfig);
+        dispatch({ type: 'fetch_user_complete', payload: response.data });
+        if (callback) {
+          callback();
+        }
+      } catch (err) {
+        dispatch({ type: 'add_board_error', payload: err.response.data });
+      }
+    }
   }, [])
 
   const addList = useCallback((list) => {
@@ -110,9 +146,8 @@ export const BoardProvider = ({ children }) => {
     dispatch({ type: 'add_board_error', payload: errorMessage });
   }, [])
 
-
   const clearBoardError = useCallback(() => {
-    dispatch({ type: 'clear_board_error_message' });
+    dispatch({ type: 'clear_board_error' });
   }, []);
 
   const clearBoard = () => {
@@ -128,7 +163,9 @@ export const BoardProvider = ({ children }) => {
         addList,
         addTask,
         clearBoardError,
+        fetchBoardDataStart,
         fetchBoardData,
+        fetchUsers,
         deleteTask,
         deleteList,
         updateListName

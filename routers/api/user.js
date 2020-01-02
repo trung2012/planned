@@ -122,8 +122,7 @@ router.get('/all', auth, async (req, res) => {
     const limit = parseInt(req.query.limit);
     const options = req.query.name ? {
       $or: [
-        { 'name': { $regex: req.query.name, $options: 'i' } },
-        { 'email': { $regex: req.query.name, $options: 'i' } }
+        { 'name': { $regex: req.query.name, $options: 'i' } }
       ]
     } : null;
 

@@ -8,7 +8,13 @@ const projectReducer = (state, action) => {
     case 'fetch_projects':
       return {
         ...state,
-        projects: action.payload
+        projects: action.payload,
+        isLoading: false
+      }
+    case 'fetching_projects':
+      return {
+        ...state,
+        isLoading: true
       }
     case 'create_project':
       return {
@@ -40,13 +46,15 @@ export const ProjectContext = React.createContext();
 export const ProjectProvider = ({ children }) => {
   const [projectState, dispatch] = useReducer(projectReducer, {
     projects: [],
-    errorMessage: null
+    errorMessage: null,
+    isLoading: false
   });
 
   const fetchProjects = useCallback(async () => {
     const requestConfig = generateRequestConfig();
     if (requestConfig) {
       try {
+        dispatch({ type: 'fetching_projects' });
         const response = await axios.get('/api/projects/all', requestConfig);
         dispatch({ type: 'fetch_projects', payload: response.data })
       } catch (err) {

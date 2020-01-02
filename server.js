@@ -41,6 +41,7 @@ io.on('connection', (socket) => {
   socket.on('initial_data', async projectId => {
     try {
       const project = await Project.findById(projectId.toString());
+      const projectMemberIds = [...project.members];
       await project.populate({
         path: 'lists'
         ,
@@ -60,7 +61,8 @@ io.on('connection', (socket) => {
           owner: project.owner
         },
         lists: project.lists,
-        members: project.members
+        members: project.members,
+        memberIds: projectMemberIds
       };
 
       socket.emit('data_updated', data);

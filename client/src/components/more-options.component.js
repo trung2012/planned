@@ -6,7 +6,9 @@ const MoreOptions = ({ children, dismiss }) => {
   return (
     <React.Fragment>
       <div className='overlay' onClick={() => dismiss()}></div>
-      {children}
+      <div className='more-options'>
+        {children}
+      </div>
     </React.Fragment>
   );
 }
