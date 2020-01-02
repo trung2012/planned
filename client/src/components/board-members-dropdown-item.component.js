@@ -4,9 +4,9 @@ import UserProfilePicture from './user-profile-picture.component';
 
 import './board-members-dropdown-item.styles.scss';
 
-const BoardMembersDropdownItem = ({ member }) => {
+const BoardMembersDropdownItem = ({ member, onClick }) => {
   return (
-    <div className='board-members-dropdown-item'>
+    <div className='board-members-dropdown-item' onClick={onClick}>
       <UserProfilePicture
         backgroundColor={member.color}
         initials={member.initials}

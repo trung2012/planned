@@ -26,10 +26,22 @@ const boardReducer = (state, action) => {
         ...action.payload,
         isLoading: false
       };
-    case 'fetch_user_complete':
+    case 'fetch_users_complete':
       return {
         ...state,
         users: action.payload.filter(user => !state.memberIds.includes(user._id))
+      }
+    case 'add_member':
+      return {
+        ...state,
+        members: [...state.members, action.payload],
+        memberIds: [...state.memberIds, action.payload._id]
+      }
+    case 'delete_member':
+      return {
+        ...state,
+        members: state.members.filter(member => member._id !== action.payload),
+        memberIds: state.memberIds.filter(memberId => memberId !== action.payload)
       }
     case 'add_list':
       return {
@@ -112,7 +124,7 @@ export const BoardProvider = ({ children }) => {
     if (requestConfig) {
       try {
         const response = await axios.get(`/api/users/all?name=${userName}`, requestConfig);
-        dispatch({ type: 'fetch_user_complete', payload: response.data });
+        dispatch({ type: 'fetch_users_complete', payload: response.data });
         if (callback) {
           callback();
         }
@@ -120,6 +132,14 @@ export const BoardProvider = ({ children }) => {
         dispatch({ type: 'add_board_error', payload: err.response.data });
       }
     }
+  }, [])
+
+  const addMember = useCallback(user => {
+    dispatch({ type: 'add_member', payload: user });
+  }, [])
+
+  const deleteMember = useCallback(_id => {
+    dispatch({ type: 'delete_member', payload: _id });
   }, [])
 
   const addList = useCallback((list) => {
@@ -162,10 +182,12 @@ export const BoardProvider = ({ children }) => {
         addBoardError,
         addList,
         addTask,
+        addMember,
         clearBoardError,
         fetchBoardDataStart,
         fetchBoardData,
         fetchUsers,
+        deleteMember,
         deleteTask,
         deleteList,
         updateListName

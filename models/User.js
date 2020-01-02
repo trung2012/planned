@@ -29,6 +29,9 @@ const userSchema = new mongoose.Schema({
   color: {
     type: String,
     default: '#0b61d9'
+  },
+  avatarUrl: {
+    type: String
   }
 }, { id: false })
 
@@ -42,9 +45,9 @@ userSchema.set('toObject', { virtuals: true });
 userSchema.set('toJSON', { virtuals: true });
 
 userSchema.methods.toJSON = function () {
-  const { _id, name, email, initials, color } = this;
+  const { _id, name, email, initials, color, avatarUrl } = this;
 
-  return { _id, name, email, initials, color }
+  return { _id, name, email, initials, color, avatarUrl }
 }
 
 const User = mongoose.model('User', userSchema);

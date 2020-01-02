@@ -24,7 +24,39 @@
   }
 
   .more-options {
-    min-width: 20rem;
+    top: 8.3rem;
+    right: 0;
+    width: 100%;
     padding: 1rem;
+
+    .board-members-dropdown-item {
+      cursor: pointer;
+
+      &:hover {
+        background-color: $color-gray-extra-light;
+      }
+    }
   }
+
+  &__list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .board-members-dropdown-item {
+      flex: 1;
+    }
+
+    .remove-user-icon {
+      height: 2.5em;
+      width: 2.5em;
+      cursor: pointer;
+      padding: .75rem;
+      border-radius: .3rem;
+
+      &:hover {
+        background-color: $color-gray-extra-light;
+      }
+    }
+  }  
 }

@@ -17,6 +17,8 @@ const ProjectDetails = () => {
     addBoardError,
     addList,
     addTask,
+    addMember,
+    deleteMember,
     deleteTask,
     deleteList,
     updateListName,
@@ -34,6 +36,15 @@ const ProjectDetails = () => {
 
     socket.on('data_updated', data => {
       fetchBoardData(data);
+    })
+
+    socket.on('member_added', member => {
+      addMember(member);
+    })
+
+    socket.on('member_deleted', _id => {
+      console.log(_id)
+      deleteMember(_id);
     })
 
     socket.on('list_added', newList => {
@@ -63,6 +74,8 @@ const ProjectDetails = () => {
     return () => {
       socket.emit('leave', projectId);
       socket.off('data_updated');
+      socket.off('member_added');
+      socket.off('member_deleted');
       socket.off('list_added');
       socket.off('list_deleted');
       socket.off('list_name_updated');
@@ -78,6 +91,8 @@ const ProjectDetails = () => {
       addList,
       addBoardError,
       addTask,
+      addMember,
+      deleteMember,
       fetchBoardData,
       fetchBoardDataStart,
       deleteTask,

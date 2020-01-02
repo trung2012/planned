@@ -67,7 +67,32 @@ io.on('connection', (socket) => {
 
       socket.emit('data_updated', data);
     } catch (err) {
-      socket.emit('new_error', 'Internal Server Error. Please try again');
+      socket.emit('new_error', 'Error loading data. Please try again');
+    }
+  })
+
+  socket.on('add_member', async ({ user, projectId }) => {
+    try {
+      const project = await Project.findById(projectId);
+      project.members.push(user._id);
+      project.save();
+
+      io.in(projectId).emit('member_added', user);
+    } catch (err) {
+      socket.emit('new_error', 'Error adding project member. Please try again');
+    }
+  })
+
+  socket.on('delete_member', async ({ _id, projectId }) => {
+    try {
+      const project = await Project.findById(projectId);
+      project.members = project.members.filter(member => member._id.toString() !== _id);
+      project.save();
+
+      io.in(projectId).emit('member_deleted', _id);
+    } catch (err) {
+      console.log(err)
+      socket.emit('new_error', 'Error deleting project member. Please try again');
     }
   })
 
@@ -84,10 +109,9 @@ io.on('connection', (socket) => {
       project.lists.push(list._id);
       await project.save();
 
-      io.in(projectId).emit('list_added', list)
-      //io.in(projectId).emit('data_updated');
+      io.in(projectId).emit('list_added', list);
     } catch (err) {
-      socket.emit('new_error', 'Internal Server Error. Please try again');
+      socket.emit('new_error', 'Error adding list. Please try again');
     }
   })
 
@@ -98,10 +122,9 @@ io.on('connection', (socket) => {
       await list.remove();
 
       io.in(projectId).emit('list_deleted', list);
-      //io.in(projectId).emit('data_updated');
     } catch (err) {
       console.log(err)
-      socket.emit('new_error', 'Error deleting list');
+      socket.emit('new_error', 'Error deleting list. Please try again');
     }
   })
 
@@ -112,7 +135,6 @@ io.on('connection', (socket) => {
       await list.save();
 
       io.in(projectId).emit('list_name_updated', list);
-      //io.in(projectId).emit('data_updated');
     } catch (err) {
       socket.emit('new_error', 'Error updating list name');
     }
@@ -131,7 +153,6 @@ io.on('connection', (socket) => {
       await list.save();
 
       io.in(projectId).emit('task_added', task);
-      //io.in(projectId).emit('data_updated');
 
     } catch (err) {
       console.log(err)
@@ -145,7 +166,6 @@ io.on('connection', (socket) => {
       await task.remove();
 
       io.in(projectId).emit('task_deleted', task);
-      //io.in(projectId).emit('data_updated');
     } catch (err) {
       console.log(err)
       socket.emit('new_error', 'Error deleting task');
