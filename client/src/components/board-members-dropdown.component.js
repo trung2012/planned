@@ -2,7 +2,6 @@ import React, { useState, useContext, useEffect } from 'react';
 
 import useDebounce from '../utils/useDebounce';
 import CustomInput from './custom-input.component';
-import { ReactComponent as SearchIcon } from '../assets/search.svg';
 import BoardMembersDropdownItem from './board-members-dropdown-item.component';
 import { BoardContext } from '../context/BoardContext';
 import MoreOptions from './more-options.component';
@@ -26,24 +25,17 @@ const BoardMembersDropdown = ({ members, dismiss }) => {
     }
   }, [debouncedSearchInput, fetchUsers])
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-  }
-
   return (
     <React.Fragment>
       <div className='overlay' onClick={dismiss}></div>
       <div className='board-members-dropdown'>
         <h3>Members</h3>
-        <form onSubmit={handleSubmit}>
-          <CustomInput
-            placeholder='Search for a user'
-            value={memberName}
-            onChange={handleChange}
-            autoFocus
-          />
-          <SearchIcon className='search-icon' onClick={handleSubmit}>Search</SearchIcon>
-        </form>
+        <CustomInput
+          placeholder='Search for a user'
+          value={memberName}
+          onChange={handleChange}
+          autoFocus
+        />
         {
           showMemberSearchResults &&
           <MoreOptions dismiss={() => setShowMemberSearchResults(false)}>
