@@ -33,25 +33,25 @@ listSchema.pre('remove', async function (next) {
   next();
 })
 
-listSchema.pre('findOne', function (next) {
-  this.populate({
-    path: 'tasks',
-    model: 'Task',
-    populate: [
-      {
-        path: 'assignee',
-        model: 'User'
-      },
-      {
-        path: 'list',
-        model: 'List',
-        select: '-tasks -project'
-      }
-    ]
-  })
+// listSchema.pre('findOne', function (next) {
+//   this.populate({
+//     path: 'tasks',
+//     model: 'Task',
+//     populate: [
+//       {
+//         path: 'assignee',
+//         model: 'User'
+//       },
+//       {
+//         path: 'list',
+//         model: 'List',
+//         select: '-tasks -project'
+//       }
+//     ]
+//   })
 
-  next();
-})
+//   next();
+// })
 
 
 const List = mongoose.model('List', listSchema);

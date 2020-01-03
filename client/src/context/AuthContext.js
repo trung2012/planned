@@ -29,17 +29,14 @@ export const AuthProvider = ({ children }) => {
     user: null
   });
 
-  const loadUser = useCallback(async (callback) => {
+  const loadUser = useCallback(async (redirectToSignIn) => {
     const requestConfig = generateRequestConfig();
     if (requestConfig) {
       try {
         const response = await axios.get('/api/users', requestConfig);
         dispatch({ type: 'load_user', payload: { token: response.data.token, user: response.data.user } });
-        if (callback) {
-          callback();
-        }
       } catch (err) {
-        dispatch({ type: 'add_auth_error', payload: err.response.data });
+        redirectToSignIn();
       }
     }
   }, [])
@@ -87,9 +84,9 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: 'add_auth_error', payload: errorMessage });
   }
 
-  const clearAuthErrorMessage = () => {
+  const clearAuthErrorMessage = useCallback(() => {
     dispatch({ type: 'clear_auth_error_message' });
-  };
+  }, []);
 
   return (
     <AuthContext.Provider value={{ authState, signIn, signOut, signUp, addAuthError, clearAuthErrorMessage, loadUser }}>

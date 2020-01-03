@@ -143,7 +143,7 @@ io.on('connection', (socket) => {
       list.name = listName;
       await list.save();
 
-      io.in(projectId).emit('list_name_updated', list);
+      io.in(projectId).emit('list_name_updated', 'List name updated');
     } catch (err) {
       socket.emit('new_error', 'Error updating list name');
     }
@@ -157,11 +157,21 @@ io.on('connection', (socket) => {
       })
 
       await newTask.save();
-      const list = await List.findById(newTask.list);
-      list.tasks.push(newTask._id);
-      await list.save();
+      await List.updateOne(
+        { _id: newTask.list },
+        { $push: { tasks: newTask._id } },
+        { new: true }
+      )
 
-      const task = await Task.findById(newTask._id);
+      const task = await Task.findById(newTask._id).populate([
+        {
+          path: 'assignee'
+        },
+        {
+          path: 'list',
+          select: '-tasks -project'
+        }
+      ]);
 
       io.in(projectId).emit('task_added', task);
     } catch (err) {

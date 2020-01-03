@@ -8,11 +8,13 @@ import MoreOptions from './more-options.component';
 import BoardListNameForm from './board-list-name-form.component';
 import ItemDelete from './item-delete.component';
 import { ReactComponent as OptionsIcon } from '../assets/options.svg';
+import { BoardContext } from '../context/BoardContext';
 import './board-list.styles.scss';
 
 const BoardList = ({ list }) => {
   const { projectId } = useParams();
   const socket = useContext(SocketContext);
+  const { updateListName } = useContext(BoardContext);
   const [showListOptions, setShowListOptions] = useState(false);
   const [showListNameEdit, setShowListNameEdit] = useState(false);
   const [showListDeleteConfirm, setShowListDeleteConfirm] = useState(false);
@@ -25,6 +27,7 @@ const BoardList = ({ list }) => {
   const handleEditName = (listName) => {
     if (listName !== list.name) {
       socket.emit('edit_list_name', { listId: list._id, listName, projectId });
+      updateListName({ _id: list._id, name: listName });
     }
     setShowListNameEdit(false);
   }

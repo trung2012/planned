@@ -47,7 +47,7 @@ taskSchema.pre('remove', async function (next) {
   const task = this;
 
   await require('./List').updateOne(
-    { _id: task.list._id },
+    { _id: task.list },
     { $pull: { tasks: task._id } },
     { new: true }
   )
@@ -55,21 +55,21 @@ taskSchema.pre('remove', async function (next) {
   next();
 })
 
-taskSchema.pre('findOne', function (next) {
-  this.populate([
-    {
-      path: 'assignee',
-      model: 'User'
-    },
-    {
-      path: 'list',
-      model: 'List',
-      select: '-tasks -project'
-    }
-  ])
+// taskSchema.pre('findOne', function (next) {
+//   this.populate([
+//     {
+//       path: 'assignee',
+//       model: 'User'
+//     },
+//     {
+//       path: 'list',
+//       model: 'List',
+//       select: '-tasks -project'
+//     }
+//   ])
 
-  next();
-})
+//   next();
+// })
 
 const Task = mongoose.model('Task', taskSchema);
 

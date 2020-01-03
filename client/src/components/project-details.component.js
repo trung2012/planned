@@ -54,10 +54,6 @@ const ProjectDetails = () => {
       deleteList(deletedList);
     })
 
-    socket.on('list_name_updated', list => {
-      updateListName(list);
-    })
-
     socket.on('task_added', newTask => {
       addTask(newTask);
     })
@@ -77,7 +73,6 @@ const ProjectDetails = () => {
       socket.off('member_deleted');
       socket.off('list_added');
       socket.off('list_deleted');
-      socket.off('list_name_updated');
       socket.off('task_added');
       socket.off('task_deleted');
       socket.off('new_error');
