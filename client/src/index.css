@@ -35,3 +35,13 @@ a {
 textarea {
   resize: none;
 }
+
+::-webkit-scrollbar {
+  width: 1rem;
+  height: 1rem;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #c8c6c4;
+  border-radius: 1rem;
+}

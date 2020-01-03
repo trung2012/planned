@@ -4,24 +4,35 @@
 .board-task {
   position: relative;
   padding: .75rem;
+  padding-left: 1.25rem;
   background-color: #fff;
   margin-bottom: 1rem;
   border: 1px solid transparent;
   box-shadow: $box-shadow-primary;
+  cursor: pointer;
 
   &:hover {
     box-shadow: $box-shadow-primary-hover;
   }
 
-  &__content {
-    position: relative;
+  &__heading {
+    margin-bottom: 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    span {
+      flex: 1;
+    }
+  }
+
+  &__content {
+    position: relative;
   }
 
   .more-options {
-    top: 100%;
+    top: 3rem;
     right: 0;
+    z-index: 100;
   }
 }

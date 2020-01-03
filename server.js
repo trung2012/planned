@@ -42,16 +42,7 @@ io.on('connection', (socket) => {
     try {
       const project = await Project.findById(projectId.toString());
       const projectMemberIds = [...project.members];
-      await project.populate({
-        path: 'lists'
-        ,
-        populate: {
-          path: 'tasks',
-          model: 'Task'
-        }
-      })
-        .populate('members', '-password')
-        .execPopulate();
+      await project.populate('members', '-password').execPopulate();
 
       const data = {
         currentProject: {
@@ -130,7 +121,7 @@ io.on('connection', (socket) => {
 
   socket.on('edit_list_name', async ({ listId, listName, projectId }) => {
     try {
-      const list = await List.findById(listId);
+      const list = await List.findById(listId).populate('tasks');
       list.name = listName;
       await list.save();
 
@@ -147,13 +138,14 @@ io.on('connection', (socket) => {
         project: projectId
       })
 
-      const task = await newTask.save();
-      const list = await List.findById(task.list);
-      list.tasks.push(task._id);
+      await newTask.save();
+      const list = await List.findById(newTask.list);
+      list.tasks.push(newTask._id);
       await list.save();
 
-      io.in(projectId).emit('task_added', task);
+      const task = await Task.findById(newTask._id);
 
+      io.in(projectId).emit('task_added', task);
     } catch (err) {
       console.log(err)
       socket.emit('new_error', 'Error adding task');

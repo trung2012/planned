@@ -14,12 +14,14 @@ const BoardHeader = () => {
   return (
     <div className='board-header'>
       <div className='board-header__project-info'>
-        <div
-          className='project-picture'
-          style={{ backgroundColor: `${project.color}` }}
-          title={project.name || null}
-        >
-          {project.name && project.name.substring(0, 1).toUpperCase()}
+        <div className='project-picture-container'>
+          <div
+            className='project-picture'
+            style={{ backgroundColor: `${project.color}` }}
+            title={project.name || null}
+          >
+            {project.name && project.name.substring(0, 1).toUpperCase()}
+          </div>
         </div>
         <div className='board-header__project-info--details'>
           <h3 className='board-header__project-info--details__name'>{project.name || ''}</h3>

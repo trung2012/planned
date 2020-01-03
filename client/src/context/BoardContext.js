@@ -68,7 +68,7 @@ const boardReducer = (state, action) => {
       return {
         ...state,
         lists: state.lists.map(list => {
-          if (list._id === action.payload.list) {
+          if (list._id === action.payload.list._id) {
             let newTasks = list.tasks;
             newTasks.push(action.payload);
             return { ...list, tasks: newTasks }
@@ -81,7 +81,7 @@ const boardReducer = (state, action) => {
       return {
         ...state,
         lists: state.lists.map(list => {
-          if (list._id === action.payload.list) {
+          if (list._id === action.payload.list._id) {
             let newTasks = list.tasks.filter(task => task._id !== action.payload._id);
             return { ...list, tasks: newTasks };
           } else {

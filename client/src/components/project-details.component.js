@@ -35,6 +35,7 @@ const ProjectDetails = () => {
     fetchData();
 
     socket.on('data_updated', data => {
+      console.log(data)
       fetchBoardData(data);
     })
 
@@ -43,7 +44,6 @@ const ProjectDetails = () => {
     })
 
     socket.on('member_deleted', _id => {
-      console.log(_id)
       deleteMember(_id);
     })
 

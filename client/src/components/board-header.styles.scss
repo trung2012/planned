@@ -14,10 +14,11 @@
       flex-direction: column;
       margin-left: .5rem;
       padding-top: 1rem;
-      width: 19rem;
+      min-width: 19rem;
+      width: 20rem;
       
       &__name {
-        font-size: 1.6rem;
+        font-size: 1.5rem;
         font-weight: 500;
         margin-bottom: .5rem;
       }

@@ -46,7 +46,7 @@ const BoardMembersDropdown = ({ members, dismiss }) => {
       <div className='board-members-dropdown'>
         <h3>Members</h3>
         <CustomInput
-          placeholder='Search for a user'
+          placeholder='Enter name to add member'
           value={memberName}
           onChange={handleChange}
           autoFocus
@@ -67,9 +67,9 @@ const BoardMembersDropdown = ({ members, dismiss }) => {
         <div className='board-members-dropdown__list'>
           {
             members.map(member => (
-              <div className='board-members-dropdown__list-item' key={member._id}>
+              <div className='board-members-dropdown__list-item' title={member.name} key={member._id}>
                 <BoardMembersDropdownItem member={member} />
-                <RemoveUserIcon className='remove-user-icon' onClick={() => handleDeleteMember(member._id)} />
+                <RemoveUserIcon className='remove-user-icon' title='Remove member' onClick={() => handleDeleteMember(member._id)} />
               </div>
             ))
           }

@@ -1,13 +1,6 @@
 const mongoose = require('mongoose');
 
 const taskSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String
-  },
   list: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'List',
@@ -17,6 +10,17 @@ const taskSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Project',
     required: true
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String
+  },
+  assignee: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
   },
   progress: {
     type: String,
@@ -28,9 +32,6 @@ const taskSchema = new mongoose.Schema({
   },
   due: {
     type: Date
-  },
-  note: {
-    type: String
   },
   createdAt: {
     type: Date,
@@ -45,11 +46,27 @@ const taskSchema = new mongoose.Schema({
 taskSchema.pre('remove', async function (next) {
   const task = this;
 
-  await require('./List').findByIdAndUpdate(
-    task.list,
+  await require('./List').updateOne(
+    { _id: task.list._id },
     { $pull: { tasks: task._id } },
     { new: true }
   )
+
+  next();
+})
+
+taskSchema.pre('findOne', function (next) {
+  this.populate([
+    {
+      path: 'assignee',
+      model: 'User'
+    },
+    {
+      path: 'list',
+      model: 'List',
+      select: '-tasks -project'
+    }
+  ])
 
   next();
 })

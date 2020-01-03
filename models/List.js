@@ -24,11 +24,31 @@ listSchema.pre('remove', async function (next) {
 
   await require('./Task').deleteMany({ list: list._id });
 
-  await require('./Project').findByIdAndUpdate(
-    list.project,
+  await require('./Project').updateOne(
+    { _id: list.project },
     { $pull: { lists: list._id } },
     { new: true }
   )
+
+  next();
+})
+
+listSchema.pre('findOne', function (next) {
+  this.populate({
+    path: 'tasks',
+    model: 'Task',
+    populate: [
+      {
+        path: 'assignee',
+        model: 'User'
+      },
+      {
+        path: 'list',
+        model: 'List',
+        select: '-tasks -project'
+      }
+    ]
+  })
 
   next();
 })

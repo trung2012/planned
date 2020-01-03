@@ -45,6 +45,30 @@ projectSchema.pre('remove', async function (next) {
   next();
 })
 
+projectSchema.pre('findOne', function (next) {
+  this.populate({
+    path: 'lists',
+    model: 'List',
+    populate: {
+      path: 'tasks',
+      model: 'Task',
+      populate: [
+        {
+          path: 'assignee',
+          model: 'User'
+        },
+        {
+          path: 'list',
+          model: 'List',
+          select: '-tasks -project'
+        }
+      ]
+    }
+  })
+
+  next();
+})
+
 const Project = mongoose.model('Project', projectSchema);
 
 module.exports = Project;

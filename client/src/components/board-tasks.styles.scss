@@ -11,6 +11,7 @@
     margin-bottom: 3rem;
     box-shadow: $box-shadow-primary;
     cursor: pointer;
+    z-index: 2;
   
     &:hover {
       box-shadow: $box-shadow-primary-hover;

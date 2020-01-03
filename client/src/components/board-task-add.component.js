@@ -18,7 +18,7 @@ const BoardTaskAdd = ({ submit, listId, dismiss }) => {
     } else {
       submit({
         name: newTaskName,
-        dueDate,
+        due: dueDate,
         list: listId
       });
     }
