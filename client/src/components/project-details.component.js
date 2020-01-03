@@ -35,7 +35,6 @@ const ProjectDetails = () => {
     fetchData();
 
     socket.on('data_updated', data => {
-      console.log(data)
       fetchBoardData(data);
     })
 

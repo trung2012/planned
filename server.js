@@ -40,7 +40,25 @@ io.on('connection', (socket) => {
 
   socket.on('initial_data', async projectId => {
     try {
-      const project = await Project.findById(projectId.toString());
+      const project = await Project.findById(projectId.toString()).populate({
+        path: 'lists',
+        model: 'List',
+        populate: {
+          path: 'tasks',
+          model: 'Task',
+          populate: [
+            {
+              path: 'assignee',
+              model: 'User'
+            },
+            {
+              path: 'list',
+              model: 'List',
+              select: '-tasks -project'
+            }
+          ]
+        }
+      });
       const projectMemberIds = [...project.members];
       await project.populate('members', '-password').execPopulate();
 
@@ -121,7 +139,7 @@ io.on('connection', (socket) => {
 
   socket.on('edit_list_name', async ({ listId, listName, projectId }) => {
     try {
-      const list = await List.findById(listId).populate('tasks');
+      const list = await List.findById(listId);
       list.name = listName;
       await list.save();
 
