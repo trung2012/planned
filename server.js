@@ -11,7 +11,6 @@ const projectRouter = require('./routers/api/project');
 const List = require('./models/List');
 const Project = require('./models/Project');
 const Task = require('./models/Task');
-const User = require('./models/User');
 
 const app = express();
 const server = http.createServer(app);
@@ -44,7 +43,18 @@ io.on('connection', (socket) => {
 
       const [project, lists] = await Promise.all([
         Project.findById(projectId).populate('members'),
-        List.find({ project: projectId }).populate('tasks')
+        List.find({ project: projectId }).populate({
+          path: 'tasks',
+          populate: [{
+            path: 'assignee',
+            select: '-password'
+          },
+          {
+            path: 'list',
+            select: '-tasks -project'
+          }
+          ]
+        })
         // , Task.find({ project: projectId })
       ])
 
@@ -146,7 +156,7 @@ io.on('connection', (socket) => {
       list.name = listName;
       await list.save();
 
-      io.in(projectId).emit('list_name_updated', 'List name updated');
+      io.to(projectId).emit('list_name_updated', list);
     } catch (err) {
       socket.emit('new_error', 'Error updating list name');
     }

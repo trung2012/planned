@@ -54,6 +54,10 @@ const ProjectDetails = () => {
       deleteList(deletedList);
     })
 
+    socket.on('list_name_updated', list => {
+      updateListName(list);
+    })
+
     socket.on('task_added', newTask => {
       addTask(newTask);
     })
