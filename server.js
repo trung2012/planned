@@ -11,6 +11,7 @@ const projectRouter = require('./routers/api/project');
 const List = require('./models/List');
 const Project = require('./models/Project');
 const Task = require('./models/Task');
+const User = require('./models/User');
 
 const app = express();
 const server = http.createServer(app);
@@ -40,27 +41,24 @@ io.on('connection', (socket) => {
 
   socket.on('initial_data', async projectId => {
     try {
-      const project = await Project.findById(projectId.toString()).populate({
-        path: 'lists',
-        model: 'List',
-        populate: {
-          path: 'tasks',
-          model: 'Task',
-          populate: [
-            {
-              path: 'assignee',
-              model: 'User'
-            },
-            {
-              path: 'list',
-              model: 'List',
-              select: '-tasks -project'
-            }
-          ]
-        }
-      });
-      const projectMemberIds = [...project.members];
-      await project.populate('members', '-password').execPopulate();
+
+      const [project, lists] = await Promise.all([
+        Project.findById(projectId).populate('members'),
+        List.find({ project: projectId }).populate('tasks')
+        // , Task.find({ project: projectId })
+      ])
+
+      const memberIds = project.members.map(member => member._id)
+
+      // const listsMap = lists.reduce((acc, list) => {
+      //   acc[list._id] = list;
+      //   return acc;
+      // }, {})
+
+      // const tasksMap = tasks.reduce((acc, task) => {
+      //   acc[task._id] = task;
+      //   return acc;
+      // }, {})
 
       const data = {
         currentProject: {
@@ -69,34 +67,38 @@ io.on('connection', (socket) => {
           color: project.color,
           owner: project.owner
         },
-        lists: project.lists,
+        lists,
         members: project.members,
-        memberIds: projectMemberIds
+        memberIds
       };
 
       socket.emit('data_updated', data);
     } catch (err) {
+      console.log(err)
       socket.emit('new_error', 'Error loading data. Please try again');
     }
   })
 
   socket.on('add_member', async ({ user, projectId }) => {
     try {
-      const project = await Project.findById(projectId);
-      project.members.push(user._id);
-      project.save();
+      await Project.updateOne(
+        { _id: projectId },
+        { $push: { members: user._id } }
+      );
 
       io.in(projectId).emit('member_added', user);
     } catch (err) {
+      console.log(err)
       socket.emit('new_error', 'Error adding project member. Please try again');
     }
   })
 
   socket.on('delete_member', async ({ _id, projectId }) => {
     try {
-      const project = await Project.findById(projectId);
-      project.members = project.members.filter(member => member._id.toString() !== _id);
-      project.save();
+      await Project.updateOne(
+        { _id: projectId },
+        { $pull: { members: _id } }
+      );
 
       io.in(projectId).emit('member_deleted', _id);
     } catch (err) {
@@ -112,13 +114,14 @@ io.on('connection', (socket) => {
         project: projectId
       })
 
-      const list = await newList.save();
+      await newList.save();
 
-      const project = await Project.findById(list.project);
-      project.lists.push(list._id);
-      await project.save();
+      await Project.updateOne(
+        { _id: projectId },
+        { $push: { lists: newList._id } }
+      );
 
-      io.in(projectId).emit('list_added', list);
+      io.in(projectId).emit('list_added', newList);
     } catch (err) {
       socket.emit('new_error', 'Error adding list. Please try again');
     }
