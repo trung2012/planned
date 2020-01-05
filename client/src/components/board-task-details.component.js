@@ -8,12 +8,14 @@ import { ReactComponent as AddUserIcon } from '../assets/add_user.svg';
 import { BoardContext } from '../context/BoardContext';
 import { SocketContext } from '../context/SocketContext';
 
-import './board-task-details.styles.scss';
+import { useParams } from 'react-router-dom';
 import TaskAssignmentDropdown from './task-assignment-dropdown.component';
+import './board-task-details.styles.scss';
 
 const BoardTaskDetails = ({ task, list, dismiss }) => {
+  const { projectId } = useParams();
   const socket = useContext(SocketContext);
-  const { boardState, assignUserToTask } = useContext(BoardContext);
+  const { boardState, assignUserToTask, unassignUserFromTask } = useContext(BoardContext);
   const { name, description, assignee, progress, priority, due, updatedAt } = task;
   const [showAssignmentDropdown, setShowAssignmentDropdown] = useState(false);
   const [showListDropdown, setShowListDropdown] = useState(false);
@@ -22,20 +24,26 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
   const [showDueDateDropdown, setShowDueDateDropdown] = useState(false);
   const [newCommentText, setNewCommentText] = useState('');
   const [memberSearchQuery, setMemberSearchQuery] = useState('');
+  const filteredMembers = boardState.members.filter(user => {
+    if (assignee) {
+      return user.name.toLowerCase().includes(memberSearchQuery.toLowerCase()) && assignee._id !== user._id
+    }
+    return user.name.toLowerCase().includes(memberSearchQuery.toLowerCase())
+  });
+
+  const handleAssignTask = user => {
+    assignUserToTask({ taskId: task._id, user });
+    socket.emit('assign_user_to_task', { taskId: task._id, user, projectId });
+  }
+
+  const handleUnassignTask = () => {
+    unassignUserFromTask({ taskId: task._id });
+    socket.emit('unassign_task', { taskId: task._id, projectId });
+  }
 
   const handleChange = event => {
 
   }
-
-  const handleAssignTask = user => {
-    assignUserToTask({ taskId: task._id, user });
-    socket.emit('assign_user_to_task', { taskId: task._id, userId: user._id });
-  }
-
-  const handleUnassignTask = () => {
-
-  }
-
 
   return (
     <React.Fragment>
@@ -62,16 +70,18 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
                     {assignee.name}
                   </span>
                 </div>
-                : <span className='board-members-dropdown-item' onClick={() => setShowAssignmentDropdown(!showAssignmentDropdown)}>Assign</span>
+                : <span className='assign-button' onClick={() => setShowAssignmentDropdown(!showAssignmentDropdown)}>Assign</span>
             }
             {
               showAssignmentDropdown &&
               <TaskAssignmentDropdown
+                setShowAssignmentDropdown={setShowAssignmentDropdown}
                 memberSearchQuery={memberSearchQuery}
                 onInputChange={event => setMemberSearchQuery(event.target.value)}
                 removeMember={handleUnassignTask}
-                members={boardState.members}
+                members={filteredMembers}
                 onMemberClick={handleAssignTask}
+                assignee={assignee}
               />
             }
           </div>

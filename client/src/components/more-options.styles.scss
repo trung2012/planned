@@ -6,16 +6,17 @@
   display: flex;
   flex-direction: column;
   font-weight: normal;
-  top: 5rem;
+  top: 5.5rem;
   right: 3rem;
   color: $color-gray-dark;
   text-align: left;
   background-color: #fff;
-  width: 18rem;
+  width: 100%;
   padding: 1rem .5rem;
   box-shadow: 0 0 1rem rgba(#333, .3);
   border-radius: 2px;
   z-index: 100;
+  overflow-y: auto;
   animation: fadeFromTop .2s;
 }
 

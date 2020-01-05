@@ -127,7 +127,7 @@ const ProjectDetails = () => {
             </div>
             {
               showErrorSnackbar &&
-              <Snackbar text='An error occurred' type='error' actionText='reload' action={() => document.location.reload()} />
+              <Snackbar text={boardState.errorMessage} type='error' actionText='reload' action={() => document.location.reload()} />
             }
           </React.Fragment>
       }

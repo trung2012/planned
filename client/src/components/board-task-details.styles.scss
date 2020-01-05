@@ -52,6 +52,11 @@
     display: flex;
     align-items: center;
     margin-bottom: 2rem;
+
+    .assign-button {
+      margin-left: 1rem;
+      cursor: pointer;
+    }
   }
 
   &__dropdowns {

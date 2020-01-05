@@ -1,7 +1,24 @@
+@import '../sass/variables';
+
 .task-assignment-dropdown {
   position: absolute;
   top: 100%;
   left: 0;
+  background-color: #fff;
+  padding: 1.5rem;
+  width: 28rem;
+  box-shadow: $box-shadow-primary;
+  animation: fadeFromTop .2s;
+  z-index: 1;
+
+  h3 {
+    position: relative;
+    font-size: 1.8rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    padding-left: 1rem;
+    z-index: 1;
+  }
 
   .board-members-dropdown-item {
     cursor: pointer;

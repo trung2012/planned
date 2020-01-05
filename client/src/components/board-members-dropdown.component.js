@@ -64,7 +64,7 @@ const BoardMembersDropdown = ({ members, dismiss }) => {
             }
           </MoreOptions>
         }
-        <BoardMembersDropdownList members={members} removeMember={handleDeleteMember} />
+        <BoardMembersDropdownList members={members} removeMember={handleDeleteMember} removeIconText='Remove member' />
       </div>
     </React.Fragment>
   );

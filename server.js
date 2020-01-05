@@ -139,9 +139,11 @@ io.on('connection', (socket) => {
 
   socket.on('edit_list_name', async ({ listId, listName, projectId }) => {
     try {
-      const list = await List.findById(listId);
-      list.name = listName;
-      await list.save();
+      const list = await List.updateOne(
+        { _id: listId },
+        { $set: { name: listName } },
+        { new: true }
+      );
 
       socket.to(projectId).emit('list_name_updated', list);
     } catch (err) {
@@ -181,6 +183,36 @@ io.on('connection', (socket) => {
     } catch (err) {
       console.log(err)
       socket.emit('new_error', 'Error deleting task');
+    }
+  })
+
+  socket.on('assign_user_to_task', async ({ taskId, user, projectId }) => {
+    try {
+      await Task.updateOne(
+        { _id: taskId },
+        { $set: { assignee: user._id } },
+        { new: true }
+      )
+
+      socket.to(projectId).emit('task_assigned', { taskId, user });
+    } catch (err) {
+      console.log(err)
+      socket.emit('new_error', 'Error assigning task to user');
+    }
+  })
+
+  socket.on('unassign_task', async ({ taskId, projectId }) => {
+    try {
+      await Task.updateOne(
+        { _id: taskId },
+        { $set: { assignee: undefined } },
+        { new: true }
+      )
+
+      socket.to(projectId).emit('task_assigned', { taskId });
+    } catch (err) {
+      console.log(err)
+      socket.emit('new_error', 'Error removing task assignment');
     }
   })
 

@@ -107,6 +107,17 @@ const boardReducer = (state, action) => {
       }
     }
 
+    case 'unassign_task': {
+      const { taskId } = action.payload;
+      return {
+        ...state,
+        tasks: {
+          ...state.tasks,
+          [taskId]: { ...state.tasks[taskId], assignee: null }
+        }
+      }
+    }
+
     case 'add_board_error':
       return {
         ...state,
@@ -184,6 +195,10 @@ export const BoardProvider = ({ children }) => {
     dispatch({ type: 'assign_user_to_task', payload: data });
   }, [])
 
+  const unassignUserFromTask = useCallback(taskId => {
+    dispatch({ type: 'unassign_task', payload: taskId });
+  }, [])
+
   const addBoardError = useCallback((errorMessage) => {
     dispatch({ type: 'add_board_error', payload: errorMessage });
   }, [])
@@ -213,7 +228,8 @@ export const BoardProvider = ({ children }) => {
         deleteTask,
         deleteList,
         updateListName,
-        assignUserToTask
+        assignUserToTask,
+        unassignUserFromTask
       }}
     >
       {children}
