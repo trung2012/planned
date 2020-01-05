@@ -1,12 +1,12 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';
-
 import { BoardContext } from '../context/BoardContext';
 import { SocketContext } from '../context/SocketContext';
 import BoardLists from './board-lists.component';
 import BoardHeader from './board-header.component';
-import './project-details.styles.scss';
 import Spinner from './spinner.component';
+import Snackbar from './snackbar.component';
+import './project-details.styles.scss';
 
 const ProjectDetails = () => {
   const socket = useContext(SocketContext);
@@ -22,8 +22,19 @@ const ProjectDetails = () => {
     deleteTask,
     deleteList,
     updateListName,
+    assignUserToTask
   } = useContext(BoardContext);
+  const [showErrorSnackbar, setShowErrorSnackbar] = useState(false);
   const { projectId } = useParams();
+
+  useEffect(() => {
+    if (boardState.errorMessage) {
+      setShowErrorSnackbar(true);
+      setTimeout(() => {
+        document.location.reload();
+      }, 3000)
+    }
+  }, [boardState.errorMessage])
 
   useEffect(() => {
     socket.emit('join', projectId);
@@ -56,6 +67,10 @@ const ProjectDetails = () => {
 
     socket.on('list_name_updated', list => {
       updateListName(list);
+    })
+
+    socket.on('task_assigned', ({ taskId, user }) => {
+      assignUserToTask({ taskId, user });
     })
 
     socket.on('task_added', newTask => {
@@ -95,7 +110,8 @@ const ProjectDetails = () => {
       fetchBoardDataStart,
       deleteTask,
       deleteList,
-      updateListName
+      updateListName,
+      assignUserToTask
     ])
 
   return (
@@ -109,6 +125,10 @@ const ProjectDetails = () => {
             <div className='project-details__main-content'>
               <BoardLists />
             </div>
+            {
+              showErrorSnackbar &&
+              <Snackbar text='An error occurred' type='error' actionText='reload' action={() => document.location.reload()} />
+            }
           </React.Fragment>
       }
     </div>

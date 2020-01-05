@@ -59,7 +59,7 @@
             content: '';
             display: block;
             height: 2px;
-            background-color: $color-green;
+            background-color: $color-green-dark;
             width: 100%;
           }   
         }
@@ -72,7 +72,7 @@
           content: '';
           display: block;
           height: 2px;
-          background-color: $color-green;
+          background-color: $color-green-dark;
           width: 100%;
         }     
       }
@@ -99,10 +99,13 @@
        background-color: $color-gray-extra-light;
     }
 
-
     span {
       flex-shrink: 0;
-      margin-right: .5rem;
+      margin: 0 .5rem;
+    }
+
+    .dropdown-icon {
+      margin-top: .2rem;
     }
   }
 }

@@ -11,6 +11,7 @@ const projectRouter = require('./routers/api/project');
 const List = require('./models/List');
 const Project = require('./models/Project');
 const Task = require('./models/Task');
+const convertArrayToMap = require('./utils/convertArrayToMap');
 
 const app = express();
 const server = http.createServer(app);
@@ -41,43 +42,31 @@ io.on('connection', (socket) => {
   socket.on('initial_data', async projectId => {
     try {
 
-      const [project, lists] = await Promise.all([
-        Project.findById(projectId).populate('members'),
-        List.find({ project: projectId }).populate({
-          path: 'tasks',
-          populate: [{
-            path: 'assignee',
-            select: '-password'
-          },
-          {
-            path: 'list',
-            select: '-tasks -project'
-          }
-          ]
+      const [project, lists, tasks] = await Promise.all([
+        Project.findById(projectId).lean().populate({
+          path: 'members',
+          select: '-password'
+        }),
+        List.find({ project: projectId }).lean(),
+        Task.find({ project: projectId }).lean().populate({
+          path: 'assignee',
+          select: '-password'
         })
-        // , Task.find({ project: projectId })
       ])
 
       const memberIds = project.members.map(member => member._id)
 
-      // const listsMap = lists.reduce((acc, list) => {
-      //   acc[list._id] = list;
-      //   return acc;
-      // }, {})
+      const listsMap = convertArrayToMap(lists);
 
-      // const tasksMap = tasks.reduce((acc, task) => {
-      //   acc[task._id] = task;
-      //   return acc;
-      // }, {})
+      const tasksMap = convertArrayToMap(tasks)
 
       const data = {
         currentProject: {
-          name: project.name,
-          description: project.description,
-          color: project.color,
-          owner: project.owner
+          ...project,
+          members: []
         },
-        lists,
+        lists: listsMap,
+        tasks: tasksMap,
         members: project.members,
         memberIds
       };
@@ -117,22 +106,20 @@ io.on('connection', (socket) => {
     }
   })
 
-  socket.on('add_list', async ({ name, projectId }) => {
+  socket.on('add_list', async (listData) => {
     try {
-      const newList = new List({
-        name,
-        project: projectId
-      })
+      const newList = new List(listData);
 
       await newList.save();
 
       await Project.updateOne(
-        { _id: projectId },
+        { _id: listData.project },
         { $push: { lists: newList._id } }
       );
 
-      io.in(projectId).emit('list_added', newList);
+      socket.to(listData.project).emit('list_added', newList);
     } catch (err) {
+      console.log(err)
       socket.emit('new_error', 'Error adding list. Please try again');
     }
   })
@@ -143,7 +130,7 @@ io.on('connection', (socket) => {
 
       await list.remove();
 
-      io.in(projectId).emit('list_deleted', list);
+      socket.to(projectId).emit('list_deleted', list);
     } catch (err) {
       console.log(err)
       socket.emit('new_error', 'Error deleting list. Please try again');
@@ -156,7 +143,7 @@ io.on('connection', (socket) => {
       list.name = listName;
       await list.save();
 
-      io.to(projectId).emit('list_name_updated', list);
+      socket.to(projectId).emit('list_name_updated', list);
     } catch (err) {
       socket.emit('new_error', 'Error updating list name');
     }
@@ -176,17 +163,9 @@ io.on('connection', (socket) => {
         { new: true }
       )
 
-      const task = await Task.findById(newTask._id).populate([
-        {
-          path: 'assignee'
-        },
-        {
-          path: 'list',
-          select: '-tasks -project'
-        }
-      ]);
+      const task = await Task.findById(newTask._id).populate('assignee');
 
-      io.in(projectId).emit('task_added', task);
+      socket.to(projectId).emit('task_added', task);
     } catch (err) {
       console.log(err)
       socket.emit('new_error', 'Error adding task');
@@ -198,7 +177,7 @@ io.on('connection', (socket) => {
       const task = await Task.findById(taskId);
       await task.remove();
 
-      io.in(projectId).emit('task_deleted', task);
+      socket.to(projectId).emit('task_deleted', task);
     } catch (err) {
       console.log(err)
       socket.emit('new_error', 'Error deleting task');

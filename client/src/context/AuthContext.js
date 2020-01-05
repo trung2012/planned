@@ -1,7 +1,7 @@
 import React, { useCallback, useReducer } from 'react';
 import axios from 'axios';
 
-import { generateRequestConfig } from '../utils/generateRequestConfig';
+import { generateRequestConfig } from '../utils/helper';
 
 const authReducer = (state, action) => {
   switch (action.type) {

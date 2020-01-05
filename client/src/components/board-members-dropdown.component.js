@@ -7,7 +7,7 @@ import CustomInput from './custom-input.component';
 import BoardMembersDropdownItem from './board-members-dropdown-item.component';
 import MoreOptions from './more-options.component';
 import useDebounce from '../utils/useDebounce';
-import { ReactComponent as RemoveUserIcon } from '../assets/remove-user.svg';
+import BoardMembersDropdownList from './board-members-dropdown-list.component';
 import './board-members-dropdown.styles.scss';
 
 const BoardMembersDropdown = ({ members, dismiss }) => {
@@ -64,16 +64,7 @@ const BoardMembersDropdown = ({ members, dismiss }) => {
             }
           </MoreOptions>
         }
-        <div className='board-members-dropdown__list'>
-          {
-            members.map(member => (
-              <div className='board-members-dropdown__list-item' title={member.name} key={member._id}>
-                <BoardMembersDropdownItem member={member} />
-                <RemoveUserIcon className='remove-user-icon' title='Remove member' onClick={() => handleDeleteMember(member._id)} />
-              </div>
-            ))
-          }
-        </div>
+        <BoardMembersDropdownList members={members} removeMember={handleDeleteMember} />
       </div>
     </React.Fragment>
   );

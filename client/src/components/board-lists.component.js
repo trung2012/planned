@@ -1,25 +1,29 @@
 import React, { useContext, useState } from 'react';
-
+import { ObjectID } from 'bson';
 import { useParams } from 'react-router-dom';
 import { SocketContext } from '../context/SocketContext';
 import { BoardContext } from '../context/BoardContext';
 import BoardListNameForm from './board-list-name-form.component';
-import BoardList from './board-list.component';
+import BoardListContainer from './board-list-container.component';
 import './board-lists.styles.scss';
 
 const BoardLists = () => {
   const socket = useContext(SocketContext)
   const { projectId } = useParams();
-  const { boardState } = useContext(BoardContext);
-  const { lists } = boardState;
+  const { boardState, addList } = useContext(BoardContext);
+  const { currentProject } = boardState;
   const [showListAdd, setShowListAdd] = useState(false);
 
   const handleAddSubmit = (listName = '') => {
     if (listName.length > 0) {
-      socket.emit('add_list', {
+      const newList = {
+        _id: new ObjectID().toString(),
         name: listName,
-        projectId
-      })
+        project: projectId,
+        tasks: [],
+      };
+      socket.emit('add_list', newList);
+      addList(newList);
     }
 
     setShowListAdd(false);
@@ -29,10 +33,10 @@ const BoardLists = () => {
     <React.Fragment>
       <div className='board-lists'>
         {
-          lists.length > 0 &&
-          lists.map(list => {
+          currentProject && currentProject.lists && currentProject.lists.length > 0 &&
+          currentProject.lists.map(listId => {
             return (
-              <BoardList key={list._id} list={list} />
+              <BoardListContainer key={listId} listId={listId} />
             );
           })
         }

@@ -1,0 +1,19 @@
+.task-assignment-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+
+  .board-members-dropdown-item {
+    cursor: pointer;
+  }
+
+  .more-options {
+    top: 100%;
+    left: 0;
+  }
+
+  .custom-input {
+    position: relative;
+    z-index: 100;
+  }
+}

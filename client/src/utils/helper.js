@@ -14,3 +14,8 @@ export const generateRequestConfig = () => {
 
   return null;
 }
+
+export const removeObjectProperty = (obj, property) => {
+  let { [property]: deleted, ...remaining } = obj;
+  return remaining;
+}

@@ -8,19 +8,16 @@ import './dropdown-opener.styles.scss';
 const DropdownOpener = ({ label, inputDefault, onClick, iconType = '' }) => {
   return (
     <div className='dropdown-opener' onClick={onClick}>
-      <div className='dropdown-opener__item'>
-        <div className='dropdown-opener__item__label'>{label}</div>
-        <div className='dropdown-opener__item__input'>
-          <span>{inputDefault}</span>
-          {
-            iconType === 'calendar' ?
-              <CalendarIcon className='dropdown-icon' />
-              : <DropdownIcon className='dropdown-icon' />
-          }
-        </div>
+      <h4 className='dropdown-opener__label'>{label}</h4>
+      <div className='dropdown-opener__input' title={inputDefault}>
+        <span>{inputDefault}</span>
+        {
+          iconType === 'calendar' ?
+            <CalendarIcon className='dropdown-icon' />
+            : <DropdownIcon className='dropdown-icon' />
+        }
       </div>
     </div>
-
   );
 }
 

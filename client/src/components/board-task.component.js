@@ -5,17 +5,20 @@ import MoreOptions from './more-options.component';
 import { ReactComponent as OptionsIcon } from '../assets/options.svg';
 import { SocketContext } from '../context/SocketContext';
 
-import './board-task.styles.scss';
 import BoardTaskDetails from './board-task-details.component';
+import { BoardContext } from '../context/BoardContext';
+import './board-task.styles.scss';
 
-const BoardTask = ({ task }) => {
+const BoardTask = ({ task, list }) => {
   const { projectId } = useParams();
   const socket = useContext(SocketContext);
+  const { deleteTask } = useContext(BoardContext);
   const [showTaskOptions, setShowTaskOptions] = useState(false);
   const [showTaskDetails, setShowTaskDetails] = useState(false);
 
   const handleDeleteClick = () => {
-    socket.emit('delete_task', { taskId: task._id, projectId });
+    deleteTask({ taskId: task._id, listId: list._id });
+    socket.emit('delete_task', { taskId: task._id, listId: list._id, projectId });
     setShowTaskOptions(false);
   }
 
@@ -40,7 +43,7 @@ const BoardTask = ({ task }) => {
       </div>
       {
         showTaskDetails &&
-        <BoardTaskDetails task={task} dismiss={() => setShowTaskDetails(false)} />
+        <BoardTaskDetails task={task} list={list} dismiss={() => setShowTaskDetails(false)} />
       }
     </React.Fragment>
   );

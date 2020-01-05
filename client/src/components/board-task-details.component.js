@@ -1,24 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Moment from 'moment';
 
 import DropdownOpener from './dropdown-opener.component';
 import UserProfilePicture from './user-profile-picture.component';
 import CustomButton from './custom-button.component';
 import { ReactComponent as AddUserIcon } from '../assets/add_user.svg';
+import { BoardContext } from '../context/BoardContext';
+import { SocketContext } from '../context/SocketContext';
 
 import './board-task-details.styles.scss';
+import TaskAssignmentDropdown from './task-assignment-dropdown.component';
 
-const BoardTaskDetails = ({ task, dismiss }) => {
-  const { name, description, assignee, list, progress, priority, due, createdAt, updatedAt } = task;
-  const [currentTask, setCurrentTask] = useState(task);
+const BoardTaskDetails = ({ task, list, dismiss }) => {
+  const socket = useContext(SocketContext);
+  const { boardState, assignUserToTask } = useContext(BoardContext);
+  const { name, description, assignee, progress, priority, due, updatedAt } = task;
   const [showAssignmentDropdown, setShowAssignmentDropdown] = useState(false);
   const [showListDropdown, setShowListDropdown] = useState(false);
   const [showProgressDropdown, setShowProgressDropdown] = useState(false);
   const [showPriorityDropdown, setShowPriorityDropdown] = useState(false);
   const [showDueDateDropdown, setShowDueDateDropdown] = useState(false);
   const [newCommentText, setNewCommentText] = useState('');
+  const [memberSearchQuery, setMemberSearchQuery] = useState('');
 
   const handleChange = event => {
+
+  }
+
+  const handleAssignTask = user => {
+    assignUserToTask({ taskId: task._id, user });
+    socket.emit('assign_user_to_task', { taskId: task._id, userId: user._id });
+  }
+
+  const handleUnassignTask = () => {
 
   }
 
@@ -36,7 +50,7 @@ const BoardTaskDetails = ({ task, dismiss }) => {
             <div className='task-last-updated'>{`Updated ${Moment(updatedAt).fromNow()}`}</div>
           </div>
           <div className='board-task-details__assignment'>
-            <AddUserIcon className='add-user-icon' />
+            <AddUserIcon className='add-user-icon' onClick={() => setShowAssignmentDropdown(true)} />
             {
               assignee ?
                 <div className='board-members-dropdown-item' onClick={() => setShowAssignmentDropdown(!showAssignmentDropdown)}>
@@ -48,7 +62,17 @@ const BoardTaskDetails = ({ task, dismiss }) => {
                     {assignee.name}
                   </span>
                 </div>
-                : <span className='board-members-dropdown-item'>Assign</span>
+                : <span className='board-members-dropdown-item' onClick={() => setShowAssignmentDropdown(!showAssignmentDropdown)}>Assign</span>
+            }
+            {
+              showAssignmentDropdown &&
+              <TaskAssignmentDropdown
+                memberSearchQuery={memberSearchQuery}
+                onInputChange={event => setMemberSearchQuery(event.target.value)}
+                removeMember={handleUnassignTask}
+                members={boardState.members}
+                onMemberClick={handleAssignTask}
+              />
             }
           </div>
           <div className='board-task-details__dropdowns'>
@@ -58,30 +82,31 @@ const BoardTaskDetails = ({ task, dismiss }) => {
             <DropdownOpener label='Due date' inputDefault={due} iconType='calendar' onClick={() => setShowDueDateDropdown(!showDueDateDropdown)} />
           </div>
           <div className='board-task-details__description'>
-            <form>
-              <textarea
-                name='description-input'
-                type='text'
-                className='board-task-details__description__input'
-                value={currentTask.description}
-                onChange={handleChange}
-              />
-            </form>
+            <h4>Description</h4>
+            <textarea
+              name='description-input'
+              type='text'
+              className='board-task-details__text-input'
+              value={description}
+              onChange={handleChange}
+            />
           </div>
           <div className='board-task-details__attachments'>
-            Attachments
+            <h4>Attachments</h4>
           </div>
           <div className='board-task-details__comments'>
-            <textarea
-              name='comment-input'
-              type='text'
-              className='board-task-details__comments__input'
-              value={newCommentText}
-              onChange={event => setNewCommentText(event.target.value)}
-            />
-            <CustomButton text='Add comment' buttonType='add-comment' />
+            <div className='board-task-details__comment-input'>
+              <h4>Comments</h4>
+              <textarea
+                name='comment-input'
+                type='text'
+                className='board-task-details__text-input'
+                value={newCommentText}
+                onChange={event => setNewCommentText(event.target.value)}
+              />
+              <CustomButton text='Save' buttonType='save-text' />
+            </div>
             <div>Comments placeholder</div>
-            <div></div>
           </div>
         </div>
       </div>

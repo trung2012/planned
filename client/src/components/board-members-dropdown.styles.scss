@@ -5,16 +5,11 @@
   top: 5rem;
   right: 70%;
   background-color: #fff;
-  padding: 1rem;
-  width: 27rem;
+  padding: 1.5rem;
+  width: 28rem;
   box-shadow: $box-shadow-primary;
   animation: fadeFromTop .2s;
   z-index: 100;
-
-  &__list {
-    margin-top: 1rem;
-    overflow-y: auto;
-  }
 
   h3 {
     font-size: 1.8rem;
@@ -37,26 +32,4 @@
       }
     }
   }
-
-  &__list-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    .board-members-dropdown-item {
-      flex: 1;
-    }
-
-    .remove-user-icon {
-      height: 2.5em;
-      width: 2.5em;
-      cursor: pointer;
-      padding: .75rem;
-      border-radius: .3rem;
-
-      &:hover {
-        background-color: $color-gray-extra-light;
-      }
-    }
-  }  
 }

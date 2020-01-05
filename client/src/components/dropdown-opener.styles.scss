@@ -1,0 +1,24 @@
+@import '../sass/components';
+@import '../sass/variables';
+
+.dropdown-opener {
+  flex: 0 1 20rem;
+  margin-bottom: 2rem;
+
+  &__label {
+    font-size: 1.2rem;
+    color: $color-gray-dark;
+    margin-bottom: .5rem;
+  }
+
+  &__input {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex: 1 1 15rem;
+    padding: .75rem;
+    padding-left: 1.25rem;
+    background-color: $color-gray-extra-light;
+    cursor: pointer;
+  }
+}

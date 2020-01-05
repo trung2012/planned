@@ -1,6 +1,7 @@
 const express = require('express')
 const auth = require('../../middleware/auth');
 const router = new express.Router();
+const mongoose = require('mongoose');
 
 const List = require('../../models/List');
 const Project = require('../../models/Project');
@@ -26,12 +27,15 @@ router.post('/create', auth, async (req, res) => {
         color: getRandomColor()
       })
 
-      const project = await newProject.save();
-
       const defaultList = new List({
+        _id: mongoose.Types.ObjectId(),
         name: 'To Do',
-        project: project._id
+        project: newProject._id
       })
+
+      newProject.lists.push(defaultList._id);
+
+      const project = await newProject.save();
 
       await defaultList.save();
 

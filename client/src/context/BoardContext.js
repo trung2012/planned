@@ -1,11 +1,12 @@
 import React, { useCallback, useReducer } from 'react';
 import axios from 'axios';
 
-import { generateRequestConfig } from '../utils/generateRequestConfig';
+import { generateRequestConfig, removeObjectProperty } from '../utils/helper';
 
 const initialState = {
   currentProject: {},
-  lists: [],
+  lists: {},
+  tasks: {},
   members: [],
   memberIds: [],
   users: [],
@@ -46,49 +47,66 @@ const boardReducer = (state, action) => {
     case 'add_list':
       return {
         ...state,
-        lists: [...state.lists, action.payload]
+        currentProject: { ...state.currentProject, lists: [...state.currentProject.lists, action.payload._id] },
+        lists: {
+          ...state.lists,
+          [action.payload._id]: action.payload
+        }
       }
     case 'delete_list':
       return {
         ...state,
-        lists: state.lists.filter(list => list._id !== action.payload._id)
+        currentProject: {
+          ...state.currentProject,
+          lists: state.currentProject.lists.filter(listId => listId !== action.payload._id)
+        },
+        lists: removeObjectProperty(state.lists, action.payload._id)
       }
     case 'update_list_name':
       return {
         ...state,
-        lists: state.lists.map(list => {
-          if (list._id === action.payload._id) {
-            return { ...list, name: action.payload.name };
-          } else {
-            return list;
-          }
-        })
+        lists: {
+          ...state.lists,
+          [action.payload._id]: { ...state.lists[action.payload._id], name: action.payload.name }
+        }
       }
-    case 'add_task':
+    case 'add_task': {
+      const listId = action.payload.list;
       return {
         ...state,
-        lists: state.lists.map(list => {
-          if (list._id === action.payload.list._id) {
-            let newTasks = list.tasks;
-            newTasks.push(action.payload);
-            return { ...list, tasks: newTasks }
-          } else {
-            return list;
-          }
-        })
+        lists: {
+          ...state.lists,
+          [listId]: { ...state.lists[listId], tasks: [...state.lists[listId].tasks, action.payload._id] }
+        },
+        tasks: {
+          ...state.tasks,
+          [action.payload._id]: action.payload
+        }
       }
-    case 'delete_task':
+    }
+    case 'delete_task': {
+      const { taskId, listId } = action.payload;
       return {
         ...state,
-        lists: state.lists.map(list => {
-          if (list._id === action.payload.list) {
-            let newTasks = list.tasks.filter(task => task._id !== action.payload._id);
-            return { ...list, tasks: newTasks };
-          } else {
-            return list;
-          }
-        })
+        lists: {
+          ...state.lists,
+          [listId]: { ...state.lists[listId], tasks: state.lists[listId].tasks.filter(_id => _id !== taskId) }
+        },
+        tasks: removeObjectProperty(state.tasks, action.payload.taskId)
       }
+    }
+    case 'assign_user_to_task': {
+      const { taskId, user } = action.payload;
+
+      return {
+        ...state,
+        tasks: {
+          ...state.tasks,
+          [taskId]: { ...state.tasks[taskId], assignee: user }
+        }
+      }
+    }
+
     case 'add_board_error':
       return {
         ...state,
@@ -158,8 +176,12 @@ export const BoardProvider = ({ children }) => {
     dispatch({ type: 'add_task', payload: task });
   }, [])
 
-  const deleteTask = useCallback(task => {
-    dispatch({ type: 'delete_task', payload: task });
+  const deleteTask = useCallback(data => {
+    dispatch({ type: 'delete_task', payload: data });
+  }, [])
+
+  const assignUserToTask = useCallback(data => {
+    dispatch({ type: 'assign_user_to_task', payload: data });
   }, [])
 
   const addBoardError = useCallback((errorMessage) => {
@@ -190,7 +212,8 @@ export const BoardProvider = ({ children }) => {
         deleteMember,
         deleteTask,
         deleteList,
-        updateListName
+        updateListName,
+        assignUserToTask
       }}
     >
       {children}

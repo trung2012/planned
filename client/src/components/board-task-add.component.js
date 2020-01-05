@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { ObjectId } from 'bson';
 
 import ErrorDisplay from './error-display.component';
 import CustomButton from './custom-button.component';
@@ -17,9 +18,15 @@ const BoardTaskAdd = ({ submit, listId, dismiss }) => {
       setInputError('Please enter task name');
     } else {
       submit({
+        _id: new ObjectId().toString(),
         name: newTaskName,
         due: dueDate,
-        list: listId
+        list: listId,
+        description: '',
+        progress: 'Not started',
+        priority: 'Low',
+        createdAt: Date.now(),
+        updatedAt: Date.now()
       });
     }
   }

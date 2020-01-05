@@ -1,0 +1,28 @@
+@import '../sass/variables';
+
+.board-members-dropdown-list {
+  margin-top: 1rem;
+  overflow-y: auto;
+
+  &__item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  
+    .board-members-dropdown-item {
+      flex: 1;
+    }
+  
+    .remove-user-icon {
+      height: 2.5em;
+      width: 2.5em;
+      cursor: pointer;
+      padding: .75rem;
+      border-radius: .3rem;
+  
+      &:hover {
+        background-color: $color-gray-extra-light;
+      }
+    }
+  }  
+}

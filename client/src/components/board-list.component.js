@@ -11,15 +11,16 @@ import { ReactComponent as OptionsIcon } from '../assets/options.svg';
 import { BoardContext } from '../context/BoardContext';
 import './board-list.styles.scss';
 
-const BoardList = ({ list }) => {
+const BoardList = ({ list, updateListName }) => {
   const { projectId } = useParams();
   const socket = useContext(SocketContext);
-  const { updateListName } = useContext(BoardContext);
+  const { deleteList } = useContext(BoardContext);
   const [showListOptions, setShowListOptions] = useState(false);
   const [showListNameEdit, setShowListNameEdit] = useState(false);
   const [showListDeleteConfirm, setShowListDeleteConfirm] = useState(false);
 
   const handleDeleteClick = () => {
+    deleteList({ _id: list._id });
     socket.emit('delete_list', { listId: list._id, projectId });
     setShowListDeleteConfirm(false);
   }

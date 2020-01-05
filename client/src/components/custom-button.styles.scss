@@ -26,9 +26,9 @@
 }
 
 .danger {
-  background: #FF416C;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(to bottom, #FF416C, #FF4B2B);  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to bottom, #FF416C, #FF4B2B); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: $color-red-light;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to bottom, $color-red-light, $color-red-dark);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to bottom, $color-red-light, $color-red-dark); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   color: #fff;
   text-transform: uppercase;
   border: none;
@@ -51,7 +51,7 @@
 }
 
 .submit-task {
-  background-color: $color-green;
+  background-color: $color-green-dark;
   color: #fff;
   text-transform: uppercase;
   border: none;
@@ -64,6 +64,33 @@
     &:hover,
     &:active {
       opacity: .9;
+    }
+
+    &:active {
+      transform: scale(.98);
+    }
+  }
+}
+
+.save-text {
+  background-color: #fff;
+  color: $color-gray-medium;
+  text-transform: capitalize;
+  padding: .75rem 2rem;
+  background-color: $color-gray-extra-light;
+  border: 1px solid transparent;
+  font-size: 1.1rem;
+  font-weight: 100;
+  cursor: pointer;
+  transition: all .1s;
+  border-radius: .3rem;
+
+  @media screen and (min-width: 600px) {
+    &:hover,
+    &:active {
+      background-color: #fff;
+      color: $color-gray-dark;
+      border: 1px solid $color-gray-light;
     }
 
     &:active {
