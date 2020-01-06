@@ -21,6 +21,7 @@ const CustomDatePicker = ({ date, setDate, children }) => {
 
   return (
     <DatePicker
+      showPopperArrow={false}
       todayButton='Today'
       selected={date}
       onChange={date => setDate(date)}

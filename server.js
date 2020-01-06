@@ -186,11 +186,11 @@ io.on('connection', (socket) => {
     }
   })
 
-  socket.on('assign_user_to_task', async ({ taskId, user, projectId }) => {
+  socket.on('assign_user_to_task', async ({ taskId, user, updatedAt, projectId }) => {
     try {
       await Task.updateOne(
         { _id: taskId },
-        { $set: { assignee: user._id } },
+        { $set: { assignee: user._id, updatedAt } },
         { new: true }
       )
 
@@ -201,11 +201,11 @@ io.on('connection', (socket) => {
     }
   })
 
-  socket.on('unassign_task', async ({ taskId, projectId }) => {
+  socket.on('unassign_task', async ({ taskId, projectId, updatedAt }) => {
     try {
       await Task.updateOne(
         { _id: taskId },
-        { $set: { assignee: undefined } },
+        { $set: { assignee: undefined, updatedAt } },
         { new: true }
       )
 
@@ -213,6 +213,23 @@ io.on('connection', (socket) => {
     } catch (err) {
       console.log(err)
       socket.emit('new_error', 'Error removing task assignment');
+    }
+  })
+
+  socket.on('assign_task_to_new_list', async ({ data, projectId }) => {
+    try {
+      const { task, oldListId, newListId, updatedAt } = data;
+
+      await Promise.all([
+        Task.updateOne({ _id: task._id }, { $set: { list: newListId, updatedAt } }, { new: true }),
+        List.updateOne({ _id: oldListId }, { $pull: { tasks: task._id } }, { new: true }),
+        List.updateOne({ _id: newListId }, { $push: { tasks: task._id } }, { new: true }),
+      ])
+
+      socket.to(projectId).emit('task_assigned_to_new_list', data);
+
+    } catch (err) {
+      socket.emit('new_error', 'An error occurred while moving task');
     }
   })
 

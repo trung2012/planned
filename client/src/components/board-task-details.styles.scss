@@ -15,7 +15,7 @@
 .board-task-details {
   position: relative;
   max-height: 100vh;
-  max-width: 75rem;
+  max-width: 80rem;
   min-width: 40rem;
   width: 50%;
   padding: 3rem 5rem;
@@ -54,12 +54,16 @@
 
   &__assignment {
     position: relative;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     margin-bottom: 2rem;
 
     .assign-button {
       margin-left: 1rem;
+      cursor: pointer;
+    }
+
+    .board-members-dropdown-item {
       cursor: pointer;
     }
   }
@@ -69,6 +73,7 @@
     flex-wrap: wrap;
     justify-content: space-between;
     margin-bottom: 3rem;
+    font-size: 1.4rem;
   }
 
   &__attachments {

@@ -1,14 +1,17 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Route, useParams, useRouteMatch } from 'react-router-dom';
+
 import { BoardContext } from '../context/BoardContext';
 import { SocketContext } from '../context/SocketContext';
 import BoardLists from './board-lists.component';
 import BoardHeader from './board-header.component';
 import Spinner from './spinner.component';
 import Snackbar from './snackbar.component';
+import BoardTaskDetailsContainer from './board-task-details-container.component';
 import './project-details.styles.scss';
 
 const ProjectDetails = () => {
+  const match = useRouteMatch();
   const socket = useContext(SocketContext);
   const {
     boardState,
@@ -22,7 +25,8 @@ const ProjectDetails = () => {
     deleteTask,
     deleteList,
     updateListName,
-    assignUserToTask
+    assignUserToTask,
+    assignTaskToNewList
   } = useContext(BoardContext);
   const [showErrorSnackbar, setShowErrorSnackbar] = useState(false);
   const { projectId } = useParams();
@@ -81,6 +85,10 @@ const ProjectDetails = () => {
       deleteTask(deletedTask);
     })
 
+    socket.on('task_assigned_to_new_list', data => {
+      assignTaskToNewList(data);
+    })
+
     socket.on('new_error', errorMessage => {
       addBoardError(errorMessage);
     })
@@ -111,27 +119,31 @@ const ProjectDetails = () => {
       deleteTask,
       deleteList,
       updateListName,
-      assignUserToTask
+      assignUserToTask,
+      assignTaskToNewList
     ])
 
   return (
-    <div className='project-details'>
-      {
-        boardState.isLoading ?
-          <Spinner />
-          :
-          <React.Fragment>
-            <BoardHeader />
-            <div className='project-details__main-content'>
-              <BoardLists />
-            </div>
-            {
-              showErrorSnackbar &&
-              <Snackbar text={boardState.errorMessage} type='error' actionText='reload' action={() => document.location.reload()} />
-            }
-          </React.Fragment>
-      }
-    </div>
+    <React.Fragment>
+      <div className='project-details'>
+        {
+          boardState.isLoading ?
+            <Spinner />
+            :
+            <React.Fragment>
+              <BoardHeader />
+              <div className='project-details__main-content'>
+                <BoardLists />
+              </div>
+              {
+                showErrorSnackbar &&
+                <Snackbar text={boardState.errorMessage} type='error' actionText='reload' action={() => document.location.reload()} />
+              }
+            </React.Fragment>
+        }
+      </div>
+      <Route path={`${match.path}/:taskId`} component={BoardTaskDetailsContainer} />
+    </React.Fragment>
   );
 }
 

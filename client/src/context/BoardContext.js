@@ -11,7 +11,8 @@ const initialState = {
   memberIds: [],
   users: [],
   errorMessage: null,
-  isLoading: false
+  isLoading: false,
+  showTaskDetails: false
 }
 
 const boardReducer = (state, action) => {
@@ -96,28 +97,50 @@ const boardReducer = (state, action) => {
       }
     }
     case 'assign_user_to_task': {
-      const { taskId, user } = action.payload;
+      const { taskId, user, updatedAt } = action.payload;
 
       return {
         ...state,
         tasks: {
           ...state.tasks,
-          [taskId]: { ...state.tasks[taskId], assignee: user }
+          [taskId]: { ...state.tasks[taskId], assignee: user, updatedAt }
         }
       }
     }
-
     case 'unassign_task': {
-      const { taskId } = action.payload;
+      const { taskId, updatedAt } = action.payload;
       return {
         ...state,
         tasks: {
           ...state.tasks,
-          [taskId]: { ...state.tasks[taskId], assignee: null }
+          [taskId]: { ...state.tasks[taskId], assignee: null, updatedAt }
         }
       }
     }
-
+    case 'assign_task_to_new_list': {
+      const { task, oldListId, newListId, updatedAt } = action.payload;
+      return {
+        ...state,
+        lists: {
+          ...state.lists,
+          [oldListId]: {
+            ...state.lists[oldListId], tasks: state.lists[oldListId].tasks.filter(id => id !== task._id)
+          },
+          [newListId]: {
+            ...state.lists[newListId], tasks: [...state.lists[newListId].tasks, task._id]
+          }
+        },
+        tasks: {
+          ...state.tasks,
+          [task._id]: { ...state.tasks[task._id], list: newListId, updatedAt }
+        }
+      }
+    }
+    case 'set_show_task_details':
+      return {
+        ...state,
+        showTaskDetails: action.payload
+      }
     case 'add_board_error':
       return {
         ...state,
@@ -207,6 +230,14 @@ export const BoardProvider = ({ children }) => {
     dispatch({ type: 'clear_board_error' });
   }, []);
 
+  const assignTaskToNewList = useCallback((data) => {
+    dispatch({ type: 'assign_task_to_new_list', payload: data });
+  }, [])
+
+  const setShowTaskDetails = (value) => {
+    dispatch({ type: 'set_show_task_details', payload: value });
+  }
+
   const clearBoard = () => {
     dispatch({ type: 'clear_board' })
   }
@@ -229,7 +260,9 @@ export const BoardProvider = ({ children }) => {
         deleteList,
         updateListName,
         assignUserToTask,
-        unassignUserFromTask
+        unassignUserFromTask,
+        assignTaskToNewList,
+        setShowTaskDetails
       }}
     >
       {children}

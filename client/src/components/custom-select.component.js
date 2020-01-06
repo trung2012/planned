@@ -1,48 +1,63 @@
 import React, { useState } from 'react';
 
+import { ReactComponent as CheckmarkIcon } from '../assets/checkmark.svg';
 import { ReactComponent as DropdownIcon } from '../assets/dropdown.svg';
-import { ReactComponent as CalendarIcon } from '../assets/calendar.svg';
 import './custom-select.styles.scss';
+import MoreOptions from './more-options.component';
 
-const CustomSelect = ({ label, inputDefault, selectOptions, iconType = '', submit }) => {
+const CustomSelect = ({ label, inputDefault, selectOptions, submit }) => {
   const [showDropdown, setShowDropdown] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(inputDefault);
+  const [selectedOption, setSelectedOption] = useState(typeof inputDefault === 'string' ? inputDefault : inputDefault.name);
+  const [isInputActive, setIsInputActive] = useState(false);
+  const inputClassname = isInputActive ? 'custom-select__input custom-select__input--active' : 'custom-select__input'
 
-  const handleSelect = event => {
-    setSelectedOption(event.target.value);
-    if (label === 'List') {
-      submit({ _id: selectedOption._id });
-    } else {
-      submit({ _id: selectedOption._id });
+  const handleSelect = (option) => {
+    if (selectedOption !== option.name) {
+      setSelectedOption(option.name);
+      if (label === 'List') {
+        submit(option._id);
+      } else {
+        // submit(option.name);
+      }
+      setShowDropdown(false);
     }
-    setShowDropdown(false);
   }
 
   return (
     <div className='custom-select' onClick={() => setShowDropdown(!showDropdown)}>
       <h4 className='custom-select__label'>{label}</h4>
-      <div className='custom-select__input' title={inputDefault}>
-        <span>{label === 'List' ? selectedOption.name : selectedOption}</span>
-        {
-          iconType === 'calendar' ?
-            <CalendarIcon className='dropdown-icon' />
-            : <DropdownIcon className='dropdown-icon' />
-        }
+      <div
+        className={`${inputClassname}`}
+        title={selectedOption}
+        onClick={() => {
+          if (!isInputActive) {
+            setIsInputActive(true);
+          }
+        }}>
+        <span>{selectedOption}</span>
+        <DropdownIcon className='dropdown-icon' />
       </div>
       {
-        label !== 'Due date' &&
         showDropdown &&
-        selectOptions.map(option => {
-          if (inputDefault._id === option._id) {
-            return <div className='custom-select__option custom-select__option--selected' key={option._id} onClick={handleSelect}>
-              {option.value}
-            </div>
-          } else {
-            return <div className='custom-select__option' key={option._id} onClick={handleSelect}>
-              {option.value}
-            </div>
+        <MoreOptions dismiss={() => {
+          setShowDropdown(false);
+          setIsInputActive(false);
+        }}>
+          {
+            selectOptions.map(option => {
+              if (inputDefault === option.name || inputDefault._id === option._id) {
+                return <div className='custom-select__option custom-select__option--selected' key={option._id} onClick={() => handleSelect(option)}>
+                  {option.name}
+                  <CheckmarkIcon className='checkmark-icon' />
+                </div>
+              } else {
+                return <div className='custom-select__option' key={option._id} onClick={() => handleSelect(option)}>
+                  {option.name}
+                </div>
+              }
+            })
           }
-        })
+        </MoreOptions>
       }
     </div>
 

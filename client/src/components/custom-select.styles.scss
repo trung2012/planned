@@ -2,6 +2,7 @@
 @import '../sass/variables';
 
 .custom-select {
+  position: relative;
   flex: 0 1 20rem;
   margin-bottom: 2rem;
 
@@ -11,7 +12,9 @@
     margin-bottom: .5rem;
   }
 
-  &__input {
+  &__input,
+  &__input--active {
+    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -19,6 +22,38 @@
     padding: .75rem;
     padding-left: 1.25rem;
     background-color: $color-gray-extra-light;
+    border-bottom: 2px solid transparent;
     cursor: pointer;
+    z-index: 0;
+    transition: border .2s;
+  }
+  
+  &__input--active {
+    border-bottom: 2px solid $color-green-dark;
+  }
+
+  .more-options {
+    padding: 0.1rem;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    box-shadow: none;
+    background-color: #fff;
+    border: 1px solid $color-gray-light;
+    border-top: 1px solid $color-gray-extra-light;
+  }
+
+  &__option {
+    padding: .75rem;
+    padding-left: 1.25rem;
+
+    &--selected {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: $color-gray-extra-light;
+      padding: .25rem;
+      padding-left: 1.25rem;
+    }
   }
 }

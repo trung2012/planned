@@ -1,13 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
 
+
 import { ProjectContext } from '../context/ProjectContext';
 import ProjectList from './project-list.component';
 import Modal from './modal.component';
+import Spinner from './spinner.component';
+import ProjectAddForm from './project-add-form.component';
+import CustomButton from './custom-button.component';
 
 import './project-overview.styles.scss';
-import Spinner from './spinner.component';
-import CustomButton from './custom-button.component';
-import ProjectAddForm from './project-add-form.component';
 
 const ProjectOverview = () => {
   const { projectState, fetchProjects } = useContext(ProjectContext);

@@ -19,22 +19,22 @@ export const progressOptions = [
 export const priorityOptions = [
   {
     _id: 0,
-    name: 'Low',
-    iconImage: 'priority-low'
+    name: 'Important',
+    iconImage: 'priority-important'
   },
   {
     _id: 1,
-    name: 'Medium',
-    iconImage: 'priority-medium'
-  },
-  {
-    _id: 2,
     name: 'High',
     iconImage: 'priority-high'
   },
   {
+    _id: 2,
+    name: 'Medium',
+    iconImage: 'priority-medium'
+  },
+  {
     _id: 3,
-    name: 'Important',
-    iconImage: 'priority-important'
+    name: 'Low',
+    iconImage: 'priority-low'
   }
 ]

@@ -1,21 +1,22 @@
 import React, { useState, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory, useLocation } from 'react-router-dom';
 
 import MoreOptions from './more-options.component';
 import { ReactComponent as OptionsIcon } from '../assets/options.svg';
 import { SocketContext } from '../context/SocketContext';
 
-import BoardTaskDetails from './board-task-details.component';
 import { BoardContext } from '../context/BoardContext';
 import BoardMembersDropdownItem from './board-members-dropdown-item.component';
 import './board-task.styles.scss';
 
 const BoardTask = ({ task, list }) => {
+  const { pathname } = useLocation()
   const { projectId } = useParams();
+  const history = useHistory();
   const socket = useContext(SocketContext);
-  const { deleteTask } = useContext(BoardContext);
+
+  const { deleteTask, setShowTaskDetails } = useContext(BoardContext);
   const [showTaskOptions, setShowTaskOptions] = useState(false);
-  const [showTaskDetails, setShowTaskDetails] = useState(false);
 
   const handleDeleteClick = () => {
     deleteTask({ taskId: task._id, listId: list._id });
@@ -23,15 +24,24 @@ const BoardTask = ({ task, list }) => {
     setShowTaskOptions(false);
   }
 
+  const handleTaskDetailsToggle = () => {
+    history.push(`${pathname}/${task._id}`);
+    setShowTaskDetails(true);
+  }
+
   return (
     <React.Fragment>
       <div className='board-task'>
         <div className='board-task__top-content'>
           <div className='board-task__heading'>
-            <span onClick={() => setShowTaskDetails(true)}>{task.name}</span>
+            <span
+              onClick={handleTaskDetailsToggle}
+            >
+              {task.name}
+            </span>
             <OptionsIcon className='options-icon' onClick={() => setShowTaskOptions(!showTaskOptions)}>...</OptionsIcon>
           </div>
-          <div className='board-task__content' onClick={() => setShowTaskDetails(true)}>
+          <div className='board-task__content' onClick={handleTaskDetailsToggle}>
             <div>icons</div>
           </div>
           {
@@ -45,15 +55,11 @@ const BoardTask = ({ task, list }) => {
         </div>
         {
           task.assignee &&
-          <div className='board-task__assignee' onClick={() => setShowTaskDetails(true)}>
+          <div className='board-task__assignee' onClick={handleTaskDetailsToggle}>
             <BoardMembersDropdownItem member={task.assignee} />
           </div>
         }
       </div>
-      {
-        showTaskDetails &&
-        <BoardTaskDetails task={task} list={list} dismiss={() => setShowTaskDetails(false)} />
-      }
     </React.Fragment>
   );
 }

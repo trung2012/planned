@@ -1,7 +1,8 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import Moment from 'moment';
 import { useParams } from 'react-router-dom';
 
+import CustomDatePickerSelect from './custom-date-picker-select.component';
 import CustomSelect from './custom-select.component';
 import UserProfilePicture from './user-profile-picture.component';
 import CustomButton from './custom-button.component';
@@ -16,11 +17,17 @@ import CustomDatePicker from './custom-date-picker.component';
 const BoardTaskDetails = ({ task, list, dismiss }) => {
   const { projectId } = useParams();
   const socket = useContext(SocketContext);
-  const { boardState, assignUserToTask, unassignUserFromTask } = useContext(BoardContext);
+  const { boardState, assignUserToTask, unassignUserFromTask, assignTaskToNewList } = useContext(BoardContext);
+
   const { name, description, assignee, progress, priority, due, updatedAt } = task;
+  const [memberSearchQuery, setMemberSearchQuery] = useState('');
   const [showAssignmentDropdown, setShowAssignmentDropdown] = useState(false);
   const [newCommentText, setNewCommentText] = useState('');
-  const [memberSearchQuery, setMemberSearchQuery] = useState('');
+  const [newDueDate, setNewDueDate] = useState(due);
+
+  const listSelectOptions = boardState.currentProject.lists.map(listId => {
+    return boardState.lists[listId];
+  })
 
   const filteredMembers = boardState.members.filter(user => {
     if (assignee) {
@@ -29,9 +36,23 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
     return user.name.toLowerCase().includes(memberSearchQuery.toLowerCase())
   });
 
+  useEffect(() => {
+    // updateTaskDueDate({ taskId: task._id, due: newDueDate });
+  }, [newDueDate])
+
+  const handleChange = () => {
+
+  }
+
   const handleAssignTask = user => {
-    assignUserToTask({ taskId: task._id, user });
-    socket.emit('assign_user_to_task', { taskId: task._id, user, projectId });
+    const updatedAt = Date.now();
+    assignUserToTask({ taskId: task._id, user, updatedAt });
+    socket.emit('assign_user_to_task', {
+      taskId: task._id,
+      user,
+      projectId,
+      updatedAt
+    });
   }
 
   const handleUnassignTask = () => {
@@ -39,8 +60,17 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
     socket.emit('unassign_task', { taskId: task._id, projectId });
   }
 
-  const handleChange = event => {
-
+  const handleMoveTaskToNewList = (newListId) => {
+    if (newListId !== list._id) {
+      const data = {
+        task,
+        oldListId: list._id,
+        newListId,
+        updatedAt: Date.now()
+      };
+      assignTaskToNewList(data);
+      socket.emit('assign_task_to_new_list', { data, projectId });
+    }
   }
 
   return (
@@ -84,11 +114,11 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
             }
           </div>
           <div className='board-task-details__dropdowns'>
-            <CustomSelect label='List' inputDefault={list} iconType='dropdown' selectOptions={boardState.currentProject.lists} />
-            <CustomSelect label='Progress' inputDefault={progress} iconType='dropdown' selectOptions={progressOptions} />
-            <CustomSelect label='Priority' inputDefault={priority} iconType='dropdown' selectOptions={priorityOptions} />
-            <CustomDatePicker date={due} setDate={handleChange}>
-              <CustomSelect label='Due date' inputDefault={due} iconType='calendar' selectOptions={[]} />
+            <CustomSelect label='List' inputDefault={list} selectOptions={listSelectOptions} submit={handleMoveTaskToNewList} />
+            <CustomSelect label='Progress' inputDefault={progress} selectOptions={progressOptions} />
+            <CustomSelect label='Priority' inputDefault={priority} selectOptions={priorityOptions} />
+            <CustomDatePicker date={newDueDate} setDate={setNewDueDate}>
+              <CustomDatePickerSelect />
             </CustomDatePicker>
           </div>
           <div className='board-task-details__description'>
