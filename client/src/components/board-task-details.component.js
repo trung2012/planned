@@ -1,16 +1,17 @@
 import React, { useState, useContext } from 'react';
 import Moment from 'moment';
+import { useParams } from 'react-router-dom';
 
-import DropdownOpener from './dropdown-opener.component';
+import CustomSelect from './custom-select.component';
 import UserProfilePicture from './user-profile-picture.component';
 import CustomButton from './custom-button.component';
 import { ReactComponent as AddUserIcon } from '../assets/add_user.svg';
 import { BoardContext } from '../context/BoardContext';
 import { SocketContext } from '../context/SocketContext';
-
-import { useParams } from 'react-router-dom';
+import { progressOptions, priorityOptions } from '../utils/dropdown-options';
 import TaskAssignmentDropdown from './task-assignment-dropdown.component';
 import './board-task-details.styles.scss';
+import CustomDatePicker from './custom-date-picker.component';
 
 const BoardTaskDetails = ({ task, list, dismiss }) => {
   const { projectId } = useParams();
@@ -18,12 +19,9 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
   const { boardState, assignUserToTask, unassignUserFromTask } = useContext(BoardContext);
   const { name, description, assignee, progress, priority, due, updatedAt } = task;
   const [showAssignmentDropdown, setShowAssignmentDropdown] = useState(false);
-  const [showListDropdown, setShowListDropdown] = useState(false);
-  const [showProgressDropdown, setShowProgressDropdown] = useState(false);
-  const [showPriorityDropdown, setShowPriorityDropdown] = useState(false);
-  const [showDueDateDropdown, setShowDueDateDropdown] = useState(false);
   const [newCommentText, setNewCommentText] = useState('');
   const [memberSearchQuery, setMemberSearchQuery] = useState('');
+
   const filteredMembers = boardState.members.filter(user => {
     if (assignee) {
       return user.name.toLowerCase().includes(memberSearchQuery.toLowerCase()) && assignee._id !== user._id
@@ -86,10 +84,12 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
             }
           </div>
           <div className='board-task-details__dropdowns'>
-            <DropdownOpener label='List' inputDefault={list.name} iconType='dropdown' onClick={() => setShowListDropdown(!showListDropdown)} />
-            <DropdownOpener label='Progress' inputDefault={progress} iconType='dropdown' onClick={() => setShowProgressDropdown(!showProgressDropdown)} />
-            <DropdownOpener label='Priority' inputDefault={priority} iconType='dropdown' onClick={() => setShowPriorityDropdown(!showPriorityDropdown)} />
-            <DropdownOpener label='Due date' inputDefault={due} iconType='calendar' onClick={() => setShowDueDateDropdown(!showDueDateDropdown)} />
+            <CustomSelect label='List' inputDefault={list} iconType='dropdown' selectOptions={boardState.currentProject.lists} />
+            <CustomSelect label='Progress' inputDefault={progress} iconType='dropdown' selectOptions={progressOptions} />
+            <CustomSelect label='Priority' inputDefault={priority} iconType='dropdown' selectOptions={priorityOptions} />
+            <CustomDatePicker date={due} setDate={handleChange}>
+              <CustomSelect label='Due date' inputDefault={due} iconType='calendar' selectOptions={[]} />
+            </CustomDatePicker>
           </div>
           <div className='board-task-details__description'>
             <h4>Description</h4>

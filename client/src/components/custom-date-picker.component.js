@@ -17,14 +17,14 @@ const CustomDateSelector = forwardRef(({ onClick, value }, ref) => (
   </div>
 ))
 
-const CustomDatePicker = ({ date, setDate }) => {
+const CustomDatePicker = ({ date, setDate, children }) => {
 
   return (
     <DatePicker
       todayButton='Today'
       selected={date}
       onChange={date => setDate(date)}
-      customInput={<CustomDateSelector />}
+      customInput={children ? children : <CustomDateSelector />}
     />
   );
 };

@@ -3,8 +3,6 @@
 
 .board-task {
   position: relative;
-  padding: .75rem;
-  padding-left: 1.25rem;
   background-color: #fff;
   margin-bottom: 1rem;
   border: 1px solid transparent;
@@ -15,21 +13,40 @@
     box-shadow: $box-shadow-primary-hover;
   }
 
+  &__top-content {    
+    padding: .75rem;
+    padding-left: 1.25rem;
+  }
+
   &__heading {
-    margin-bottom: 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
 
     span {
       flex: 1;
+      padding-bottom: 1rem;
+    }
+
+    .options-icon {
+      align-self: flex-start;
     }
   }
 
   &__content {
     position: relative;
+    padding-bottom: 1rem;
   }
 
+  &__assignee {
+    border-top: 1px solid $color-gray-light;
+
+    .board-members-dropdown-item {
+      padding: .75rem;
+      padding-left: 1rem;
+    }
+  }
+  
   .more-options {
     top: 3rem;
     right: 0;

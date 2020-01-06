@@ -7,6 +7,7 @@ import { SocketContext } from '../context/SocketContext';
 
 import BoardTaskDetails from './board-task-details.component';
 import { BoardContext } from '../context/BoardContext';
+import BoardMembersDropdownItem from './board-members-dropdown-item.component';
 import './board-task.styles.scss';
 
 const BoardTask = ({ task, list }) => {
@@ -25,20 +26,28 @@ const BoardTask = ({ task, list }) => {
   return (
     <React.Fragment>
       <div className='board-task'>
-        <div className='board-task__heading'>
-          <span onClick={() => setShowTaskDetails(true)}>{task.name}</span>
-          <OptionsIcon className='options-icon' onClick={() => setShowTaskOptions(!showTaskOptions)}>...</OptionsIcon>
-        </div>
-        <div className='board-task__content' onClick={() => setShowTaskDetails(true)}>
-          <div>icons</div>
+        <div className='board-task__top-content'>
+          <div className='board-task__heading'>
+            <span onClick={() => setShowTaskDetails(true)}>{task.name}</span>
+            <OptionsIcon className='options-icon' onClick={() => setShowTaskOptions(!showTaskOptions)}>...</OptionsIcon>
+          </div>
+          <div className='board-task__content' onClick={() => setShowTaskDetails(true)}>
+            <div>icons</div>
+          </div>
+          {
+            showTaskOptions &&
+            <MoreOptions dismiss={() => setShowTaskOptions(false)}>
+              <div className='more-options-item'>Copy Task</div>
+              <div className='more-options-item'>Assign</div>
+              <div className='more-options-item' onClick={handleDeleteClick}>Delete</div>
+            </MoreOptions>
+          }
         </div>
         {
-          showTaskOptions &&
-          <MoreOptions dismiss={() => setShowTaskOptions(false)}>
-            <div className='more-options-item'>Copy Task</div>
-            <div className='more-options-item'>Assign</div>
-            <div className='more-options-item' onClick={handleDeleteClick}>Delete</div>
-          </MoreOptions>
+          task.assignee &&
+          <div className='board-task__assignee' onClick={() => setShowTaskDetails(true)}>
+            <BoardMembersDropdownItem member={task.assignee} />
+          </div>
         }
       </div>
       {

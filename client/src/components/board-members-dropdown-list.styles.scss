@@ -1,3 +1,4 @@
+@import '../sass/components';
 @import '../sass/variables';
 
 .board-members-dropdown-list {
@@ -11,18 +12,6 @@
   
     .board-members-dropdown-item {
       flex: 1;
-    }
-  
-    .remove-user-icon {
-      height: 2.5em;
-      width: 2.5em;
-      cursor: pointer;
-      padding: .75rem;
-      border-radius: .3rem;
-  
-      &:hover {
-        background-color: $color-gray-extra-light;
-      }
     }
   }  
 }
