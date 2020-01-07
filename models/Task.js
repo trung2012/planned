@@ -52,11 +52,16 @@ const taskSchema = new mongoose.Schema({
 taskSchema.pre('remove', async function (next) {
   const task = this;
 
-  await require('./List').updateOne(
-    { _id: task.list },
-    { $pull: { tasks: task._id } },
-    { new: true }
-  )
+  await Promise.all([
+    require('./List').updateOne(
+      { _id: task.list },
+      { $pull: { tasks: task._id } },
+      { new: true }
+    ),
+    require('./Comment').deleteMany(
+      { task: task._id }
+    )
+  ])
 
   next();
 })

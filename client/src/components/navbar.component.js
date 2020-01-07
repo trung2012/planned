@@ -1,19 +1,25 @@
 import React, { useContext, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import UserProfilePicture from './user-profile-picture.component';
 import MoreOptions from './more-options.component';
 import { AuthContext } from '../context/AuthContext';
+import { SocketContext } from '../context/SocketContext';
 
 import logo from '../assets/logo.png';
 import './navbar.styles.scss';
 
 const NavBar = () => {
+  const history = useHistory();
   const { authState: { user }, signOut } = useContext(AuthContext);
+  const { socket } = useContext(SocketContext);
   const [showProfileOptions, setShowProfileOptions] = useState(false);
 
   const handleSignOut = event => {
-    signOut();
+    signOut(() => {
+      history.push('/');
+    });
+    socket.close();
     setShowProfileOptions(false);
   }
 

@@ -7,6 +7,8 @@
   background-color: #fff;
   padding: 1.5rem;
   width: 28rem;
+  max-height: 32rem;
+  overflow: auto;
   box-shadow: $box-shadow-primary;
   animation: fadeFromTop .2s;
   z-index: 100;

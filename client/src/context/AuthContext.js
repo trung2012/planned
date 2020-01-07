@@ -76,9 +76,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const signOut = () => {
+  const signOut = (callback) => {
     localStorage.removeItem('token');
     dispatch({ type: 'signout' });
+    if (callback) {
+      callback();
+    }
   };
 
   const addAuthError = (errorMessage) => {

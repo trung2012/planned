@@ -15,16 +15,17 @@ import './board-task-details.styles.scss';
 import CustomDatePicker from './custom-date-picker.component';
 
 const BoardTaskDetails = ({ task, list, dismiss }) => {
+  console.log('render')
   const { projectId } = useParams();
   const { socket } = useContext(SocketContext);
-  const { boardState, assignUserToTask, unassignUserFromTask, assignTaskToNewList } = useContext(BoardContext);
+  const { boardState, assignUserToTask, unassignUserFromTask, assignTaskToNewList, updateTaskAttributes } = useContext(BoardContext);
 
   const { name, description, assignee, progress, priority, due, updatedAt } = task;
   const [memberSearchQuery, setMemberSearchQuery] = useState('');
   const [showAssignmentDropdown, setShowAssignmentDropdown] = useState(false);
   const [newCommentText, setNewCommentText] = useState('');
   const [newDueDate, setNewDueDate] = useState(due);
-  const [newDescription, setNewDescription] = useState(description);
+  const [newDescription, setNewDescription] = useState(task.description);
 
   const listSelectOptions = boardState.currentProject.lists.map(listId => {
     return boardState.lists[listId];
@@ -38,14 +39,29 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
   });
 
   useEffect(() => {
-    // updateTaskDueDate({ taskId: task._id, due: newDueDate });
-  }, [newDueDate])
+    setNewDescription(description);
+  }, [description])
+
+  useEffect(() => {
+    setNewDueDate(due);
+  }, [due])
 
   const handleAttributeUpdate = data => {
-    // updateTaskAttributes({
-    //   taskId: task._id,
-    //   data
-    // })
+    const updatedTask = {
+      taskId: task._id,
+      data: {
+        ...data,
+        updatedAt: Date.now()
+      },
+      projectId
+    }
+    socket.emit('update_task_attributes', updatedTask);
+    updateTaskAttributes(updatedTask);
+  }
+
+  const handleSetNewDueDate = date => {
+    setNewDueDate(date);
+    handleAttributeUpdate({ due: date });
   }
 
   const handleAssignTask = user => {
@@ -75,6 +91,10 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
       assignTaskToNewList(data);
       socket.emit('assign_task_to_new_list', { data, projectId });
     }
+  }
+
+  const handleCommentSubmit = () => {
+    // addComment()
   }
 
   return (
@@ -121,7 +141,7 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
             <CustomSelect label='List' inputDefault={list} selectOptions={listSelectOptions} submit={handleMoveTaskToNewList} />
             <CustomSelect label='Progress' inputDefault={progress} selectOptions={progressOptions} submit={handleAttributeUpdate} />
             <CustomSelect label='Priority' inputDefault={priority} selectOptions={priorityOptions} submit={handleAttributeUpdate} />
-            <CustomDatePicker date={newDueDate} setDate={setNewDueDate}>
+            <CustomDatePicker date={newDueDate} setDate={handleSetNewDueDate}>
               <CustomDatePickerSelect />
             </CustomDatePicker>
           </div>
@@ -133,7 +153,11 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
               className='board-task-details__text-input'
               value={newDescription}
               onChange={event => setNewDescription(event.target.value)}
-              onBlur={handleAttributeUpdate}
+              onBlur={() => {
+                if (description !== newDescription) {
+                  handleAttributeUpdate({ description: newDescription });
+                }
+              }}
             />
           </div>
           <div className='board-task-details__attachments'>
@@ -149,7 +173,7 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
                 value={newCommentText}
                 onChange={event => setNewCommentText(event.target.value)}
               />
-              <CustomButton text='Save' buttonType='save-text' />
+              <CustomButton text='Save' buttonType='save-text' onClick={handleCommentSubmit} />
             </div>
             <div>Comments placeholder</div>
           </div>

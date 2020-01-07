@@ -233,6 +233,22 @@ io.on('connection', (socket) => {
     }
   })
 
+  socket.on('update_task_attributes', async ({ taskId, data, projectId }) => {
+    try {
+      await Task.updateOne(
+        { _id: taskId },
+        { $set: data },
+        { new: true }
+      )
+
+      socket.to(projectId).emit('task_attributes_updated', { taskId, data });
+
+    } catch (err) {
+      console.log(err)
+      socket.emit('new_error', 'Error updating task');
+    }
+  })
+
   socket.on('leave', (projectId) => {
     socket.leave(projectId);
     console.log(`left project ${projectId}`)

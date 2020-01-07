@@ -26,13 +26,14 @@ const listSchema = new mongoose.Schema({
 listSchema.pre('remove', async function (next) {
   const list = this;
 
-  await require('./Task').deleteMany({ list: list._id });
-
-  await require('./Project').updateOne(
-    { _id: list.project },
-    { $pull: { lists: list._id } },
-    { new: true }
-  )
+  await Promise.all([
+    require('./Task').deleteMany({ list: list._id }),
+    require('./Project').updateOne(
+      { _id: list.project },
+      { $pull: { lists: list._id } },
+      { new: true }
+    )
+  ])
 
   next();
 })

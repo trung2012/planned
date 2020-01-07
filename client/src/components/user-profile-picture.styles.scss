@@ -10,13 +10,13 @@
   border-radius: 50%;
   cursor: pointer;
   letter-spacing: 1px;
-  transition: transform .2s;
+  transition: transform .1s;
 
   &:active {
     transform: scale(.95);
   }
 
   &:hover {
-    opacity: .9;
+    opacity: .8;
   }
 }

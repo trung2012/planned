@@ -7,6 +7,7 @@ const initialState = {
   currentProject: {},
   lists: {},
   tasks: {},
+  comments: {},
   members: [],
   memberIds: [],
   users: [],
@@ -136,6 +137,16 @@ const boardReducer = (state, action) => {
         }
       }
     }
+    case 'update_task_attributes': {
+      const { taskId, data } = action.payload;
+      return {
+        ...state,
+        tasks: {
+          ...state.tasks,
+          [taskId]: { ...state.tasks[taskId], ...data }
+        }
+      }
+    }
     case 'set_show_task_details':
       return {
         ...state,
@@ -234,6 +245,14 @@ export const BoardProvider = ({ children }) => {
     dispatch({ type: 'assign_task_to_new_list', payload: data });
   }, [])
 
+  const updateTaskAttributes = useCallback(({ taskId, data }) => {
+    dispatch({ type: 'update_task_attributes', payload: { taskId, data } });
+  }, [])
+
+  const addComment = () => {
+
+  }
+
   const setShowTaskDetails = (value) => {
     dispatch({ type: 'set_show_task_details', payload: value });
   }
@@ -262,7 +281,9 @@ export const BoardProvider = ({ children }) => {
         assignUserToTask,
         unassignUserFromTask,
         assignTaskToNewList,
-        setShowTaskDetails
+        updateTaskAttributes,
+        setShowTaskDetails,
+        addComment
       }}
     >
       {children}

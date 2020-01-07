@@ -26,7 +26,8 @@ const ProjectDetails = () => {
     deleteList,
     updateListName,
     assignUserToTask,
-    assignTaskToNewList
+    assignTaskToNewList,
+    updateTaskAttributes
   } = useContext(BoardContext);
   const [showErrorSnackbar, setShowErrorSnackbar] = useState(false);
   const { projectId } = useParams();
@@ -89,13 +90,14 @@ const ProjectDetails = () => {
       assignTaskToNewList(data);
     })
 
+    socket.on('task_attributes_updated', data => {
+      console.log(data)
+      updateTaskAttributes(data);
+    })
+
     socket.on('new_error', errorMessage => {
       addBoardError(errorMessage);
     })
-
-    socket.on('reconnect_attempt', () => {
-      socket.io.opts.transports = ['polling', 'websocket'];
-    });
 
     return () => {
       socket.emit('leave', projectId);
@@ -104,8 +106,12 @@ const ProjectDetails = () => {
       socket.off('member_deleted');
       socket.off('list_added');
       socket.off('list_deleted');
+      socket.off('list_name_updated');
       socket.off('task_added');
       socket.off('task_deleted');
+      socket.off('task_assigned');
+      socket.off('task_assigned_to_new_list');
+      socket.off('task_attributes_updated');
       socket.off('new_error');
     }
 
@@ -124,7 +130,8 @@ const ProjectDetails = () => {
       deleteList,
       updateListName,
       assignUserToTask,
-      assignTaskToNewList
+      assignTaskToNewList,
+      updateTaskAttributes
     ])
 
   return (
