@@ -5,10 +5,14 @@ import FormInput from './form-input.component';
 import CustomButton from './custom-button.component';
 import ErrorDisplay from './error-display.component';
 
+import reconnectSocket from '../utils/reconnectSocket';
+import { SocketContext } from '../context/SocketContext';
+
 import './signup.styles.scss';
 
 const SignUp = ({ history }) => {
   const { authState, signUp, addAuthError, clearAuthErrorMessage } = useContext(AuthContext);
+  const { socket } = useContext(SocketContext);
   const [userCredentials, setUserCredentials] = useState({ displayName: '', email: '', password: '', confirmPassword: '' })
   const { email, password, confirmPassword, displayName } = userCredentials;
 
@@ -27,7 +31,10 @@ const SignUp = ({ history }) => {
       return addAuthError('Passwords need to be at least 8 characters long');
     }
 
-    signUp({ displayName, email, password }, () => { history.push('/') });
+    signUp({ displayName, email, password }, () => {
+      reconnectSocket(socket);
+      history.push('/');
+    });
   }
 
   const onFocus = () => {

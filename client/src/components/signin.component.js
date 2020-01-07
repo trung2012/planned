@@ -5,9 +5,10 @@ import { useHistory, useLocation } from 'react-router-dom';
 import FormInput from './form-input.component';
 import CustomButton from './custom-button.component';
 import ErrorDisplay from './error-display.component';
+import { SocketContext } from '../context/SocketContext';
+import reconnectSocket from '../utils/reconnectSocket';
 
 import './signin.styles.scss';
-import { SocketContext } from '../context/SocketContext';
 
 const SignIn = () => {
   const history = useHistory();
@@ -27,9 +28,7 @@ const SignIn = () => {
   const handleSubmit = event => {
     event.preventDefault();
     signIn({ email, password }, () => {
-      let token = localStorage.getItem('token');
-      socket.io.reconnect()
-      console.log(socket)
+      reconnectSocket(socket);
       history.replace(from);
     });
   }
