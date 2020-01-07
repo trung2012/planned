@@ -1,7 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react';
-import Moment from 'moment';
+import moment from 'moment';
+import { ObjectID } from 'bson';
 import { useParams } from 'react-router-dom';
 
+import CommentList from './comment-list.component';
 import CustomDatePickerSelect from './custom-date-picker-select.component';
 import CustomSelect from './custom-select.component';
 import UserProfilePicture from './user-profile-picture.component';
@@ -9,18 +11,26 @@ import CustomButton from './custom-button.component';
 import { ReactComponent as AddUserIcon } from '../assets/add_user.svg';
 import { BoardContext } from '../context/BoardContext';
 import { SocketContext } from '../context/SocketContext';
+import { AuthContext } from '../context/AuthContext';
 import { progressOptions, priorityOptions } from '../utils/dropdown-options';
 import TaskAssignmentDropdown from './task-assignment-dropdown.component';
 import './board-task-details.styles.scss';
 import CustomDatePicker from './custom-date-picker.component';
 
 const BoardTaskDetails = ({ task, list, dismiss }) => {
-  console.log('render')
   const { projectId } = useParams();
   const { socket } = useContext(SocketContext);
-  const { boardState, assignUserToTask, unassignUserFromTask, assignTaskToNewList, updateTaskAttributes } = useContext(BoardContext);
+  const { authState } = useContext(AuthContext);
+  const {
+    boardState,
+    assignUserToTask,
+    unassignUserFromTask,
+    assignTaskToNewList,
+    updateTaskAttributes,
+    addComment
+  } = useContext(BoardContext);
 
-  const { name, description, assignee, progress, priority, due, updatedAt } = task;
+  const { name, description, assignee, progress, priority, due, updatedAt, comments } = task;
   const [memberSearchQuery, setMemberSearchQuery] = useState('');
   const [showAssignmentDropdown, setShowAssignmentDropdown] = useState(false);
   const [newCommentText, setNewCommentText] = useState('');
@@ -94,7 +104,18 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
   }
 
   const handleCommentSubmit = () => {
-    // addComment()
+    const commentData = {
+      _id: new ObjectID().toString(),
+      text: newCommentText,
+      author: authState.user,
+      task: task._id,
+      project: projectId,
+      createdAt: Date.now()
+    }
+
+    addComment(commentData);
+    setNewCommentText('');
+    socket.emit('add_comment', commentData);
   }
 
   return (
@@ -107,18 +128,18 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
           </span>
           <div className='board-task-details__header'>
             <h2>{name}</h2>
-            <div className='task-last-updated'>{`Updated ${Moment(updatedAt).fromNow()}`}</div>
+            <div className='task-last-updated'>{`Updated ${moment(updatedAt).fromNow()}`}</div>
           </div>
           <div className='board-task-details__assignment'>
             <AddUserIcon className='add-user-icon' onClick={() => setShowAssignmentDropdown(true)} />
             {
               assignee ?
-                <div className='board-members-dropdown-item' onClick={() => setShowAssignmentDropdown(!showAssignmentDropdown)}>
+                <div className='member-profile-item' onClick={() => setShowAssignmentDropdown(!showAssignmentDropdown)}>
                   <UserProfilePicture
                     backgroundColor={assignee.color}
                     initials={assignee.initials}
                   />
-                  <span className='board-members-dropdown-item__user-name'>
+                  <span className='member-profile-item__user-name'>
                     {assignee.name}
                   </span>
                 </div>
@@ -175,7 +196,7 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
               />
               <CustomButton text='Save' buttonType='save-text' onClick={handleCommentSubmit} />
             </div>
-            <div>Comments placeholder</div>
+            <CommentList comments={comments} />
           </div>
         </div>
       </div>

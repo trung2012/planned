@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { ReactComponent as CheckmarkIcon } from '../assets/checkmark.svg';
 import { ReactComponent as DropdownIcon } from '../assets/dropdown.svg';
@@ -10,6 +10,10 @@ const CustomSelect = ({ label, inputDefault, selectOptions, submit }) => {
   const [selectedOption, setSelectedOption] = useState(typeof inputDefault === 'string' ? inputDefault : inputDefault.name);
   const [isInputActive, setIsInputActive] = useState(false);
   const inputClassname = isInputActive ? 'custom-select__input custom-select__input--active' : 'custom-select__input'
+
+  useEffect(() => {
+    setSelectedOption(typeof inputDefault === 'string' ? inputDefault : inputDefault.name);
+  }, [inputDefault])
 
   const handleSelect = (option) => {
     if (selectedOption !== option.name) {

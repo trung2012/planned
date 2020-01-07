@@ -11,6 +11,7 @@ const projectRouter = require('./routers/api/project');
 const List = require('./models/List');
 const Project = require('./models/Project');
 const Task = require('./models/Task');
+const Comment = require('./models/Comment');
 const convertArrayToMap = require('./utils/convertArrayToMap');
 
 const app = express();
@@ -52,6 +53,16 @@ io.on('connection', (socket) => {
           path: 'assignee',
           select: '-password'
         })
+          .populate({
+            path: 'comments',
+            sort: {
+              'createdAt': -1
+            },
+            populate: {
+              path: 'author',
+              select: '-password'
+            }
+          })
       ])
 
       const memberIds = project.members.map(member => member._id)
@@ -110,12 +121,13 @@ io.on('connection', (socket) => {
     try {
       const newList = new List(listData);
 
-      await newList.save();
-
-      await Project.updateOne(
-        { _id: listData.project },
-        { $push: { lists: newList._id } }
-      );
+      await Promise.all([
+        newList.save(),
+        Project.updateOne(
+          { _id: listData.project },
+          { $push: { lists: listData._id } }
+        )
+      ])
 
       socket.to(listData.project).emit('list_added', newList);
     } catch (err) {
@@ -165,9 +177,12 @@ io.on('connection', (socket) => {
         { new: true }
       )
 
-      const task = await Task.findById(newTask._id).populate('assignee');
+      const task = await Task.findById(newTask._id).populate({
+        path: 'assignee',
+        select: '-password'
+      });
 
-      socket.to(projectId).emit('task_added', task);
+      socket.to(projectId).emit('task_added', taskData);
     } catch (err) {
       console.log(err)
       socket.emit('new_error', 'Error adding task');
@@ -179,7 +194,7 @@ io.on('connection', (socket) => {
       const task = await Task.findById(taskId);
       await task.remove();
 
-      socket.to(projectId).emit('task_deleted', task);
+      socket.to(projectId).emit('task_deleted', { taskId, listId: task.list });
     } catch (err) {
       console.log(err)
       socket.emit('new_error', 'Error deleting task');
@@ -246,6 +261,21 @@ io.on('connection', (socket) => {
     } catch (err) {
       console.log(err)
       socket.emit('new_error', 'Error updating task');
+    }
+  })
+
+  socket.on('add_comment', async commentData => {
+    try {
+      const comment = new Comment({
+        ...commentData,
+        author: commentData.author._id
+      });
+      await comment.save();
+
+      socket.to(commentData.project).emit('comment_added', commentData);
+    } catch (err) {
+      console.log(err)
+      socket.emit('new_error', 'Error adding comment');
     }
   })
 

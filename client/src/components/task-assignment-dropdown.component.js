@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import CustomInput from './custom-input.component';
 import BoardMembersDropdownList from './board-members-dropdown-list.component';
-import BoardMembersDropdownItem from './board-members-dropdown-item.component'
+import MemberProfileItem from './member-profile-item.component'
 import MoreOptions from './more-options.component';
 
 import './task-assignment-dropdown.styles.scss';
@@ -35,7 +35,7 @@ const TaskAssignmentDropdown = ({ setShowAssignmentDropdown, memberSearchQuery, 
                 {
                   members.length > 0 ? members.map(user => {
                     return (
-                      <BoardMembersDropdownItem onClick={() => handleMemberClick(user)} key={user._id} member={user} />
+                      <MemberProfileItem onClick={() => handleMemberClick(user)} key={user._id} member={user} />
                     );
                   })
                     : <span>No results found</span>

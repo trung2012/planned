@@ -1,17 +1,23 @@
 const mongoose = require('mongoose');
 
 const commentSchema = new mongoose.Schema({
+  _id: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true
+  },
   text: {
     type: String,
     required: true
   },
   author: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    required: true
   },
   task: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Task'
+    ref: 'Task',
+    required: true
   },
   project: {
     type: mongoose.Schema.Types.ObjectId,
@@ -20,6 +26,13 @@ const commentSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now()
+  }
+}, {
+  toObject: {
+    virtuals: true
+  },
+  toJSON: {
+    virtuals: true
   }
 })
 

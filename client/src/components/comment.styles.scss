@@ -1,0 +1,34 @@
+@import '../sass/variables';
+
+.comment {
+  padding: .5rem;
+  margin-bottom: 1rem;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .member-profile-item {
+      font-size: 1.3rem;
+      color: $color-gray-medium;
+      padding-left: 0;
+    }
+
+    .user-profile-picture {
+      height: 3rem;
+      width: 3rem;
+      font-size: 1.1rem;
+    }
+  }
+  
+  &__created-at {
+    font-size: 1.2rem;
+    color: $color-gray-medium;
+  }
+
+  &__content {
+    font-size: 1.3rem;
+    padding: 0 4rem;
+  }
+}

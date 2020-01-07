@@ -47,3 +47,24 @@
   margin-left: .3rem;
   margin-right: 1rem;
 }
+
+
+.board-task-add-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: .75rem;
+  background-color: #fff;
+  margin-bottom: 3rem;
+  box-shadow: $box-shadow-primary;
+  cursor: pointer;
+  z-index: 2;
+
+  &:hover {
+    box-shadow: $box-shadow-primary-hover;
+  }
+
+  &:active {
+    opacity: .8;
+  }
+}

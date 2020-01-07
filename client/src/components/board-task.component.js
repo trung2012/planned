@@ -6,7 +6,7 @@ import { ReactComponent as OptionsIcon } from '../assets/options.svg';
 import { SocketContext } from '../context/SocketContext';
 
 import { BoardContext } from '../context/BoardContext';
-import BoardMembersDropdownItem from './board-members-dropdown-item.component';
+import MemberProfileItem from './member-profile-item.component';
 import './board-task.styles.scss';
 
 const BoardTask = ({ task, list }) => {
@@ -56,7 +56,7 @@ const BoardTask = ({ task, list }) => {
         {
           task.assignee &&
           <div className='board-task__assignee' onClick={handleTaskDetailsToggle}>
-            <BoardMembersDropdownItem member={task.assignee} />
+            <MemberProfileItem member={task.assignee} />
           </div>
         }
       </div>

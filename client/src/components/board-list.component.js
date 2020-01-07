@@ -9,15 +9,18 @@ import BoardListNameForm from './board-list-name-form.component';
 import ItemDelete from './item-delete.component';
 import { ReactComponent as OptionsIcon } from '../assets/options.svg';
 import { BoardContext } from '../context/BoardContext';
+import BoardTaskAdd from './board-task-add.component';
+import { ReactComponent as AddIcon } from '../assets/add.svg';
 import './board-list.styles.scss';
 
 const BoardList = ({ list, updateListName }) => {
   const { projectId } = useParams();
   const { socket } = useContext(SocketContext);
-  const { deleteList } = useContext(BoardContext);
+  const { deleteList, addTask } = useContext(BoardContext);
   const [showListOptions, setShowListOptions] = useState(false);
   const [showListNameEdit, setShowListNameEdit] = useState(false);
   const [showListDeleteConfirm, setShowListDeleteConfirm] = useState(false);
+  const [showTaskAdd, setShowTaskAdd] = useState(false);
 
   const handleDeleteClick = () => {
     deleteList({ _id: list._id });
@@ -31,6 +34,15 @@ const BoardList = ({ list, updateListName }) => {
       updateListName({ _id: list._id, name: listName });
     }
     setShowListNameEdit(false);
+  }
+
+  const handleAddSubmit = (taskData) => {
+    if (taskData) {
+      addTask(taskData);
+      socket.emit('add_task', { taskData, projectId });
+
+      setShowTaskAdd(false);
+    }
   }
 
   return (
@@ -77,6 +89,14 @@ const BoardList = ({ list, updateListName }) => {
           </Modal>
         }
       </div>
+      <div className='board-task-add-button' onClick={() => setShowTaskAdd(!showTaskAdd)}>
+        <AddIcon className='add-icon' />
+        Add task
+      </div>
+      {
+        showTaskAdd &&
+        <BoardTaskAdd submit={handleAddSubmit} listId={list._id} dismiss={() => setShowTaskAdd(false)} />
+      }
       <BoardTasks list={list} />
     </div>
   );

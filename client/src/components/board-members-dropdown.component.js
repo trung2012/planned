@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { BoardContext } from '../context/BoardContext';
 import { SocketContext } from '../context/SocketContext';
 import CustomInput from './custom-input.component';
-import BoardMembersDropdownItem from './board-members-dropdown-item.component';
+import MemberProfileItem from './member-profile-item.component';
 import MoreOptions from './more-options.component';
 import useDebounce from '../utils/useDebounce';
 import BoardMembersDropdownList from './board-members-dropdown-list.component';
@@ -58,7 +58,7 @@ const BoardMembersDropdown = ({ members, dismiss }) => {
               boardState.users.length === 0 ? <span>No results found</span>
                 : boardState.users.map(user => {
                   return (
-                    <BoardMembersDropdownItem onClick={() => handleAddMember(user)} key={user._id} member={user} />
+                    <MemberProfileItem onClick={() => handleAddMember(user)} key={user._id} member={user} />
                   );
                 })
             }

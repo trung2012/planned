@@ -27,7 +27,8 @@ const ProjectDetails = () => {
     updateListName,
     assignUserToTask,
     assignTaskToNewList,
-    updateTaskAttributes
+    updateTaskAttributes,
+    addComment
   } = useContext(BoardContext);
   const [showErrorSnackbar, setShowErrorSnackbar] = useState(false);
   const { projectId } = useParams();
@@ -91,13 +92,18 @@ const ProjectDetails = () => {
     })
 
     socket.on('task_attributes_updated', data => {
-      console.log(data)
       updateTaskAttributes(data);
+    })
+
+    socket.on('comment_added', data => {
+      console.log(data)
+      addComment(data);
     })
 
     socket.on('new_error', errorMessage => {
       addBoardError(errorMessage);
     })
+
 
     return () => {
       socket.emit('leave', projectId);
@@ -112,6 +118,7 @@ const ProjectDetails = () => {
       socket.off('task_assigned');
       socket.off('task_assigned_to_new_list');
       socket.off('task_attributes_updated');
+      socket.off('comment_added');
       socket.off('new_error');
     }
 
@@ -131,7 +138,8 @@ const ProjectDetails = () => {
       updateListName,
       assignUserToTask,
       assignTaskToNewList,
-      updateTaskAttributes
+      updateTaskAttributes,
+      addComment
     ])
 
   return (

@@ -5,9 +5,10 @@ import BoardTask from './board-task.component';
 
 const BoardTaskContainer = ({ taskId, list }) => {
   const { boardState: { tasks } } = useContext(BoardContext);
-  const task = tasks ? tasks[taskId] : {};
+  const task = tasks && tasks[taskId];
 
   return (
+    task &&
     <BoardTask task={task} list={list} />
   );
 }
