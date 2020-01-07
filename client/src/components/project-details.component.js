@@ -12,7 +12,7 @@ import './project-details.styles.scss';
 
 const ProjectDetails = () => {
   const match = useRouteMatch();
-  const socket = useContext(SocketContext);
+  const { socket } = useContext(SocketContext);
   const {
     boardState,
     fetchBoardData,
@@ -41,12 +41,12 @@ const ProjectDetails = () => {
   }, [boardState.errorMessage])
 
   useEffect(() => {
-    socket.emit('join', projectId);
     const fetchData = () => {
       fetchBoardDataStart();
       socket.emit('initial_data', projectId);
     }
 
+    socket.emit('join', projectId);
     fetchData();
 
     socket.on('data_updated', data => {
@@ -92,6 +92,10 @@ const ProjectDetails = () => {
     socket.on('new_error', errorMessage => {
       addBoardError(errorMessage);
     })
+
+    socket.on('reconnect_attempt', () => {
+      socket.io.opts.transports = ['polling', 'websocket'];
+    });
 
     return () => {
       socket.emit('leave', projectId);

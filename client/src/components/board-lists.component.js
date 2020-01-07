@@ -8,7 +8,7 @@ import BoardListContainer from './board-list-container.component';
 import './board-lists.styles.scss';
 
 const BoardLists = () => {
-  const socket = useContext(SocketContext)
+  const { socket } = useContext(SocketContext)
   const { projectId } = useParams();
   const { boardState, addList } = useContext(BoardContext);
   const { currentProject } = boardState;

@@ -17,7 +17,7 @@ const CustomSelect = ({ label, inputDefault, selectOptions, submit }) => {
       if (label === 'List') {
         submit(option._id);
       } else {
-        // submit(option.name);
+        submit({ [label.toLowerCase()]: option.name });
       }
       setShowDropdown(false);
     }

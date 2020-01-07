@@ -16,7 +16,7 @@ import CustomDatePicker from './custom-date-picker.component';
 
 const BoardTaskDetails = ({ task, list, dismiss }) => {
   const { projectId } = useParams();
-  const socket = useContext(SocketContext);
+  const { socket } = useContext(SocketContext);
   const { boardState, assignUserToTask, unassignUserFromTask, assignTaskToNewList } = useContext(BoardContext);
 
   const { name, description, assignee, progress, priority, due, updatedAt } = task;
@@ -24,6 +24,7 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
   const [showAssignmentDropdown, setShowAssignmentDropdown] = useState(false);
   const [newCommentText, setNewCommentText] = useState('');
   const [newDueDate, setNewDueDate] = useState(due);
+  const [newDescription, setNewDescription] = useState(description);
 
   const listSelectOptions = boardState.currentProject.lists.map(listId => {
     return boardState.lists[listId];
@@ -40,8 +41,11 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
     // updateTaskDueDate({ taskId: task._id, due: newDueDate });
   }, [newDueDate])
 
-  const handleChange = () => {
-
+  const handleAttributeUpdate = data => {
+    // updateTaskAttributes({
+    //   taskId: task._id,
+    //   data
+    // })
   }
 
   const handleAssignTask = user => {
@@ -105,18 +109,18 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
               <TaskAssignmentDropdown
                 setShowAssignmentDropdown={setShowAssignmentDropdown}
                 memberSearchQuery={memberSearchQuery}
+                members={filteredMembers}
+                assignee={assignee}
                 onInputChange={event => setMemberSearchQuery(event.target.value)}
                 removeMember={handleUnassignTask}
-                members={filteredMembers}
                 onMemberClick={handleAssignTask}
-                assignee={assignee}
               />
             }
           </div>
           <div className='board-task-details__dropdowns'>
             <CustomSelect label='List' inputDefault={list} selectOptions={listSelectOptions} submit={handleMoveTaskToNewList} />
-            <CustomSelect label='Progress' inputDefault={progress} selectOptions={progressOptions} />
-            <CustomSelect label='Priority' inputDefault={priority} selectOptions={priorityOptions} />
+            <CustomSelect label='Progress' inputDefault={progress} selectOptions={progressOptions} submit={handleAttributeUpdate} />
+            <CustomSelect label='Priority' inputDefault={priority} selectOptions={priorityOptions} submit={handleAttributeUpdate} />
             <CustomDatePicker date={newDueDate} setDate={setNewDueDate}>
               <CustomDatePickerSelect />
             </CustomDatePicker>
@@ -127,8 +131,9 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
               name='description-input'
               type='text'
               className='board-task-details__text-input'
-              value={description}
-              onChange={handleChange}
+              value={newDescription}
+              onChange={event => setNewDescription(event.target.value)}
+              onBlur={handleAttributeUpdate}
             />
           </div>
           <div className='board-task-details__attachments'>

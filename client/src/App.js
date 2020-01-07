@@ -8,6 +8,7 @@ import NavBar from './components/navbar.component'
 import ProjectOverview from './components/project-overview.component'
 import PrivateRoute from './components/private-route.component';
 import ProjectDetails from './components/project-details.component';
+// import { SocketProvider } from './context/SocketContext';
 
 const App = () => {
   const history = useHistory();

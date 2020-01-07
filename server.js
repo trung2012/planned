@@ -139,13 +139,13 @@ io.on('connection', (socket) => {
 
   socket.on('edit_list_name', async ({ listId, listName, projectId }) => {
     try {
-      const list = await List.updateOne(
+      await List.updateOne(
         { _id: listId },
         { $set: { name: listName } },
         { new: true }
       );
 
-      socket.to(projectId).emit('list_name_updated', list);
+      socket.to(projectId).emit('list_name_updated', { _id: listId, name: listName });
     } catch (err) {
       socket.emit('new_error', 'Error updating list name');
     }

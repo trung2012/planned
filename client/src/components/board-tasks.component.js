@@ -9,7 +9,7 @@ import BoardTaskContainer from './board-task-container.component';
 import './board-tasks.styles.scss';
 
 const BoardTasks = ({ list }) => {
-  const socket = useContext(SocketContext);
+  const { socket } = useContext(SocketContext);
   const { addTask } = useContext(BoardContext);
   const { projectId } = useParams();
   const [showTaskAdd, setShowTaskAdd] = useState(false);

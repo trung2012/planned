@@ -7,11 +7,13 @@ import CustomButton from './custom-button.component';
 import ErrorDisplay from './error-display.component';
 
 import './signin.styles.scss';
+import { SocketContext } from '../context/SocketContext';
 
 const SignIn = () => {
   const history = useHistory();
   const location = useLocation();
   let { from } = location.state || { from: { pathname: "/" } };
+  const { socket } = useContext(SocketContext);
   const { authState, signIn, clearAuthErrorMessage } = useContext(AuthContext);
 
   const [userCredentials, setUserCredentials] = useState({ email: '', password: '' })
@@ -24,7 +26,18 @@ const SignIn = () => {
 
   const handleSubmit = event => {
     event.preventDefault();
-    signIn({ email, password }, () => history.replace(from));
+    signIn({ email, password }, () => {
+      let token = localStorage.getItem('token');
+      socket.io.reconnect()
+      console.log(socket)
+      history.replace(from);
+    });
+  }
+
+  const clearError = () => {
+    if (authState.errorMessage) {
+      clearAuthErrorMessage();
+    }
   }
 
   return (
@@ -42,7 +55,7 @@ const SignIn = () => {
             required
             handleChange={handleChange}
             label='email'
-            onFocus={() => clearAuthErrorMessage()}
+            onFocus={clearError}
           />
           <FormInput
             name='password'
@@ -51,7 +64,7 @@ const SignIn = () => {
             required
             handleChange={handleChange}
             label='password'
-            onFocus={() => clearAuthErrorMessage()}
+            onFocus={clearError}
           />
           <div className='buttons-container'>
             <CustomButton text='Sign in' />
@@ -62,7 +75,7 @@ const SignIn = () => {
               className='register-link'
               onClick={() => {
                 history.push('/signup');
-                clearAuthErrorMessage();
+                clearError()
               }
               }
             >

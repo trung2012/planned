@@ -12,7 +12,7 @@ import './board-members-dropdown.styles.scss';
 
 const BoardMembersDropdown = ({ members, dismiss }) => {
   const { projectId } = useParams();
-  const socket = useContext(SocketContext);
+  const { socket } = useContext(SocketContext);
   const { boardState, fetchUsers } = useContext(BoardContext);
   const [memberName, setMemberName] = useState('');
   const [showMemberSearchResults, setShowMemberSearchResults] = useState(false);

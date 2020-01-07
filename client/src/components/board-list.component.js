@@ -13,7 +13,7 @@ import './board-list.styles.scss';
 
 const BoardList = ({ list, updateListName }) => {
   const { projectId } = useParams();
-  const socket = useContext(SocketContext);
+  const { socket } = useContext(SocketContext);
   const { deleteList } = useContext(BoardContext);
   const [showListOptions, setShowListOptions] = useState(false);
   const [showListNameEdit, setShowListNameEdit] = useState(false);

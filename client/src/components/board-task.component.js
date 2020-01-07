@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { useParams, useHistory, useLocation } from 'react-router-dom';
+import { useParams, useHistory, useRouteMatch } from 'react-router-dom';
 
 import MoreOptions from './more-options.component';
 import { ReactComponent as OptionsIcon } from '../assets/options.svg';
@@ -10,10 +10,10 @@ import BoardMembersDropdownItem from './board-members-dropdown-item.component';
 import './board-task.styles.scss';
 
 const BoardTask = ({ task, list }) => {
-  const { pathname } = useLocation()
+  const { url } = useRouteMatch();
   const { projectId } = useParams();
   const history = useHistory();
-  const socket = useContext(SocketContext);
+  const { socket } = useContext(SocketContext);
 
   const { deleteTask, setShowTaskDetails } = useContext(BoardContext);
   const [showTaskOptions, setShowTaskOptions] = useState(false);
@@ -25,7 +25,7 @@ const BoardTask = ({ task, list }) => {
   }
 
   const handleTaskDetailsToggle = () => {
-    history.push(`${pathname}/${task._id}`);
+    history.push(`${url}/${task._id}`);
     setShowTaskDetails(true);
   }
 
