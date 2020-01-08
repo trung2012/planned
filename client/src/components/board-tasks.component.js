@@ -7,7 +7,6 @@ const BoardTasks = ({ list }) => {
 
   return (
     <div className='board-tasks'>
-
       {
         list &&
         (

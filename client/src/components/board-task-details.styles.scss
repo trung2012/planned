@@ -27,11 +27,15 @@
   animation: fade .2s;
   z-index: 11;
 
+  .add-user-icon-after {
+    display: none;
+  }
+
   h4 {
     font-weight: normal;
     font-size: 1.2rem;
     color: $color-gray-medium;
-    margin-bottom: .5rem;
+    margin-bottom: .75rem;
   }
 
   &__header {
@@ -53,28 +57,16 @@
     }
   }
 
-  &__assignment {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    margin-bottom: 2rem;
-
-    .assign-button {
-      margin-left: 1rem;
-      cursor: pointer;
-    }
-
-    .member-profile-item {
-      cursor: pointer;
-    }
-  }
-
   &__dropdowns {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    margin-bottom: 3rem;
+    margin: 2rem 0 3rem 0;
     font-size: 1.4rem;
+  }
+
+  &__description {
+    margin-bottom: 2rem;
   }
 
   &__attachments {

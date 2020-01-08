@@ -7,7 +7,7 @@ import MoreOptions from './more-options.component';
 
 import './task-assignment-dropdown.styles.scss';
 
-const TaskAssignmentDropdown = ({ setShowAssignmentDropdown, memberSearchQuery, onInputChange, onMemberClick, assignee, removeMember, members, dismiss }) => {
+const TaskAssignmentDropdown = ({ setShowAssignmentDropdown, memberSearchQuery, onInputChange, onMemberClick, assignee, removeMember, members }) => {
   const [showSearchResults, setShowSearchResults] = useState(false);
 
   const handleMemberClick = (user) => {
@@ -31,7 +31,7 @@ const TaskAssignmentDropdown = ({ setShowAssignmentDropdown, memberSearchQuery, 
             <BoardMembersDropdownList members={assignee ? [assignee] : []} removeMember={removeMember} removeIconText='Remove assignment' />
             {
               showSearchResults &&
-              <MoreOptions dismiss={() => setShowSearchResults(false)}>
+              <MoreOptions className='member-search-result' dismiss={() => setShowSearchResults(false)}>
                 {
                   members.length > 0 ? members.map(user => {
                     return (

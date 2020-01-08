@@ -6,16 +6,16 @@ import { useParams } from 'react-router-dom';
 import CommentList from './comment-list.component';
 import CustomDatePickerSelect from './custom-date-picker-select.component';
 import CustomSelect from './custom-select.component';
-import UserProfilePicture from './user-profile-picture.component';
 import CustomButton from './custom-button.component';
-import { ReactComponent as AddUserIcon } from '../assets/add_user.svg';
 import { BoardContext } from '../context/BoardContext';
 import { SocketContext } from '../context/SocketContext';
 import { AuthContext } from '../context/AuthContext';
-import { progressOptions, priorityOptions } from '../utils/dropdown-options';
-import TaskAssignmentDropdown from './task-assignment-dropdown.component';
-import './board-task-details.styles.scss';
+import { progressOptions, priorityOptions } from '../utils/dropdownOptions';
 import CustomDatePicker from './custom-date-picker.component';
+import TaskAssignment from './task-assignment.component';
+import { handleTaskAssignment } from '../utils/useTaskAssignment';
+
+import './board-task-details.styles.scss';
 
 const BoardTaskDetails = ({ task, list, dismiss }) => {
   const { projectId } = useParams();
@@ -31,8 +31,6 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
   } = useContext(BoardContext);
 
   const { name, description, assignee, progress, priority, due, updatedAt, comments } = task;
-  const [memberSearchQuery, setMemberSearchQuery] = useState('');
-  const [showAssignmentDropdown, setShowAssignmentDropdown] = useState(false);
   const [newCommentText, setNewCommentText] = useState('');
   const [newDueDate, setNewDueDate] = useState(due);
   const [newDescription, setNewDescription] = useState(task.description);
@@ -41,13 +39,6 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
     return boardState.lists[listId];
   })
 
-  const filteredMembers = boardState.members.filter(user => {
-    if (assignee) {
-      return user.name.toLowerCase().includes(memberSearchQuery.toLowerCase()) && assignee._id !== user._id
-    }
-    return user.name.toLowerCase().includes(memberSearchQuery.toLowerCase())
-  });
-
   useEffect(() => {
     setNewDescription(description);
   }, [description])
@@ -55,6 +46,8 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
   useEffect(() => {
     setNewDueDate(due);
   }, [due])
+
+  const { handleAssignTask, handleUnassignTask } = handleTaskAssignment(socket, task._id, projectId, assignUserToTask, unassignUserFromTask);
 
   const handleAttributeUpdate = data => {
     const updatedTask = {
@@ -74,21 +67,21 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
     handleAttributeUpdate({ due: date });
   }
 
-  const handleAssignTask = user => {
-    const updatedAt = Date.now();
-    assignUserToTask({ taskId: task._id, user, updatedAt });
-    socket.emit('assign_user_to_task', {
-      taskId: task._id,
-      user,
-      projectId,
-      updatedAt
-    });
-  }
+  // const handleAssignTask = user => {
+  //   const updatedAt = Date.now();
+  //   assignUserToTask({ taskId: task._id, user, updatedAt });
+  //   socket.emit('assign_user_to_task', {
+  //     taskId: task._id,
+  //     user,
+  //     projectId,
+  //     updatedAt
+  //   });
+  // }
 
-  const handleUnassignTask = () => {
-    unassignUserFromTask({ taskId: task._id });
-    socket.emit('unassign_task', { taskId: task._id, projectId });
-  }
+  // const handleUnassignTask = () => {
+  //   unassignUserFromTask({ taskId: task._id });
+  //   socket.emit('unassign_task', { taskId: task._id, projectId });
+  // }
 
   const handleMoveTaskToNewList = (newListId) => {
     if (newListId !== list._id) {
@@ -130,34 +123,12 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
             <h2>{name}</h2>
             <div className='task-last-updated'>{`Updated ${moment(updatedAt).fromNow()}`}</div>
           </div>
-          <div className='board-task-details__assignment'>
-            <AddUserIcon className='add-user-icon' onClick={() => setShowAssignmentDropdown(true)} />
-            {
-              assignee ?
-                <div className='member-profile-item' onClick={() => setShowAssignmentDropdown(!showAssignmentDropdown)}>
-                  <UserProfilePicture
-                    backgroundColor={assignee.color}
-                    initials={assignee.initials}
-                  />
-                  <span className='member-profile-item__user-name'>
-                    {assignee.name}
-                  </span>
-                </div>
-                : <span className='assign-button' onClick={() => setShowAssignmentDropdown(!showAssignmentDropdown)}>Assign</span>
-            }
-            {
-              showAssignmentDropdown &&
-              <TaskAssignmentDropdown
-                setShowAssignmentDropdown={setShowAssignmentDropdown}
-                memberSearchQuery={memberSearchQuery}
-                members={filteredMembers}
-                assignee={assignee}
-                onInputChange={event => setMemberSearchQuery(event.target.value)}
-                removeMember={handleUnassignTask}
-                onMemberClick={handleAssignTask}
-              />
-            }
-          </div>
+          <TaskAssignment
+            assignee={assignee}
+            members={boardState.members}
+            handleAssignTask={handleAssignTask}
+            handleUnassignTask={handleUnassignTask}
+          />
           <div className='board-task-details__dropdowns'>
             <CustomSelect label='List' inputDefault={list} selectOptions={listSelectOptions} submit={handleMoveTaskToNewList} />
             <CustomSelect label='Progress' inputDefault={progress} selectOptions={progressOptions} submit={handleAttributeUpdate} />
@@ -169,6 +140,7 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
           <div className='board-task-details__description'>
             <h4>Description</h4>
             <textarea
+              placeholder='Add a description or notes'
               name='description-input'
               type='text'
               className='board-task-details__text-input'
@@ -188,6 +160,7 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
             <div className='board-task-details__comment-input'>
               <h4>Comments</h4>
               <textarea
+                placeholder='Type your message here'
                 name='comment-input'
                 type='text'
                 className='board-task-details__text-input'

@@ -1,0 +1,22 @@
+.task-assignment-container {  
+  position: relative;
+}
+
+.task-assignment {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .task-assignment-dropdown {
+    margin-top: .25rem;
+  }
+
+  .assign-button {
+    margin-left: 1rem;
+    cursor: pointer;
+  }
+
+  .member-profile-item {
+    cursor: pointer;
+  }
+}

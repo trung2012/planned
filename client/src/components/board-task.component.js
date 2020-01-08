@@ -4,9 +4,10 @@ import { useParams, useHistory, useRouteMatch } from 'react-router-dom';
 import MoreOptions from './more-options.component';
 import { ReactComponent as OptionsIcon } from '../assets/options.svg';
 import { SocketContext } from '../context/SocketContext';
-
 import { BoardContext } from '../context/BoardContext';
-import MemberProfileItem from './member-profile-item.component';
+import TaskAssignment from './task-assignment.component';
+import { handleTaskAssignment } from '../utils/useTaskAssignment';
+
 import './board-task.styles.scss';
 
 const BoardTask = ({ task, list }) => {
@@ -15,8 +16,10 @@ const BoardTask = ({ task, list }) => {
   const history = useHistory();
   const { socket } = useContext(SocketContext);
 
-  const { deleteTask, setShowTaskDetails } = useContext(BoardContext);
+  const { boardState, deleteTask, setShowTaskDetails, assignUserToTask, unassignUserFromTask } = useContext(BoardContext);
   const [showTaskOptions, setShowTaskOptions] = useState(false);
+
+  const { handleAssignTask, handleUnassignTask } = handleTaskAssignment(socket, task._id, projectId, assignUserToTask, unassignUserFromTask);
 
   const handleDeleteClick = () => {
     deleteTask({ taskId: task._id, listId: list._id });
@@ -55,8 +58,13 @@ const BoardTask = ({ task, list }) => {
         </div>
         {
           task.assignee &&
-          <div className='board-task__assignee' onClick={handleTaskDetailsToggle}>
-            <MemberProfileItem member={task.assignee} />
+          <div className='board-task__assignee'>
+            <TaskAssignment
+              assignee={task.assignee}
+              members={boardState.members}
+              handleAssignTask={handleAssignTask}
+              handleUnassignTask={handleUnassignTask}
+            />
           </div>
         }
       </div>
