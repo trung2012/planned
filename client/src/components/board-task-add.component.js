@@ -1,15 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { ObjectID } from 'bson';
 
 import ErrorDisplay from './error-display.component';
 import CustomButton from './custom-button.component';
 import CustomDatePicker from './custom-date-picker.component';
 import CustomInput from './custom-input.component';
+import TaskAssignment from './task-assignment.component';
+import { BoardContext } from '../context/BoardContext';
+
 import './board-task-add.styles.scss';
 
 const BoardTaskAdd = ({ submit, listId, dismiss }) => {
+  const { boardState } = useContext(BoardContext);
   const [newTaskName, setNewTaskName] = useState('');
   const [dueDate, setDueDate] = useState(null);
+  const [taskAssignee, setTaskAssignee] = useState(null);
   const [inputError, setInputError] = useState(null);
 
   const handleSubmit = event => {
@@ -27,6 +32,7 @@ const BoardTaskAdd = ({ submit, listId, dismiss }) => {
         priority: 'Low',
         createdAt: Date.now(),
         updatedAt: Date.now(),
+        assignee: taskAssignee,
         comments: []
       });
     }
@@ -54,6 +60,12 @@ const BoardTaskAdd = ({ submit, listId, dismiss }) => {
               required
             />
             <CustomDatePicker date={dueDate} setDate={setDueDate} />
+            <TaskAssignment
+              assignee={taskAssignee}
+              members={boardState.members}
+              handleAssignTask={setTaskAssignee}
+              handleUnassignTask={() => setTaskAssignee(null)}
+            />
           </div>
           <CustomButton text='Add Task' buttonType='submit-task' onClick={handleSubmit} />
         </form>

@@ -5,19 +5,23 @@
   top: 5rem;
   right: 70%;
   background-color: #fff;
-  padding: 1.5rem;
   width: 28rem;
-  max-height: 31rem;
-  overflow: auto;
   box-shadow: $box-shadow-primary;
   animation: fadeFromTop .2s;
   z-index: 100;
+
+  &__header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #fff;
+    padding: .75rem 1.5rem;
+  }
 
   h3 {
     font-size: 1.8rem;
     font-weight: 500;
     margin-bottom: 1rem;
-    padding-left: 1rem;
   }
 
   .more-options {

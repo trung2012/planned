@@ -1,20 +1,23 @@
 import React, { useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
+import { ObjectID } from 'bson';
 
 import { SocketContext } from '../context/SocketContext';
 import Modal from './modal.component';
 import BoardTasks from './board-tasks.component';
 import MoreOptions from './more-options.component';
-import BoardListNameForm from './board-list-name-form.component';
+import NameChangeForm from './name-change-form.component';
 import ItemDelete from './item-delete.component';
 import { ReactComponent as OptionsIcon } from '../assets/options.svg';
 import { BoardContext } from '../context/BoardContext';
 import BoardTaskAdd from './board-task-add.component';
 import { ReactComponent as AddIcon } from '../assets/add.svg';
+import { AuthContext } from '../context/AuthContext';
 import './board-list.styles.scss';
 
 const BoardList = ({ list, updateListName }) => {
   const { projectId } = useParams();
+  const { authState } = useContext(AuthContext);
   const { socket } = useContext(SocketContext);
   const { deleteList, addTask } = useContext(BoardContext);
   const [showListOptions, setShowListOptions] = useState(false);
@@ -28,7 +31,7 @@ const BoardList = ({ list, updateListName }) => {
     setShowListDeleteConfirm(false);
   }
 
-  const handleEditName = (listName) => {
+  const handleListEditName = (listName) => {
     if (listName !== list.name) {
       socket.emit('edit_list_name', { listId: list._id, listName, projectId });
       updateListName({ _id: list._id, name: listName });
@@ -38,8 +41,21 @@ const BoardList = ({ list, updateListName }) => {
 
   const handleAddSubmit = (taskData) => {
     if (taskData) {
-      addTask(taskData);
-      socket.emit('add_task', { taskData, projectId });
+      const firstComment = {
+        _id: new ObjectID().toString(),
+        text: `Task "${taskData.name}" created`,
+        author: authState.user,
+        task: taskData._id,
+        project: projectId,
+        createdAt: Date.now()
+      };
+
+      addTask({ ...taskData, comments: [firstComment] });
+      socket.emit('add_task', {
+        taskData,
+        projectId,
+        firstComment
+      });
 
       setShowTaskAdd(false);
     }
@@ -68,7 +84,7 @@ const BoardList = ({ list, updateListName }) => {
         }
         {
           showListNameEdit ?
-            <BoardListNameForm name={list.name} submit={handleEditName} dismiss={() => setShowListNameEdit(false)} />
+            <NameChangeForm name={list.name} submit={handleListEditName} dismiss={() => setShowListNameEdit(false)} />
             :
             <React.Fragment>
               <h4 className='board-list__name' onClick={() => setShowListNameEdit(true)}>{list.name}</h4>

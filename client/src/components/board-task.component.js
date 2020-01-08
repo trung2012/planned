@@ -16,7 +16,7 @@ const BoardTask = ({ task, list }) => {
   const history = useHistory();
   const { socket } = useContext(SocketContext);
 
-  const { boardState, deleteTask, setShowTaskDetails, assignUserToTask, unassignUserFromTask } = useContext(BoardContext);
+  const { boardState, deleteTask, setShowTaskDetails, assignUserToTask, unassignUserFromTask, setCurrentlyOpenedTask } = useContext(BoardContext);
   const [showTaskOptions, setShowTaskOptions] = useState(false);
 
   const { handleAssignTask, handleUnassignTask } = handleTaskAssignment(socket, task._id, projectId, assignUserToTask, unassignUserFromTask);
@@ -28,6 +28,7 @@ const BoardTask = ({ task, list }) => {
   }
 
   const handleTaskDetailsToggle = () => {
+    setCurrentlyOpenedTask(task._id);
     history.push(`${url}/${task._id}`);
     setShowTaskDetails(true);
   }

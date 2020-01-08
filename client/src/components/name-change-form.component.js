@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 
-import './board-list-name-form.styles.scss';
 import CustomInput from './custom-input.component';
+import './name-change-form.styles.scss';
 
-const BoardListNameForm = ({ submit, dismiss, name = '' }) => {
+const NameChangeForm = ({ submit, dismiss, name = '' }) => {
   const [newListName, setNewListName] = useState(name);
 
   const handleSubmit = event => {
@@ -14,7 +14,7 @@ const BoardListNameForm = ({ submit, dismiss, name = '' }) => {
   return (
     <React.Fragment>
       <div className='overlay' onClick={handleSubmit}></div>
-      <form className='board-list-name-form' onSubmit={handleSubmit}>
+      <form className='name-change-form' onSubmit={handleSubmit}>
         <CustomInput
           placeholder='Enter list name'
           value={newListName}
@@ -31,4 +31,4 @@ const BoardListNameForm = ({ submit, dismiss, name = '' }) => {
   );
 }
 
-export default BoardListNameForm;
+export default NameChangeForm;

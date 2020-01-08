@@ -3,6 +3,7 @@ import moment from 'moment';
 import { ObjectID } from 'bson';
 import { useParams } from 'react-router-dom';
 
+import NameChangeForm from './name-change-form.component';
 import CommentList from './comment-list.component';
 import CustomDatePickerSelect from './custom-date-picker-select.component';
 import CustomSelect from './custom-select.component';
@@ -31,6 +32,7 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
   } = useContext(BoardContext);
 
   const { name, description, assignee, progress, priority, due, updatedAt, comments } = task;
+  const [showTaskNameEdit, setShowTaskNameEdit] = useState(false);
   const [newCommentText, setNewCommentText] = useState('');
   const [newDueDate, setNewDueDate] = useState(due);
   const [newDescription, setNewDescription] = useState(task.description);
@@ -67,22 +69,6 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
     handleAttributeUpdate({ due: date });
   }
 
-  // const handleAssignTask = user => {
-  //   const updatedAt = Date.now();
-  //   assignUserToTask({ taskId: task._id, user, updatedAt });
-  //   socket.emit('assign_user_to_task', {
-  //     taskId: task._id,
-  //     user,
-  //     projectId,
-  //     updatedAt
-  //   });
-  // }
-
-  // const handleUnassignTask = () => {
-  //   unassignUserFromTask({ taskId: task._id });
-  //   socket.emit('unassign_task', { taskId: task._id, projectId });
-  // }
-
   const handleMoveTaskToNewList = (newListId) => {
     if (newListId !== list._id) {
       const data = {
@@ -107,8 +93,16 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
     }
 
     addComment(commentData);
+    handleAttributeUpdate({ updatedAt: Date.now() });
     setNewCommentText('');
     socket.emit('add_comment', commentData);
+  }
+
+  const handleTaskEditName = taskName => {
+    if (name !== taskName) {
+      handleAttributeUpdate({ name: taskName })
+    }
+    setShowTaskNameEdit(false);
   }
 
   return (
@@ -120,7 +114,12 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
             &times;
           </span>
           <div className='board-task-details__header'>
-            <h2>{name}</h2>
+            {
+              showTaskNameEdit ?
+                <NameChangeForm name={name} submit={handleTaskEditName} dismiss={() => setShowTaskNameEdit(false)} />
+                : <h2 onClick={() => setShowTaskNameEdit(true)}>{name}</h2>
+            }
+
             <div className='task-last-updated'>{`Updated ${moment(updatedAt).fromNow()}`}</div>
           </div>
           <TaskAssignment

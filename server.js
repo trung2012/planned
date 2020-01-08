@@ -55,21 +55,29 @@ io.on('connection', (socket) => {
         })
           .populate({
             path: 'comments',
-            sort: {
-              'createdAt': -1
+            options: {
+              sort: {
+                'createdAt': -1
+              }
             },
             populate: {
               path: 'author',
               select: '-password'
             }
           })
+        //   ,
+        // Task.aggregate([
+        //   {
+        //     $group: { _id: '$progress', tasks: { $push: '$_id' } }
+        //   }
+        // ])
       ])
 
-      const memberIds = project.members.map(member => member._id)
+      const memberIds = project.members.map(member => member._id);
 
       const listsMap = convertArrayToMap(lists);
 
-      const tasksMap = convertArrayToMap(tasks)
+      const tasksMap = convertArrayToMap(tasks);
 
       const data = {
         currentProject: {
@@ -163,26 +171,27 @@ io.on('connection', (socket) => {
     }
   })
 
-  socket.on('add_task', async ({ taskData, projectId }) => {
+  socket.on('add_task', async ({ taskData, projectId, firstComment }) => {
     try {
       const newTask = new Task({
         ...taskData,
+        assignee: taskData.assignee ? taskData.assignee._id : null,
         project: projectId
       })
 
-      await newTask.save();
-      await List.updateOne(
-        { _id: newTask.list },
-        { $push: { tasks: newTask._id } },
-        { new: true }
-      )
+      const newComment = new Comment(firstComment);
 
-      const task = await Task.findById(newTask._id).populate({
-        path: 'assignee',
-        select: '-password'
-      });
+      await Promise.all([
+        newTask.save(),
+        newComment.save(),
+        List.updateOne(
+          { _id: taskData.list },
+          { $push: { tasks: taskData._id } },
+          { new: true }
+        )
+      ])
 
-      socket.to(projectId).emit('task_added', taskData);
+      socket.to(projectId).emit('task_added', { ...taskData, comments: [firstComment] });
     } catch (err) {
       console.log(err)
       socket.emit('new_error', 'Error adding task');
@@ -270,6 +279,7 @@ io.on('connection', (socket) => {
         ...commentData,
         author: commentData.author._id
       });
+
       await comment.save();
 
       socket.to(commentData.project).emit('comment_added', commentData);

@@ -3,7 +3,7 @@ import { ObjectID } from 'bson';
 import { useParams } from 'react-router-dom';
 import { SocketContext } from '../context/SocketContext';
 import { BoardContext } from '../context/BoardContext';
-import BoardListNameForm from './board-list-name-form.component';
+import NameChangeForm from './name-change-form.component';
 import BoardListContainer from './board-list-container.component';
 import './board-lists.styles.scss';
 
@@ -44,7 +44,7 @@ const BoardLists = () => {
 
       {
         showListAdd ?
-          <BoardListNameForm submit={handleAddSubmit} dismiss={() => setShowListAdd(false)} />
+          <NameChangeForm submit={handleAddSubmit} dismiss={() => setShowListAdd(false)} />
           :
           <button className='add-list' onClick={() => setShowListAdd(true)}>
             Add new list

@@ -22,5 +22,14 @@
     &:hover {
       box-shadow: $box-shadow-primary-hover;
     }
+
+    .add-user-icon-after {
+      display: none;
+    }
+
+    .task-assignment {
+      position: relative;
+      z-index: 2;
+    }
   }
 }

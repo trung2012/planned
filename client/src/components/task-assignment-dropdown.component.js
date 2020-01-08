@@ -19,30 +19,28 @@ const TaskAssignmentDropdown = ({ setShowAssignmentDropdown, memberSearchQuery, 
     <React.Fragment>
       <div className='overlay' onClick={() => setShowAssignmentDropdown(false)}></div>
       <div className='task-assignment-dropdown'>
+        <div className='task-assignment-dropdown__header'>
+          <h3>Assigned</h3>
+          <CustomInput
+            placeholder='Enter name to add member'
+            value={memberSearchQuery}
+            onChange={onInputChange}
+            onFocus={() => setShowSearchResults(true)}
+          />
+        </div>
+        <BoardMembersDropdownList members={assignee ? [assignee] : []} removeMember={removeMember} removeIconText='Remove assignment' />
         {
-          <React.Fragment>
-            <h3>Assigned</h3>
-            <CustomInput
-              placeholder='Enter name to add member'
-              value={memberSearchQuery}
-              onChange={onInputChange}
-              onFocus={() => setShowSearchResults(true)}
-            />
-            <BoardMembersDropdownList members={assignee ? [assignee] : []} removeMember={removeMember} removeIconText='Remove assignment' />
+          showSearchResults &&
+          <MoreOptions className='member-search-result' dismiss={() => setShowSearchResults(false)}>
             {
-              showSearchResults &&
-              <MoreOptions className='member-search-result' dismiss={() => setShowSearchResults(false)}>
-                {
-                  members.length > 0 ? members.map(user => {
-                    return (
-                      <MemberProfileItem onClick={() => handleMemberClick(user)} key={user._id} member={user} />
-                    );
-                  })
-                    : <span>No results found</span>
-                }
-              </MoreOptions>
+              members.length > 0 ? members.map(user => {
+                return (
+                  <MemberProfileItem onClick={() => handleMemberClick(user)} key={user._id} member={user} />
+                );
+              })
+                : <span>No results found</span>
             }
-          </React.Fragment>
+          </MoreOptions>
         }
       </div>
     </React.Fragment>

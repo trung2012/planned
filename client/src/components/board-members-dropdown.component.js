@@ -44,13 +44,15 @@ const BoardMembersDropdown = ({ members, dismiss }) => {
     <React.Fragment>
       <div className='overlay' onClick={dismiss}></div>
       <div className='board-members-dropdown'>
-        <h3>Members</h3>
-        <CustomInput
-          placeholder='Enter name to add member'
-          value={memberName}
-          onChange={handleChange}
-          autoFocus
-        />
+        <div className='board-members-dropdown__header'>
+          <h3>Members</h3>
+          <CustomInput
+            placeholder='Enter name to add member'
+            value={memberName}
+            onChange={handleChange}
+            autoFocus
+          />
+        </div>
         {
           showMemberSearchResults &&
           <MoreOptions dismiss={() => setShowMemberSearchResults(false)}>

@@ -28,7 +28,8 @@ const ProjectDetails = () => {
     assignUserToTask,
     assignTaskToNewList,
     updateTaskAttributes,
-    addComment
+    addComment,
+    removeCurrentlyOpenedTask
   } = useContext(BoardContext);
   const [showErrorSnackbar, setShowErrorSnackbar] = useState(false);
   const { projectId } = useParams();
@@ -84,6 +85,7 @@ const ProjectDetails = () => {
     })
 
     socket.on('task_deleted', deletedTask => {
+      removeCurrentlyOpenedTask(deletedTask.taskId)
       deleteTask(deletedTask);
     })
 
@@ -96,7 +98,6 @@ const ProjectDetails = () => {
     })
 
     socket.on('comment_added', data => {
-      console.log(data)
       addComment(data);
     })
 
@@ -139,7 +140,8 @@ const ProjectDetails = () => {
       assignUserToTask,
       assignTaskToNewList,
       updateTaskAttributes,
-      addComment
+      addComment,
+      removeCurrentlyOpenedTask
     ])
 
   return (

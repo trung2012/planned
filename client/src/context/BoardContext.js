@@ -12,7 +12,9 @@ const initialState = {
   users: [],
   errorMessage: null,
   isLoading: false,
-  showTaskDetails: false
+  showTaskDetails: false,
+  currentlyOpenedTask: null,
+  isCurrentlyOpenedTaskDeleted: false
 }
 
 const boardReducer = (state, action) => {
@@ -157,7 +159,27 @@ const boardReducer = (state, action) => {
         }
       }
     }
-
+    case 'set_currently_opened_task':
+      return {
+        ...state,
+        currentlyOpenedTask: action.payload
+      }
+    case 'remove_currently_opened_task': {
+      if (action.payload === state.currentlyOpenedTask) {
+        return {
+          ...state,
+          currentlyOpenedTask: null,
+          isCurrentlyOpenedTaskDeleted: true
+        }
+      } else {
+        return state;
+      }
+    }
+    case 'set_is_currently_deleted':
+      return {
+        ...state,
+        isCurrentlyOpenedTaskDeleted: action.payload
+      }
     case 'set_show_task_details':
       return {
         ...state,
@@ -264,6 +286,18 @@ export const BoardProvider = ({ children }) => {
     dispatch({ type: 'add_comment', payload: comment });
   }, [])
 
+  const setCurrentlyOpenedTask = taskId => {
+    dispatch({ type: 'set_currently_opened_task', payload: taskId });
+  }
+
+  const removeCurrentlyOpenedTask = useCallback((taskId) => {
+    dispatch({ type: 'remove_currently_opened_task', payload: taskId });
+  }, [])
+
+  const setIsCurrentlyOpenedTaskDeleted = (value) => {
+    dispatch({ type: 'set_is_currently_deleted', payload: value });
+  }
+
   const setShowTaskDetails = (value) => {
     dispatch({ type: 'set_show_task_details', payload: value });
   }
@@ -294,7 +328,10 @@ export const BoardProvider = ({ children }) => {
         assignTaskToNewList,
         updateTaskAttributes,
         setShowTaskDetails,
-        addComment
+        addComment,
+        setCurrentlyOpenedTask,
+        removeCurrentlyOpenedTask,
+        setIsCurrentlyOpenedTaskDeleted
       }}
     >
       {children}

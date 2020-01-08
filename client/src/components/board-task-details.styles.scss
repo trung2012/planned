@@ -41,10 +41,15 @@
   &__header {
     margin-bottom: 2rem;
 
-    h2 {
+    h2,
+    .name-change-form {
       font-size: 2rem;
       font-weight: 500;
+    }
+    
+    h2 {
       margin-bottom: .5rem;
+      cursor: text;
 
       &:hover {
         background-color: $color-gray-extra-light;

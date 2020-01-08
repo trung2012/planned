@@ -3,8 +3,10 @@
 
 .board-members-dropdown-list {
   position: relative;
-  margin-top: 1rem;
+  padding: 1rem 1.5rem;  
+  max-height: 28rem;
   overflow-y: auto;
+  
 
   &__item {
     display: flex;

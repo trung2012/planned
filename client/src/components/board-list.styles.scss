@@ -31,10 +31,14 @@
 
   }
 
-  &__name {
-    flex: 1;
+  &__name,
+  .name-change-form {
     font-size: 1.5rem;
     font-weight: 500;
+  }
+
+  &__name {
+    flex: 1;
     padding: .5rem 1rem;
     cursor: text;
   }
