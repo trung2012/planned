@@ -19,10 +19,11 @@ const server = http.createServer(app);
 app.use(cors());
 app.use(express.json());
 
+const io = socketIO(server);
+const fileRouter = require('./routers/api/file')(io);
 app.use('/api/users', userRouter);
 app.use('/api/projects', projectRouter);
-
-const io = socketIO(server);
+app.use('/api/files', fileRouter);
 
 ////////////////////////////
 //Socket operations
@@ -65,6 +66,7 @@ io.on('connection', (socket) => {
               select: '-password'
             }
           })
+          .populate('attachments')
         //   ,
         // Task.aggregate([
         //   {

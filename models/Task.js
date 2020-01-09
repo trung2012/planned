@@ -62,6 +62,13 @@ taskSchema.virtual('comments', {
   foreignField: 'task'
 })
 
+taskSchema.virtual('attachments', {
+  ref: 'File',
+  localField: '_id',
+  foreignField: 'task'
+})
+
+
 taskSchema.pre('remove', async function (next) {
   const task = this;
 

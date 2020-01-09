@@ -14,10 +14,10 @@ const storage = cloudinaryStorage({
 });
 
 const parser = multer({
-  storage,
-  limits: {
-    fileSize: 20000000
-  }
+  // storage,
+  // limits: {
+  //   fileSize: 9900000
+  // }
 });
 
 module.exports = parser;

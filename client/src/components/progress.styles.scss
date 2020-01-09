@@ -1,0 +1,32 @@
+@import '../sass/variables';
+
+.progress {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+progress[value] {
+  -webkit-appearance: none;
+  appearance: none;
+  align-self: center;
+  height: .3rem;
+  width: 80%;
+  border: none;
+  
+  &::-webkit-progress-bar {
+    background-color: white;
+    border-radius: .3rem;
+    box-shadow: 0 .1rem .3rem rgba(0, 0, 0, 0.25) inset;
+  }
+
+  &::-webkit-progress-value {
+    background: $color-green-light;
+    transition: width 1s;
+  }
+}
+
+@media screen and (min-width: 800px) {
+  progress[value] {
+    width: 30rem;
+  } 
+}

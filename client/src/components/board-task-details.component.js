@@ -15,8 +15,10 @@ import { progressOptions, priorityOptions } from '../utils/dropdownOptions';
 import CustomDatePicker from './custom-date-picker.component';
 import TaskAssignment from './task-assignment.component';
 import { handleTaskAssignment } from '../utils/useTaskAssignment';
+import FileUpload from './file-upload.component';
 
 import './board-task-details.styles.scss';
+import TaskAttachmentList from './task-attachment-list.component';
 
 const BoardTaskDetails = ({ task, list, dismiss }) => {
   const { projectId } = useParams();
@@ -154,6 +156,8 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
           </div>
           <div className='board-task-details__attachments'>
             <h4>Attachments</h4>
+            <FileUpload taskId={task._id} text='Add attachment' />
+            <TaskAttachmentList attachments={task.attachments} />
           </div>
           <div className='board-task-details__comments'>
             <div className='board-task-details__comment-input'>

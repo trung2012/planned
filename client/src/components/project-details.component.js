@@ -101,6 +101,10 @@ const ProjectDetails = () => {
       addComment(data);
     })
 
+    socket.on('file_uploaded', file => {
+      console.log(file)
+    })
+
     socket.on('new_error', errorMessage => {
       addBoardError(errorMessage);
     })

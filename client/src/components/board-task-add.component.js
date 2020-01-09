@@ -33,7 +33,8 @@ const BoardTaskAdd = ({ submit, listId, dismiss }) => {
         createdAt: Date.now(),
         updatedAt: Date.now(),
         assignee: taskAssignee,
-        comments: []
+        comments: [],
+        attachments: []
       });
     }
   }

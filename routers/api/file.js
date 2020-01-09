@@ -3,26 +3,30 @@ const router = new express.Router();
 const File = require('../../models/File');
 const parser = require('../../middleware/cloudinary');
 const auth = require('../../middleware/auth');
+const cloudinary = require('cloudinary');
 
 const returnRouter = (io) => {
-  router.post('/files/upload/:projectId/:taskId', auth, parser.any('file'), async (req, res) => {
+  router.post('/upload/:projectId/:taskId/:fileName', [auth, parser.single('file')], async (req, res) => {
     try {
       if (req.user) {
-        req.files.forEach(async file => {
-          const newFile = new File({
-            name: file.original_filename,
-            url: file.url,
-            public_id: file.public_id,
-            task: req.params.taskId
-          });
+        const { file } = req;
+        cloudinary.v2.uploader.upload_stream({ resource_type: 'auto' }, (error, result) => {
+          console.log(result)
+        }).end(file.buffer);
 
-          await newFile.save();
-        });
+        // const newFile = new File({
+        //   name: req.params.fileName,
+        //   url: file.url,
+        //   public_id: file.public_id,
+        //   task: req.params.taskId
+        // });
 
-        io.in(req.params.projectId).emit('file_uploaded', newFile);
+        // await newFile.save();
+        // res.send('File uploaded successfully');
+        // io.in(req.params.projectId).emit('file_uploaded', newFile);
       }
     } catch (err) {
-      res.status(500).send('Error uploading attachment. Please try again');
+      res.status(500).send(err);
     }
   })
 
