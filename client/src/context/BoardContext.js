@@ -159,6 +159,52 @@ const boardReducer = (state, action) => {
         }
       }
     }
+    case 'add_task_attachment':
+      const file = action.payload;
+      const taskId = file.task;
+      return {
+        ...state,
+        tasks: {
+          ...state.tasks,
+          [taskId]: { ...state.tasks[taskId], attachments: [...state.tasks[taskId].attachments, file], updatedAt: Date.now() }
+        }
+      }
+    case 'delete_task_attachment': {
+      const file = action.payload;
+      const taskId = file.task;
+      return {
+        ...state,
+        tasks: {
+          ...state.tasks,
+          [taskId]: {
+            ...state.tasks[taskId],
+            attachments: state.tasks[taskId].attachments.filter(attachment => attachment._id !== file._id),
+            updatedAt: Date.now()
+          }
+        }
+      }
+    }
+    case 'rename_attachment': {
+      const { file, newName } = action.payload;
+      const taskId = file.task;
+      return {
+        ...state,
+        tasks: {
+          ...state.tasks,
+          [taskId]: {
+            ...state.tasks[taskId],
+            attachments: state.tasks[taskId].attachments.map(attachment => {
+              if (attachment._id === file._id) {
+                return { ...attachment, name: newName };
+              } else {
+                return attachment;
+              }
+            }),
+            updatedAt: Date.now()
+          }
+        }
+      }
+    }
     case 'set_currently_opened_task':
       return {
         ...state,
@@ -282,8 +328,20 @@ export const BoardProvider = ({ children }) => {
     dispatch({ type: 'update_task_attributes', payload: { taskId, data } });
   }, [])
 
-  const addComment = useCallback((comment) => {
+  const addComment = useCallback(comment => {
     dispatch({ type: 'add_comment', payload: comment });
+  }, [])
+
+  const addTaskAttachment = useCallback(file => {
+    dispatch({ type: 'add_task_attachment', payload: file });
+  }, [])
+
+  const deleteTaskAttachment = useCallback(file => {
+    dispatch({ type: 'delete_task_attachment', payload: file });
+  }, [])
+
+  const renameTaskAttachment = useCallback(data => {
+    dispatch({ type: 'rename_attachment', payload: data });
   }, [])
 
   const setCurrentlyOpenedTask = taskId => {
@@ -328,10 +386,13 @@ export const BoardProvider = ({ children }) => {
         assignTaskToNewList,
         updateTaskAttributes,
         setShowTaskDetails,
-        addComment,
         setCurrentlyOpenedTask,
         removeCurrentlyOpenedTask,
-        setIsCurrentlyOpenedTaskDeleted
+        setIsCurrentlyOpenedTaskDeleted,
+        addComment,
+        addTaskAttachment,
+        deleteTaskAttachment,
+        renameTaskAttachment
       }}
     >
       {children}

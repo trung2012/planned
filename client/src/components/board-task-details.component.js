@@ -134,7 +134,7 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
             <CustomSelect label='List' inputDefault={list} selectOptions={listSelectOptions} submit={handleMoveTaskToNewList} />
             <CustomSelect label='Progress' inputDefault={progress} selectOptions={progressOptions} submit={handleAttributeUpdate} />
             <CustomSelect label='Priority' inputDefault={priority} selectOptions={priorityOptions} submit={handleAttributeUpdate} />
-            <CustomDatePicker date={newDueDate} setDate={handleSetNewDueDate}>
+            <CustomDatePicker date={Date.parse(newDueDate)} setDate={handleSetNewDueDate}>
               <CustomDatePickerSelect />
             </CustomDatePicker>
           </div>

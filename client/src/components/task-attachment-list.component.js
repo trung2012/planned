@@ -8,7 +8,7 @@ const TaskAttachmentList = ({ attachments }) => {
     <div className='attachment-list'>
       {
         attachments.map(file => (
-          <TaskAttachment file={file} />
+          <TaskAttachment key={file._id} file={file} />
         ))
       }
     </div>

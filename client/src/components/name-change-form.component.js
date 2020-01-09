@@ -4,11 +4,11 @@ import CustomInput from './custom-input.component';
 import './name-change-form.styles.scss';
 
 const NameChangeForm = ({ submit, dismiss, name = '' }) => {
-  const [newListName, setNewListName] = useState(name);
+  const [newName, setNewName] = useState(name);
 
   const handleSubmit = event => {
     event.preventDefault();
-    submit(newListName);
+    submit(newName);
   }
 
   return (
@@ -16,9 +16,9 @@ const NameChangeForm = ({ submit, dismiss, name = '' }) => {
       <div className='overlay' onClick={handleSubmit}></div>
       <form className='name-change-form' onSubmit={handleSubmit}>
         <CustomInput
-          placeholder='Enter list name'
-          value={newListName}
-          onChange={(event) => setNewListName(event.target.value)}
+          placeholder='Enter  name'
+          value={newName}
+          onChange={(event) => setNewName(event.target.value)}
           onKeyDown={(event) => {
             if (event.key === 'Escape') {
               dismiss()

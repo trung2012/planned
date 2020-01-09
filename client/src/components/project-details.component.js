@@ -29,7 +29,9 @@ const ProjectDetails = () => {
     assignTaskToNewList,
     updateTaskAttributes,
     addComment,
-    removeCurrentlyOpenedTask
+    removeCurrentlyOpenedTask,
+    addTaskAttachment,
+    deleteTaskAttachment
   } = useContext(BoardContext);
   const [showErrorSnackbar, setShowErrorSnackbar] = useState(false);
   const { projectId } = useParams();
@@ -102,7 +104,11 @@ const ProjectDetails = () => {
     })
 
     socket.on('file_uploaded', file => {
-      console.log(file)
+      addTaskAttachment(file);
+    })
+
+    socket.on('attachment_deleted', file => {
+      deleteTaskAttachment(file);
     })
 
     socket.on('new_error', errorMessage => {
@@ -124,6 +130,8 @@ const ProjectDetails = () => {
       socket.off('task_assigned_to_new_list');
       socket.off('task_attributes_updated');
       socket.off('comment_added');
+      socket.off('file_uploaded');
+      socket.off('attachment_deleted');
       socket.off('new_error');
     }
 
@@ -145,7 +153,9 @@ const ProjectDetails = () => {
       assignTaskToNewList,
       updateTaskAttributes,
       addComment,
-      removeCurrentlyOpenedTask
+      removeCurrentlyOpenedTask,
+      addTaskAttachment,
+      deleteTaskAttachment
     ])
 
   return (

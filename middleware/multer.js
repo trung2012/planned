@@ -1,6 +1,5 @@
 const multer = require('multer');
 const cloudinary = require('cloudinary');
-const cloudinaryStorage = require('multer-storage-cloudinary');
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -8,16 +7,17 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-const storage = cloudinaryStorage({
-  cloudinary,
-  folder: 'planned_files'
-});
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname)
+  }
+})
 
 const parser = multer({
-  // storage,
-  // limits: {
-  //   fileSize: 9900000
-  // }
+  storage
 });
 
 module.exports = parser;

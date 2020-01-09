@@ -1,7 +1,8 @@
 @import '../sass/variables';
 
-.file-upload {  
+.file-upload {
   text-align: left;
+  margin-bottom: 1.5rem;
 
   input[type=file] {
     display: none;

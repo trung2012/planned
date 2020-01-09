@@ -50,7 +50,7 @@ const FileUpload = ({ text, taskId }) => {
 
   return (
     <div className='file-upload'>
-      <input type='file' name='image' id='image' onChange={handleImageUpload} multiple />
+      <input type='file' name='image' id='image' onChange={handleImageUpload} />
       <label htmlFor='image' className='add-task-attachment'>
         {text}
       </label>

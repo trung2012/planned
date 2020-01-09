@@ -1,7 +1,9 @@
+const fs = require('fs');
 const express = require('express');
 const router = new express.Router();
 const File = require('../../models/File');
-const parser = require('../../middleware/cloudinary');
+const Task = require('../../models/Task');
+const parser = require('../../middleware/multer');
 const auth = require('../../middleware/auth');
 const cloudinary = require('cloudinary');
 
@@ -10,23 +12,35 @@ const returnRouter = (io) => {
     try {
       if (req.user) {
         const { file } = req;
-        cloudinary.v2.uploader.upload_stream({ resource_type: 'auto' }, (error, result) => {
-          console.log(result)
-        }).end(file.buffer);
 
-        // const newFile = new File({
-        //   name: req.params.fileName,
-        //   url: file.url,
-        //   public_id: file.public_id,
-        //   task: req.params.taskId
-        // });
+        cloudinary.v2.uploader.upload(file.path, { resource_type: 'raw', use_filename: true, folder: 'planned_files' }, async (error, result) => {
+          if (error) {
+            throw new Error(error);
+          }
 
-        // await newFile.save();
-        // res.send('File uploaded successfully');
-        // io.in(req.params.projectId).emit('file_uploaded', newFile);
+          fs.unlinkSync(file.path);
+
+          const newFile = new File({
+            name: req.params.fileName,
+            url: result.url,
+            public_id: result.public_id,
+            task: req.params.taskId
+          });
+
+          await Promise.all([
+            newFile.save(),
+            Task.updateOne(
+              { _id: newFile.task },
+              { $set: { updatedAt: Date.now() } }
+            )
+          ]);
+
+          res.send('File uploaded successfully');
+          io.in(req.params.projectId).emit('file_uploaded', newFile);
+        })
       }
     } catch (err) {
-      res.status(500).send(err);
+      res.status(500).send(error);
     }
   })
 

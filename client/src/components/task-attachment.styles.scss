@@ -1,0 +1,48 @@
+@import '../sass/variables';
+
+.task-attachment {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 1rem;
+
+  &:hover {
+    background-color: $color-gray-extra-light;
+  }
+
+  &:not(:last-child) {
+    margin-bottom: .5rem;
+  }
+
+  &__info {
+    flex: 1;
+    display: flex;
+    align-items: center;
+
+    .name-change-form {
+      max-width: 100%;
+    }
+  }
+
+  &__name {
+    color: $color-gray-dark;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .attachment-icon {
+    height: 2em;
+    width: 3em;
+    padding: .25rem;
+    margin-right: .75rem;
+  }
+
+  .more-options {
+    top: 65%;
+    right: .5rem;
+  }
+}

@@ -4,6 +4,7 @@ const http = require('http');
 const cors = require('cors');
 const socketIO = require('socket.io');
 const socketioJwt = require('socketio-jwt');
+const cloudinary = require('cloudinary');
 
 const userRouter = require('./routers/api/user');
 const projectRouter = require('./routers/api/project');
@@ -12,6 +13,7 @@ const List = require('./models/List');
 const Project = require('./models/Project');
 const Task = require('./models/Task');
 const Comment = require('./models/Comment');
+const File = require('./models/File');
 const convertArrayToMap = require('./utils/convertArrayToMap');
 
 const app = express();
@@ -247,9 +249,9 @@ io.on('connection', (socket) => {
       const { task, oldListId, newListId, updatedAt } = data;
 
       await Promise.all([
-        Task.updateOne({ _id: task._id }, { $set: { list: newListId, updatedAt } }, { new: true }),
-        List.updateOne({ _id: oldListId }, { $pull: { tasks: task._id } }, { new: true }),
-        List.updateOne({ _id: newListId }, { $push: { tasks: task._id } }, { new: true }),
+        Task.updateOne({ _id: task._id }, { $set: { list: newListId, updatedAt } }),
+        List.updateOne({ _id: oldListId }, { $pull: { tasks: task._id } }),
+        List.updateOne({ _id: newListId }, { $push: { tasks: task._id } }),
       ])
 
       socket.to(projectId).emit('task_assigned_to_new_list', data);
@@ -282,12 +284,61 @@ io.on('connection', (socket) => {
         author: commentData.author._id
       });
 
-      await comment.save();
+      await Promise.all([
+        comment.save(),
+        Task.updateOne(
+          { _id: commentData.task },
+          { $set: { updatedAt: Date.now() } }
+        )
+      ])
 
       socket.to(commentData.project).emit('comment_added', commentData);
     } catch (err) {
       console.log(err)
       socket.emit('new_error', 'Error adding comment');
+    }
+  })
+
+  socket.on('delete_attachment', async ({ file, projectId }) => {
+    try {
+      console.log(file.public_id)
+      await Promise.all([
+        File.findByIdAndDelete(file._id),
+        Task.updateOne(
+          { _id: file.task },
+          { $set: { updatedAt: Date.now() } }
+        ),
+        cloudinary.v2.uploader.destroy(file.public_id, { resource_type: 'raw' }, (error, result) => {
+          if (error) {
+            throw new Error(error)
+          }
+        })
+      ])
+
+      socket.to(projectId).emit('attachment_deleted', file);
+    } catch (err) {
+      console.log(err)
+      socket.emit('new_error', 'Error deleting attachment');
+    }
+  })
+
+  socket.on('change_filename', async ({ file, newName, projectId }) => {
+    try {
+      await Promise.all([
+        File.updateOne(
+          { _id: file._id },
+          { $set: { name: newName } }
+        ),
+        Task.updateOne(
+          { _id: file.task },
+          { $set: { updatedAt: Date.now() } }
+        )
+      ]);
+
+      socket.to(projectId).emit('attachment_renamed', { file, newName });
+    } catch (err) {
+      console.log(err)
+      socket.emit('new_error', 'Error renaming attachment');
     }
   })
 

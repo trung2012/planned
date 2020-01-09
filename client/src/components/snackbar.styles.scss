@@ -12,6 +12,7 @@
   border-radius: .3rem;
   max-width: 50rem;
   animation: fadeFromBottom .3s;
+  z-index: 1000;
 
   &__action {
     align-self: flex-end;
