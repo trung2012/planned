@@ -8,8 +8,18 @@ const BoardTasks = ({ list }) => {
   return (
     <Droppable droppableId={list._id}>
       {
-        provided => (
-          <div className='board-tasks' ref={provided.innerRef} {...provided.droppableProps}>
+        (provided, snapshot) => (
+          <div
+            className='board-tasks'
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+            style={
+              {
+                ...provided.droppableProps.style,
+                backgroundColor: snapshot.isDraggingOver && '#f3f3f3'
+              }
+            }
+          >
             {
               list &&
               (

@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { ObjectID } from 'bson';
 import { useParams } from 'react-router-dom';
-import { DragDropContext } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
 import { SocketContext } from '../context/SocketContext';
 import { BoardContext } from '../context/BoardContext';
@@ -12,7 +12,7 @@ import './board-lists.styles.scss';
 const BoardLists = () => {
   const { socket } = useContext(SocketContext)
   const { projectId } = useParams();
-  const { boardState, addList, replaceSingleList, replaceMultipleListsAfterDragAndDrop } = useContext(BoardContext);
+  const { boardState, addList, replaceSingleList, replaceMultipleListsAfterDragAndDrop, reorderLists } = useContext(BoardContext);
   const { currentProject } = boardState;
   const [showListAdd, setShowListAdd] = useState(false);
 
@@ -31,7 +31,7 @@ const BoardLists = () => {
     setShowListAdd(false);
   }
 
-  const onDragEnd = ({ destination, source, draggableId }) => {
+  const onDragEnd = ({ destination, source, draggableId, type }) => {
     if (!destination) {
       return;
     }
@@ -40,6 +40,16 @@ const BoardLists = () => {
       destination.droppableId === source.droppableId &&
       destination.index === source.index
     ) {
+      return;
+    }
+
+    if (type === 'list') {
+      const newLists = [...boardState.currentProject.lists];
+      newLists.splice(source.index, 1);
+      newLists.splice(destination.index, 0, draggableId);
+
+      reorderLists(newLists);
+      socket.emit('reorder_lists', { lists: newLists, projectId });
       return;
     }
 
@@ -56,8 +66,13 @@ const BoardLists = () => {
         tasks: newTasks
       };
 
-      replaceSingleList(newList);
-      socket.emit('replace_single_list', newList);
+      const updatedData = {
+        list: newList,
+        taskId: draggableId
+      }
+
+      replaceSingleList(updatedData);
+      socket.emit('replace_single_list', updatedData);
       return;
     } else {
 
@@ -77,8 +92,14 @@ const BoardLists = () => {
         tasks: newEndTasks
       }
 
-      replaceMultipleListsAfterDragAndDrop([newStartList, newEndList]);
-      // socket.emit('replace_multiple_lists', [newStartList, newEndList]);
+      const updatedData = {
+        lists: [newStartList, newEndList],
+        taskId: draggableId
+      }
+
+      replaceMultipleListsAfterDragAndDrop(updatedData);
+      socket.emit('replace_multiple_lists', updatedData);
+      return;
     }
 
   }
@@ -86,16 +107,32 @@ const BoardLists = () => {
   return (
     <React.Fragment>
       <DragDropContext onDragEnd={onDragEnd}>
-        <div className='board-lists'>
+        <Droppable droppableId='all-lists' direction='horizontal' type='list'>
           {
-            currentProject && currentProject.lists && currentProject.lists.length > 0 &&
-            currentProject.lists.map(listId => {
-              return (
-                <BoardListContainer key={listId} listId={listId} />
-              );
-            })
+            (provided, snapshot) => (
+              <div
+                className='board-lists'
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                style={{
+                  ...provided.droppableProps.style,
+                  backgroundColor: snapshot.isDraggingOver && '#f3f3f3'
+                }}
+              >
+                {
+                  currentProject && currentProject.lists && currentProject.lists.length > 0 &&
+                  currentProject.lists.map((listId, index) => {
+                    return (
+                      <BoardListContainer key={listId} listId={listId} index={index} />
+                    );
+                  })
+                }
+                {provided.placeholder}
+              </div>
+            )
           }
-        </div>
+
+        </Droppable>
       </DragDropContext>
       {
         showListAdd ?

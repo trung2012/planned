@@ -37,13 +37,17 @@ const BoardTask = ({ task, list, index }) => {
   return (
     <Draggable draggableId={task._id} index={index}>
       {
-        provided => (
+        (provided) => (
           <div
             className='board-task'
             {...provided.draggableProps}
             {...provided.dragHandleProps}
             ref={provided.innerRef}
-            style={{ ...provided.draggableProps.style }}
+            style={
+              {
+                ...provided.draggableProps.style
+              }
+            }
           >
             <div className='board-task__top-content'>
               <div className='board-task__heading'>

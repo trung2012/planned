@@ -342,38 +342,62 @@ io.on('connection', (socket) => {
     }
   })
 
-  socket.on('replace_single_list', async list => {
+  socket.on('replace_single_list', async ({ list, taskId }) => {
     try {
-      await List.replaceOne(
-        { _id: list._id },
-        list
-      );
+      await Promise.all([
+        List.replaceOne(
+          { _id: list._id },
+          list
+        ),
+        Task.updateOne(
+          { _id: taskId },
+          { $set: { updatedAt: Date.now() } }
+        )
+      ])
 
-      socket.to(list.project).emit('single_list_replaced', list);
+      socket.to(list.project).emit('single_list_replaced', { list, taskId });
     } catch (err) {
       socket.emit('new_error', 'Error updating list');
     }
   })
 
-  socket.on('replace_multiple_lists', async lists => {
+  socket.on('replace_multiple_lists', async ({ lists, taskId }) => {
     try {
-      const [list1, list2] = lists;
+      const [startList, endList] = lists;
 
       await Promise.all([
         List.replaceOne(
-          { _id: list1._id },
-          list1
+          { _id: startList._id },
+          startList
         ),
         List.replaceOne(
-          { _id: list2._id },
-          list2
+          { _id: endList._id },
+          endList
+        ),
+        Task.updateOne(
+          { _id: taskId },
+          { $set: { list: endList._id, updatedAt: Date.now() } }
         )
       ])
 
-      socket.to(list1.project).emit('multiple_lists_replaced', lists);
+      socket.to(startList.project).emit('multiple_lists_replaced', { lists, taskId });
     } catch (err) {
       console.log(err)
       socket.emit('new_error', 'Error updating lists');
+    }
+  })
+
+  socket.on('reorder_lists', async ({ lists, projectId }) => {
+    try {
+      await Project.updateOne(
+        { _id: projectId },
+        { $set: { lists } }
+      );
+
+      socket.to(projectId).emit('lists_reordered', lists);
+    } catch (err) {
+      console.log(err)
+      socket.emit('new_error', 'Error ordering lists');
     }
   })
 

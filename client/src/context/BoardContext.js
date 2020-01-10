@@ -74,6 +74,14 @@ const boardReducer = (state, action) => {
           [action.payload._id]: { ...state.lists[action.payload._id], name: action.payload.name }
         }
       }
+    case 'reorder_lists':
+      return {
+        ...state,
+        currentProject: {
+          ...state.currentProject,
+          lists: action.payload
+        }
+      }
     case 'add_task': {
       const listId = action.payload.list;
       return {
@@ -140,23 +148,32 @@ const boardReducer = (state, action) => {
       }
     }
     case 'replace_single_list': {
-      const list = action.payload;
+      const { list, taskId } = action.payload;
       return {
         ...state,
         lists: {
           ...state.lists,
           [list._id]: list
+        },
+        tasks: {
+          ...state.tasks,
+          [taskId]: { ...state.tasks[taskId], updatedAt: Date.now() }
         }
       }
     }
     case 'replace_multiple_lists_after_dnd': {
-      const [startList, endList] = action.payload;
+      const { lists, taskId } = action.payload;
+      const [startList, endList] = lists;
       return {
         ...state,
         lists: {
           ...state.lists,
           [startList._id]: startList,
           [endList._id]: endList
+        },
+        tasks: {
+          ...state.tasks,
+          [taskId]: { ...state.tasks[taskId], list: endList._id, updatedAt: Date.now() }
         }
       }
     }
@@ -370,17 +387,22 @@ export const BoardProvider = ({ children }) => {
     dispatch({ type: 'set_currently_opened_task', payload: taskId });
   }
 
-  const replaceSingleList = useCallback(list => {
-    dispatch({ type: 'replace_single_list', payload: list });
+  const replaceSingleList = useCallback(data => {
+    dispatch({ type: 'replace_single_list', payload: data });
   }, [])
 
-  const replaceMultipleListsAfterDragAndDrop = useCallback(lists => {
-    dispatch({ type: 'replace_multiple_lists_after_dnd', payload: lists });
+  const replaceMultipleListsAfterDragAndDrop = useCallback(data => {
+    dispatch({ type: 'replace_multiple_lists_after_dnd', payload: data });
+  }, [])
+
+  const reorderLists = useCallback(lists => {
+    dispatch({ type: 'reorder_lists', payload: lists });
   }, [])
 
   const removeCurrentlyOpenedTask = useCallback((taskId) => {
     dispatch({ type: 'remove_currently_opened_task', payload: taskId });
   }, [])
+
 
   const setIsCurrentlyOpenedTaskDeleted = (value) => {
     dispatch({ type: 'set_is_currently_deleted', payload: value });
@@ -424,7 +446,8 @@ export const BoardProvider = ({ children }) => {
         deleteTaskAttachment,
         renameTaskAttachment,
         replaceSingleList,
-        replaceMultipleListsAfterDragAndDrop
+        replaceMultipleListsAfterDragAndDrop,
+        reorderLists
       }}
     >
       {children}

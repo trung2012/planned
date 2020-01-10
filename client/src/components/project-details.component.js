@@ -33,7 +33,8 @@ const ProjectDetails = () => {
     addTaskAttachment,
     deleteTaskAttachment,
     replaceSingleList,
-    replaceMultipleListsAfterDragAndDrop
+    replaceMultipleListsAfterDragAndDrop,
+    reorderLists
   } = useContext(BoardContext);
   const [showErrorSnackbar, setShowErrorSnackbar] = useState(false);
   const { projectId } = useParams();
@@ -121,6 +122,10 @@ const ProjectDetails = () => {
       replaceMultipleListsAfterDragAndDrop(lists)
     })
 
+    socket.on('lists_reordered', lists => {
+      reorderLists(lists);
+    })
+
     socket.on('new_error', errorMessage => {
       addBoardError(errorMessage);
     })
@@ -168,7 +173,8 @@ const ProjectDetails = () => {
       addTaskAttachment,
       deleteTaskAttachment,
       replaceSingleList,
-      replaceMultipleListsAfterDragAndDrop
+      replaceMultipleListsAfterDragAndDrop,
+      reorderLists
     ])
 
   return (

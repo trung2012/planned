@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { ObjectID } from 'bson';
+import { Draggable } from 'react-beautiful-dnd';
 
 import { SocketContext } from '../context/SocketContext';
 import Modal from './modal.component';
@@ -15,7 +16,7 @@ import { ReactComponent as AddIcon } from '../assets/add.svg';
 import { AuthContext } from '../context/AuthContext';
 import './board-list.styles.scss';
 
-const BoardList = ({ list }) => {
+const BoardList = ({ list, index }) => {
   const { projectId } = useParams();
   const { authState } = useContext(AuthContext);
   const { socket } = useContext(SocketContext);
@@ -62,59 +63,82 @@ const BoardList = ({ list }) => {
   }
 
   return (
-    <div className='board-list'>
-      <div className='board-list__header'>
-        {
-          showListOptions &&
-          <MoreOptions dismiss={() => setShowListOptions(false)}>
-            <div className='more-options-item' onClick={() => {
-              setShowListOptions(false);
-              setShowListNameEdit(true);
-            }}>
-              Rename
-              </div>
-            <div className='more-options-item' onClick={() => {
-              setShowListDeleteConfirm(true)
-              setShowListOptions(false);
-            }}
-            >
-              Delete
-              </div>
-          </MoreOptions>
-        }
-        {
-          showListNameEdit ?
-            <NameChangeForm name={list.name} submit={handleListEditName} dismiss={() => setShowListNameEdit(false)} />
-            :
-            <React.Fragment>
-              <h4 className='board-list__name' onClick={() => setShowListNameEdit(true)}>{list.name}</h4>
-              <OptionsIcon className='options-icon' onClick={() => setShowListOptions(true)} />
-            </React.Fragment>
-        }
-        {
-          showListDeleteConfirm &&
-          <Modal
-            modalTitle='Delete project'
-            dismiss={() => setShowListDeleteConfirm(false)}
-          >
-            <ItemDelete
-              confirm={handleDeleteClick}
-              dismiss={() => setShowListDeleteConfirm(false)}
-              type='list'
-            />
-          </Modal>
-        }
-      </div>
-      <div className='board-task-add-button' onClick={() => setShowTaskAdd(!showTaskAdd)}>
-        <AddIcon className='add-icon' />
-        Add task
-      </div>
+    <Draggable draggableId={list._id} index={index}>
       {
-        showTaskAdd &&
-        <BoardTaskAdd submit={handleAddSubmit} listId={list._id} dismiss={() => setShowTaskAdd(false)} />
+        (provided, snapshot) => (
+          <div
+            className='board-list'
+            {...provided.draggableProps}
+            ref={provided.innerRef}
+            style={
+              {
+                ...provided.draggableProps.style,
+                backgroundColor: snapshot.isDragging && 'white'
+              }
+            }
+          >
+            <div className='board-list__header'>
+              {
+                showListOptions &&
+                <MoreOptions dismiss={() => setShowListOptions(false)}>
+                  <div className='more-options-item' onClick={() => {
+                    setShowListOptions(false);
+                    setShowListNameEdit(true);
+                  }}>
+                    Rename
+                    </div>
+                  <div className='more-options-item' onClick={() => {
+                    setShowListDeleteConfirm(true)
+                    setShowListOptions(false);
+                  }}
+                  >
+                    Delete
+                    </div>
+                </MoreOptions>
+              }
+              {
+                showListNameEdit ?
+                  <NameChangeForm name={list.name} submit={handleListEditName} dismiss={() => setShowListNameEdit(false)} />
+                  :
+                  <React.Fragment>
+                    <h4
+                      {...provided.dragHandleProps}
+                      className='board-list__name'
+                      onClick={() => setShowListNameEdit(true)}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      {list.name}
+                    </h4>
+                    <OptionsIcon className='options-icon' onClick={() => setShowListOptions(true)} />
+                  </React.Fragment>
+              }
+              {
+                showListDeleteConfirm &&
+                <Modal
+                  modalTitle='Delete project'
+                  dismiss={() => setShowListDeleteConfirm(false)}
+                >
+                  <ItemDelete
+                    confirm={handleDeleteClick}
+                    dismiss={() => setShowListDeleteConfirm(false)}
+                    type='list'
+                  />
+                </Modal>
+              }
+            </div>
+            <div className='board-task-add-button' onClick={() => setShowTaskAdd(!showTaskAdd)}>
+              <AddIcon className='add-icon' />
+              Add task
+            </div>
+            {
+              showTaskAdd &&
+              <BoardTaskAdd submit={handleAddSubmit} listId={list._id} dismiss={() => setShowTaskAdd(false)} />
+            }
+            <BoardTasks list={list} />
+          </div>
+        )
       }
-      <BoardTasks list={list} />
-    </div>
+    </Draggable >
   );
 }
 
