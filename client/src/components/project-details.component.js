@@ -31,7 +31,9 @@ const ProjectDetails = () => {
     addComment,
     removeCurrentlyOpenedTask,
     addTaskAttachment,
-    deleteTaskAttachment
+    deleteTaskAttachment,
+    replaceSingleList,
+    replaceMultipleListsAfterDragAndDrop
   } = useContext(BoardContext);
   const [showErrorSnackbar, setShowErrorSnackbar] = useState(false);
   const { projectId } = useParams();
@@ -87,7 +89,7 @@ const ProjectDetails = () => {
     })
 
     socket.on('task_deleted', deletedTask => {
-      removeCurrentlyOpenedTask(deletedTask.taskId)
+      removeCurrentlyOpenedTask(deletedTask.taskId);
       deleteTask(deletedTask);
     })
 
@@ -111,10 +113,17 @@ const ProjectDetails = () => {
       deleteTaskAttachment(file);
     })
 
+    socket.on('single_list_replaced', list => {
+      replaceSingleList(list);
+    })
+
+    socket.on('multiple_lists_replaced', lists => {
+      replaceMultipleListsAfterDragAndDrop(lists)
+    })
+
     socket.on('new_error', errorMessage => {
       addBoardError(errorMessage);
     })
-
 
     return () => {
       socket.emit('leave', projectId);
@@ -132,6 +141,8 @@ const ProjectDetails = () => {
       socket.off('comment_added');
       socket.off('file_uploaded');
       socket.off('attachment_deleted');
+      socket.off('single_list_replaced');
+      socket.off('multiple_lists_replaced')
       socket.off('new_error');
     }
 
@@ -155,7 +166,9 @@ const ProjectDetails = () => {
       addComment,
       removeCurrentlyOpenedTask,
       addTaskAttachment,
-      deleteTaskAttachment
+      deleteTaskAttachment,
+      replaceSingleList,
+      replaceMultipleListsAfterDragAndDrop
     ])
 
   return (

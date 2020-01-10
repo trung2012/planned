@@ -342,6 +342,41 @@ io.on('connection', (socket) => {
     }
   })
 
+  socket.on('replace_single_list', async list => {
+    try {
+      await List.replaceOne(
+        { _id: list._id },
+        list
+      );
+
+      socket.to(list.project).emit('single_list_replaced', list);
+    } catch (err) {
+      socket.emit('new_error', 'Error updating list');
+    }
+  })
+
+  socket.on('replace_multiple_lists', async lists => {
+    try {
+      const [list1, list2] = lists;
+
+      await Promise.all([
+        List.replaceOne(
+          { _id: list1._id },
+          list1
+        ),
+        List.replaceOne(
+          { _id: list2._id },
+          list2
+        )
+      ])
+
+      socket.to(list1.project).emit('multiple_lists_replaced', lists);
+    } catch (err) {
+      console.log(err)
+      socket.emit('new_error', 'Error updating lists');
+    }
+  })
+
   socket.on('leave', (projectId) => {
     socket.leave(projectId);
     console.log(`left project ${projectId}`)

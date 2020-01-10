@@ -16,6 +16,7 @@
   &__top-content {    
     padding: .75rem;
     padding-left: 1.25rem;
+    cursor: pointer;
   }
 
   &__heading {
@@ -36,10 +37,12 @@
   &__content {
     position: relative;
     padding-bottom: 1rem;
+    cursor: pointer;
   }
 
   &__assignee {
     border-top: 1px solid $color-gray-light;
+    cursor: pointer;
 
     .task-assignment {
       display: flex;
@@ -89,5 +92,6 @@
     top: 3rem;
     right: 0;
     z-index: 100;
+    cursor: pointer;
   }
 }

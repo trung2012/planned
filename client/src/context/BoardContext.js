@@ -11,6 +11,7 @@ const initialState = {
   memberIds: [],
   users: [],
   errorMessage: null,
+  updateMessage: null,
   isLoading: false,
   showTaskDetails: false,
   currentlyOpenedTask: null,
@@ -135,6 +136,27 @@ const boardReducer = (state, action) => {
         tasks: {
           ...state.tasks,
           [task._id]: { ...state.tasks[task._id], list: newListId, updatedAt }
+        }
+      }
+    }
+    case 'replace_single_list': {
+      const list = action.payload;
+      return {
+        ...state,
+        lists: {
+          ...state.lists,
+          [list._id]: list
+        }
+      }
+    }
+    case 'replace_multiple_lists_after_dnd': {
+      const [startList, endList] = action.payload;
+      return {
+        ...state,
+        lists: {
+          ...state.lists,
+          [startList._id]: startList,
+          [endList._id]: endList
         }
       }
     }
@@ -348,6 +370,14 @@ export const BoardProvider = ({ children }) => {
     dispatch({ type: 'set_currently_opened_task', payload: taskId });
   }
 
+  const replaceSingleList = useCallback(list => {
+    dispatch({ type: 'replace_single_list', payload: list });
+  }, [])
+
+  const replaceMultipleListsAfterDragAndDrop = useCallback(lists => {
+    dispatch({ type: 'replace_multiple_lists_after_dnd', payload: lists });
+  }, [])
+
   const removeCurrentlyOpenedTask = useCallback((taskId) => {
     dispatch({ type: 'remove_currently_opened_task', payload: taskId });
   }, [])
@@ -392,7 +422,9 @@ export const BoardProvider = ({ children }) => {
         addComment,
         addTaskAttachment,
         deleteTaskAttachment,
-        renameTaskAttachment
+        renameTaskAttachment,
+        replaceSingleList,
+        replaceMultipleListsAfterDragAndDrop
       }}
     >
       {children}

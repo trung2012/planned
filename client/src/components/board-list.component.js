@@ -15,11 +15,11 @@ import { ReactComponent as AddIcon } from '../assets/add.svg';
 import { AuthContext } from '../context/AuthContext';
 import './board-list.styles.scss';
 
-const BoardList = ({ list, updateListName }) => {
+const BoardList = ({ list }) => {
   const { projectId } = useParams();
   const { authState } = useContext(AuthContext);
   const { socket } = useContext(SocketContext);
-  const { deleteList, addTask } = useContext(BoardContext);
+  const { deleteList, addTask, updateListName } = useContext(BoardContext);
   const [showListOptions, setShowListOptions] = useState(false);
   const [showListNameEdit, setShowListNameEdit] = useState(false);
   const [showListDeleteConfirm, setShowListDeleteConfirm] = useState(false);
