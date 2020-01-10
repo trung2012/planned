@@ -136,7 +136,7 @@ const BoardLists = () => {
       </DragDropContext>
       {
         showListAdd ?
-          <NameChangeForm submit={handleAddSubmit} dismiss={() => setShowListAdd(false)} />
+          <NameChangeForm submit={handleAddSubmit} dismiss={() => setShowListAdd(false)} type='list' />
           :
           <button className='add-list' onClick={() => setShowListAdd(true)}>
             Add new list

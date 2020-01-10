@@ -118,7 +118,7 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
           <div className='board-task-details__header'>
             {
               showTaskNameEdit ?
-                <NameChangeForm name={name} submit={handleTaskEditName} dismiss={() => setShowTaskNameEdit(false)} />
+                <NameChangeForm name={name} submit={handleTaskEditName} dismiss={() => setShowTaskNameEdit(false)} type='task' />
                 : <h2 onClick={() => setShowTaskNameEdit(true)}>{name}</h2>
             }
 

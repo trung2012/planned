@@ -41,7 +41,7 @@ const TaskAttachment = ({ file }) => {
         }
         {
           showAttachmentRename ?
-            <NameChangeForm name={file.name} submit={handleAttachmentRename} dismiss={() => setShowAttachmentRename(false)} />
+            <NameChangeForm name={file.name} submit={handleAttachmentRename} dismiss={() => setShowAttachmentRename(false)} type='file' />
             : <a className='task-attachment__name' href={file.url}>{file.name}</a>
         }
       </div>

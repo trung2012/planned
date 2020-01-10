@@ -98,7 +98,7 @@ const BoardList = ({ list, index }) => {
               }
               {
                 showListNameEdit ?
-                  <NameChangeForm name={list.name} submit={handleListEditName} dismiss={() => setShowListNameEdit(false)} />
+                  <NameChangeForm name={list.name} submit={handleListEditName} dismiss={() => setShowListNameEdit(false)} type='list' />
                   :
                   <React.Fragment>
                     <h4

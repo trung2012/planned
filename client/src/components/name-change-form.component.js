@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import CustomInput from './custom-input.component';
 import './name-change-form.styles.scss';
 
-const NameChangeForm = ({ submit, dismiss, name = '' }) => {
+const NameChangeForm = ({ submit, dismiss, name = '', type }) => {
   const [newName, setNewName] = useState(name);
 
   const handleSubmit = event => {
@@ -16,7 +16,7 @@ const NameChangeForm = ({ submit, dismiss, name = '' }) => {
       <div className='overlay' onClick={handleSubmit}></div>
       <form className='name-change-form' onSubmit={handleSubmit}>
         <CustomInput
-          placeholder='Enter  name'
+          placeholder={`Enter ${type} name`}
           value={newName}
           onChange={(event) => setNewName(event.target.value)}
           onKeyDown={(event) => {
