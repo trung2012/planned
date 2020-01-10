@@ -24,7 +24,7 @@
   box-shadow: 0 0 .7rem $color-gray-medium;
   border-radius: .3rem;  
   overflow-y: auto;
-  animation: fade .2s;
+  animation: fade .2s ease-out both;
   z-index: 11;
 
   .add-user-icon-after {
@@ -104,5 +104,9 @@
     background-color: $color-gray-extra-light;
     min-height: 7.5rem;
     margin-bottom: 1rem;
+  }
+
+  .task-assignment-dropdown {
+    max-width: 28rem;
   }
 }

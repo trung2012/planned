@@ -1,6 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { ObjectID } from 'bson';
 import { useParams } from 'react-router-dom';
+import { DragDropContext } from 'react-beautiful-dnd';
+
 import { SocketContext } from '../context/SocketContext';
 import { BoardContext } from '../context/BoardContext';
 import NameChangeForm from './name-change-form.component';
@@ -29,19 +31,27 @@ const BoardLists = () => {
     setShowListAdd(false);
   }
 
+  const onDragEnd = ({ destination, source, draggableId }) => {
+    if (!destination) {
+      return;
+    }
+
+  }
+
   return (
     <React.Fragment>
-      <div className='board-lists'>
-        {
-          currentProject && currentProject.lists && currentProject.lists.length > 0 &&
-          currentProject.lists.map(listId => {
-            return (
-              <BoardListContainer key={listId} listId={listId} />
-            );
-          })
-        }
-      </div>
-
+      <DragDropContext onDragEnd={onDragEnd}>
+        <div className='board-lists'>
+          {
+            currentProject && currentProject.lists && currentProject.lists.length > 0 &&
+            currentProject.lists.map(listId => {
+              return (
+                <BoardListContainer key={listId} listId={listId} />
+              );
+            })
+          }
+        </div>
+      </DragDropContext>
       {
         showListAdd ?
           <NameChangeForm submit={handleAddSubmit} dismiss={() => setShowListAdd(false)} />

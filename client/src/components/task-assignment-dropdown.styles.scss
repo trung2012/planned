@@ -5,9 +5,9 @@
   top: 100%;
   left: 0;
   background-color: #fff;
-  width: 28rem;
+  width: 100%;
   box-shadow: $box-shadow-primary;
-  animation: fadeFromTop .2s;
+  animation: fadeFromTop .2s cubic-bezier(0.1, 0.9, 0.2, 1) both;
   z-index: 2;
 
   &__header {    

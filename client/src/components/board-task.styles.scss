@@ -71,10 +71,17 @@
         background: unset;
       }
     }
+    
+    .board-members-dropdown-list {
+      padding: .5rem 1rem;
+      
+      .member-profile-item {
+        padding-left: .5rem;
+      }
+    }
 
     .member-profile-item {
-      padding: .75rem;
-      padding-left: 1rem;
+      padding-left: 1.25rem;
     }
   }
   

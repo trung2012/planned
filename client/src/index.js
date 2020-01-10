@@ -10,16 +10,16 @@ import { BoardProvider } from './context/BoardContext';
 import { SocketProvider } from './context/SocketContext';
 
 ReactDOM.render(
-  <BoardProvider>
-    <AuthProvider>
-      <ProjectProvider>
-        <SocketProvider>
+  <SocketProvider>
+    <BoardProvider>
+      <AuthProvider>
+        <ProjectProvider>
           <BrowserRouter>
             <App />
           </BrowserRouter>
-        </SocketProvider>
-      </ProjectProvider>
-    </AuthProvider>
-  </BoardProvider>, document.getElementById('root'));
+        </ProjectProvider>
+      </AuthProvider>
+    </BoardProvider>
+  </SocketProvider>, document.getElementById('root'));
 
 serviceWorker.unregister();
