@@ -1,7 +1,7 @@
 @import '../sass/variables';
 
 .board-task-add {
-  margin: 0 .5rem 2rem;
+  margin-bottom: 2rem;
   z-index: 2;
 
   &__form {
@@ -26,9 +26,9 @@
     .add-user-icon-after {
       display: none;
     }
-
+    
     .task-assignment {
-      position: relative;
+      margin-left: -.3rem;
       z-index: 2;
     }
   }

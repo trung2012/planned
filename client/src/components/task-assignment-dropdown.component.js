@@ -24,7 +24,12 @@ const TaskAssignmentDropdown = ({ setShowAssignmentDropdown, memberSearchQuery, 
           <CustomInput
             placeholder='Enter name to add member'
             value={memberSearchQuery}
-            onChange={onInputChange}
+            onChange={(event) => {
+              onInputChange(event);
+              if (!showSearchResults) {
+                setShowSearchResults(true);
+              }
+            }}
             onFocus={() => setShowSearchResults(true)}
           />
         </div>
@@ -38,7 +43,7 @@ const TaskAssignmentDropdown = ({ setShowAssignmentDropdown, memberSearchQuery, 
                   <MemberProfileItem onClick={() => handleMemberClick(user)} key={user._id} member={user} />
                 );
               })
-                : <span>No results found</span>
+                : <span className='no-results'>No results found</span>
             }
           </MoreOptions>
         }

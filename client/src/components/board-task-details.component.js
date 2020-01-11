@@ -14,11 +14,12 @@ import { AuthContext } from '../context/AuthContext';
 import { progressOptions, priorityOptions } from '../utils/dropdownOptions';
 import CustomDatePicker from './custom-date-picker.component';
 import TaskAssignment from './task-assignment.component';
-import { handleTaskAssignment } from '../utils/useTaskAssignment';
+import { handleTaskAssignment, handleTaskUpdate } from '../utils/useTaskUpdate';
 import FileUpload from './file-upload.component';
+import TaskAttachmentList from './task-attachment-list.component';
+import getSelectIcon from '../utils/getSelectIcon';
 
 import './board-task-details.styles.scss';
-import TaskAttachmentList from './task-attachment-list.component';
 
 const BoardTaskDetails = ({ task, list, dismiss }) => {
   const { projectId } = useParams();
@@ -51,20 +52,9 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
     setNewDueDate(due);
   }, [due])
 
-  const { handleAssignTask, handleUnassignTask } = handleTaskAssignment(socket, task._id, projectId, assignUserToTask, unassignUserFromTask);
+  const { handleAssignTask, handleUnassignTask } = handleTaskAssignment(socket, task._id, projectId, { assignUserToTask, unassignUserFromTask });
 
-  const handleAttributeUpdate = data => {
-    const updatedTask = {
-      taskId: task._id,
-      data: {
-        ...data,
-        updatedAt: Date.now()
-      },
-      projectId
-    }
-    socket.emit('update_task_attributes', updatedTask);
-    updateTaskAttributes(updatedTask);
-  }
+  const { handleAttributeUpdate, handleCompletionToggle } = handleTaskUpdate(socket, task._id, projectId, { updateTaskAttributes })
 
   const handleSetNewDueDate = date => {
     setNewDueDate(date);
@@ -116,20 +106,26 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
             &times;
           </span>
           <div className='board-task-details__header'>
-            {
-              showTaskNameEdit ?
-                <NameChangeForm name={name} submit={handleTaskEditName} dismiss={() => setShowTaskNameEdit(false)} type='task' />
-                : <h2 onClick={() => setShowTaskNameEdit(true)}>{name}</h2>
-            }
-
+            <div className='board-task-details__name'>
+              <span onClick={() => handleCompletionToggle(task.progress)}>
+                {getSelectIcon(task.progress)}
+              </span>
+              {
+                showTaskNameEdit ?
+                  <NameChangeForm name={name} submit={handleTaskEditName} dismiss={() => setShowTaskNameEdit(false)} type='task' />
+                  : <h2 onClick={() => setShowTaskNameEdit(true)}>{name}</h2>
+              }
+            </div>
             <div className='task-last-updated'>{`Updated ${moment(updatedAt).fromNow()}`}</div>
           </div>
-          <TaskAssignment
-            assignee={assignee}
-            members={boardState.members}
-            handleAssignTask={handleAssignTask}
-            handleUnassignTask={handleUnassignTask}
-          />
+          <div className='board-task-details__assignment'>
+            <TaskAssignment
+              assignee={assignee}
+              members={boardState.members}
+              handleAssignTask={handleAssignTask}
+              handleUnassignTask={handleUnassignTask}
+            />
+          </div>
           <div className='board-task-details__dropdowns'>
             <CustomSelect label='List' inputDefault={list} selectOptions={listSelectOptions} submit={handleMoveTaskToNewList} />
             <CustomSelect label='Progress' inputDefault={progress} selectOptions={progressOptions} submit={handleAttributeUpdate} />

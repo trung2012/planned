@@ -7,7 +7,8 @@ import { ReactComponent as OptionsIcon } from '../assets/options.svg';
 import { SocketContext } from '../context/SocketContext';
 import { BoardContext } from '../context/BoardContext';
 import TaskAssignment from './task-assignment.component';
-import { handleTaskAssignment } from '../utils/useTaskAssignment';
+import { handleTaskAssignment, handleTaskUpdate } from '../utils/useTaskUpdate';
+import getSelectIcon from '../utils/getSelectIcon';
 
 import './board-task.styles.scss';
 
@@ -17,10 +18,20 @@ const BoardTask = ({ task, list, index }) => {
   const history = useHistory();
   const { socket } = useContext(SocketContext);
 
-  const { boardState, deleteTask, setShowTaskDetails, assignUserToTask, unassignUserFromTask, setCurrentlyOpenedTask } = useContext(BoardContext);
+  const {
+    boardState,
+    deleteTask,
+    setShowTaskDetails,
+    assignUserToTask,
+    unassignUserFromTask,
+    setCurrentlyOpenedTask,
+    updateTaskAttributes
+  } = useContext(BoardContext);
   const [showTaskOptions, setShowTaskOptions] = useState(false);
 
-  const { handleAssignTask, handleUnassignTask } = handleTaskAssignment(socket, task._id, projectId, assignUserToTask, unassignUserFromTask);
+  const { handleAssignTask, handleUnassignTask } = handleTaskAssignment(socket, task._id, projectId, { assignUserToTask, unassignUserFromTask });
+  const { handleCompletionToggle } = handleTaskUpdate(socket, task._id, projectId, { updateTaskAttributes });
+
   const taskClassName = task.progress === 'Completed' ? 'board-task--completed' : 'board-task'
 
   const handleDeleteClick = () => {
@@ -52,11 +63,17 @@ const BoardTask = ({ task, list, index }) => {
           >
             <div className={`${taskClassName}__top-content`}>
               <div className={`${taskClassName}__heading`}>
-                <span
-                  onClick={handleTaskDetailsToggle}
-                >
-                  {task.name}
-                </span>
+                <div className={`${taskClassName}__name-container`}>
+                  <span className={`${taskClassName}__name-icon`} onClick={() => handleCompletionToggle(task.progress)}>
+                    {getSelectIcon(task.progress)}
+                  </span>
+                  <span
+                    className={`${taskClassName}__name`}
+                    onClick={handleTaskDetailsToggle}
+                  >
+                    {task.name}
+                  </span>
+                </div>
                 <OptionsIcon className='options-icon' onClick={() => setShowTaskOptions(!showTaskOptions)}>...</OptionsIcon>
               </div>
               <div className={`${taskClassName}__content`} onClick={handleTaskDetailsToggle}>

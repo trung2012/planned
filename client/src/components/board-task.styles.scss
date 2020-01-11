@@ -6,7 +6,7 @@
 .board-task--completed {
   position: relative;
   background-color: #fff;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
   border: 1px solid transparent;
   box-shadow: $box-shadow-primary;
   cursor: pointer;
@@ -26,44 +26,34 @@
     justify-content: space-between;
     align-items: center;
 
-    span {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      padding-bottom: 1rem;
-
-      &::before {
-        display: inline-block;
-        content: '';
-        background-image: url('../assets/progress-not-started.svg');
-        background-size: 1.5em 1.5em;
-        width: 1.5em;
-        height: 1.5em;
-        margin-right: .75rem;
-      }
-
-      &:hover {
-        &::before {
-          display: inline-block;
-          content: '';
-          background-image: url('../assets/progress-completed.svg');
-          background-size: 1.5em 1.5em;
-          width: 1.5em;
-          height: 1.5em;
-          margin-right: .75rem;
-        } 
-      }
-    }
-
     .options-icon {
       align-self: flex-start;
     }
+  }
+  
+  &__name-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__name-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
+
+  &__name {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
   }
 
   &__content {
     position: relative;
     padding-bottom: 1rem;
-    cursor: pointer;
+    cursor: pointer;    
+    padding-top: 1rem;
   }
 
   &__assignee {
@@ -122,10 +112,53 @@
   }
 }
 
+// .board-task {
+//   &__name-icon {
+//     border: none;
+//     border-radius: 50%;
+//     transform: scale(.86);
+//     transition: background-color .3s ease-out;
+
+//     &:hover {
+//       background-color: #2BB673;
+//       fill: none;
+
+//       &::after {
+//         content: '';
+//         position: absolute;
+//         display: block;
+//         border-left: 1.3px #fff solid;  
+//         border-bottom: 1.3px #fff solid;
+//         height: 3px;
+//         width: 7.5px;
+//         transform: rotate(-45deg) translateY(-.5px);
+//       }
+//     }
+//   }
+// }
+
 .board-task--completed {
   &__heading {
     span {
       text-decoration: line-through;
     }
   }
+
+  // &__name-icon {
+  //   transform: scale(.7);
+  //   border: none;
+  //   border-radius: 50%;
+
+  //   .select-option-icon {
+  //     transform: scale(1.4);
+  //   }
+
+  //   &:hover {
+  //     border: 1px solid black;
+      
+  //     path {
+  //       fill: none;
+  //     }
+  //   }
+  // }
 }

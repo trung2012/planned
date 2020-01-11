@@ -1,12 +1,15 @@
 @import '../sass/variables';
 
 .project-details {
-  padding: .5rem 2rem;  
-  height: calc(100vh - 75px);
-  overflow-x: auto;
-  
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
   &__main-content {
     display: flex;
     align-items: flex-start;
+    overflow: auto;
+    padding: .5rem 2rem;
+    flex: 1;
   }
 }

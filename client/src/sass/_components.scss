@@ -27,6 +27,7 @@
   left: 0;
   right: 0;
   z-index: 1;
+  cursor: auto;
 }
 
 .dropdown-icon {
@@ -51,6 +52,10 @@
   padding: .5rem;
   border-radius: 50%;
   cursor: pointer;
+  
+  path {
+    fill: $color-gray-dark;
+  }
 
   &:hover {
     background-color: $color-gray-extra-light;
@@ -62,7 +67,7 @@
   width: 2.5em;
   cursor: pointer;
   padding: .75rem;
-  border-radius: .3rem;
+  border-radius: 50%;
 
   &:hover {
     background-color: $color-gray-extra-light;
@@ -76,6 +81,35 @@
 }
 
 .select-option-icon {
-  height: 1.35em;
-  width: 1.35em;
+  height: 1.25em;
+  width: 1.25em;
+  margin-top: .2rem;  
+  margin-right: .75rem;
+}
+
+.progress-in-progress {
+  path {
+    fill: $color-blue-light;
+  }
+}
+
+.priority-low {
+  fill: $color-blue-light;
+}
+
+.priority-medium {
+  fill: $color-green-dark;
+}
+
+.priority-high {
+  fill: $color-red-dark;
+  stroke: #fff;
+}
+
+.priority-urgent {
+  fill: $color-red-light;
+}
+
+.no-results {
+  padding: .5rem 0 .5rem 1rem;
 }

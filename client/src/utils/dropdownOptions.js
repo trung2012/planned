@@ -19,8 +19,8 @@ export const progressOptions = [
 export const priorityOptions = [
   {
     _id: 0,
-    name: 'Important',
-    iconImage: 'priority-important'
+    name: 'Urgent',
+    iconImage: 'priority-urgent'
   },
   {
     _id: 1,

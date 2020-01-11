@@ -2,11 +2,22 @@
 
 .board-list {
   font-size: 1.4rem;
-  width: 30rem;
-  padding: .75rem;
-  margin: 0 2rem 0 1rem;
+  width: 31rem;
   border-radius: .1rem;
   flex-shrink: 0;
+  margin-left: 1rem;
+  margin-right: 1.5rem;
+  min-height: 0;
+  max-height: 100%;
+
+  &__top {
+    padding-right: 1rem;
+    padding-left: 1rem;
+  }
+
+  &__bottom {
+    padding: 1rem 1rem 2rem;
+  }
 
   &__header {
     position: relative;
@@ -40,7 +51,7 @@
 
   &__name {
     flex: 1;
-    padding: .5rem 1rem;
+    padding: .5rem 1rem .5rem .5rem;
     cursor: pointer;
   }
 }
@@ -59,7 +70,6 @@
   display: flex;
   align-items: center;
   padding: .75rem;
-  margin: 0 .5rem;
   color: $color-green-dark;
   background-color: #fff;
   margin-bottom: 3rem;

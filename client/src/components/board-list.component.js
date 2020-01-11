@@ -77,67 +77,73 @@ const BoardList = ({ list, index }) => {
               }
             }
           >
-            <div className='board-list__header' {...provided.dragHandleProps}>
-              {
-                showListOptions &&
-                <MoreOptions dismiss={() => setShowListOptions(false)}>
-                  <div className='more-options-item' onClick={() => {
-                    setShowListOptions(false);
-                    setShowListNameEdit(true);
-                  }}>
-                    Rename
+            <div className='board-list__top'>
+              <div className='board-list__header' {...provided.dragHandleProps}>
+                {
+                  showListOptions &&
+                  <MoreOptions dismiss={() => setShowListOptions(false)}>
+                    <div className='more-options-item' onClick={() => {
+                      setShowListOptions(false);
+                      setShowListNameEdit(true);
+                    }}>
+                      Rename
                     </div>
-                  <div className='more-options-item' onClick={() => {
-                    setShowListDeleteConfirm(true)
-                    setShowListOptions(false);
-                  }}
-                  >
-                    Delete
-                    </div>
-                </MoreOptions>
-              }
-              {
-                showListNameEdit ?
-                  <NameChangeForm name={list.name} submit={handleListEditName} dismiss={() => setShowListNameEdit(false)} type='list' />
-                  :
-                  <React.Fragment>
-                    <h4
-                      className='board-list__name'
-                      onClick={() => setShowListNameEdit(true)}
-                      style={{ cursor: 'pointer' }}
+                    <div className='more-options-item' onClick={() => {
+                      setShowListDeleteConfirm(true)
+                      setShowListOptions(false);
+                    }}
                     >
-                      {list.name}
-                    </h4>
-                    <OptionsIcon className='options-icon' onClick={() => setShowListOptions(true)} />
-                  </React.Fragment>
-              }
-              {
-                showListDeleteConfirm &&
-                <Modal
-                  modalTitle='Delete project'
-                  dismiss={() => setShowListDeleteConfirm(false)}
-                >
-                  <ItemDelete
-                    confirm={handleDeleteClick}
+                      Delete
+                    </div>
+                  </MoreOptions>
+                }
+                {
+                  showListNameEdit ?
+                    <NameChangeForm name={list.name} submit={handleListEditName} dismiss={() => setShowListNameEdit(false)} type='list' />
+                    :
+                    <React.Fragment>
+                      <h4
+                        className='board-list__name'
+                        onClick={() => setShowListNameEdit(true)}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        {list.name}
+                      </h4>
+                      <OptionsIcon className='options-icon' onClick={() => setShowListOptions(true)} />
+                    </React.Fragment>
+                }
+                {
+                  showListDeleteConfirm &&
+                  <Modal
+                    modalTitle='Delete project'
                     dismiss={() => setShowListDeleteConfirm(false)}
-                    type='list'
-                  />
-                </Modal>
+                  >
+                    <ItemDelete
+                      confirm={handleDeleteClick}
+                      dismiss={() => setShowListDeleteConfirm(false)}
+                      type='list'
+                    />
+                  </Modal>
+                }
+              </div>
+              <div className='board-task-add-button' onClick={() => setShowTaskAdd(!showTaskAdd)}>
+                <AddIcon className='add-icon' />
+                Add task
+              </div>
+              {
+                showTaskAdd &&
+                <BoardTaskAdd submit={handleAddSubmit} listId={list._id} dismiss={() => setShowTaskAdd(false)} />
               }
             </div>
-            <div className='board-task-add-button' onClick={() => setShowTaskAdd(!showTaskAdd)}>
-              <AddIcon className='add-icon' />
-              Add task
+            <div
+              className='board-list__bottom'
+            >
+              <BoardTasks list={list} />
             </div>
-            {
-              showTaskAdd &&
-              <BoardTaskAdd submit={handleAddSubmit} listId={list._id} dismiss={() => setShowTaskAdd(false)} />
-            }
-            <BoardTasks list={list} />
           </div>
         )
       }
-    </Draggable >
+    </Draggable>
   );
 }
 

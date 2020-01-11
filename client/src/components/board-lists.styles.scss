@@ -2,10 +2,14 @@
 
 .board-lists {
   display: flex;
+  align-items: flex-start;
+  max-height: 100%;
 }
 
 .add-list {
+  text-align: left;
   flex-shrink: 0;
+  min-width: 31rem;
   font-size: 1.5rem;
   font-weight: bold;
   color: $color-green-dark;
