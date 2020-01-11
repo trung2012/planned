@@ -4,6 +4,7 @@ import { ReactComponent as CheckmarkIcon } from '../assets/checkmark.svg';
 import { ReactComponent as DropdownIcon } from '../assets/dropdown.svg';
 import './custom-select.styles.scss';
 import MoreOptions from './more-options.component';
+import getSelectIcon from '../utils/getSelectIcon';
 
 const CustomSelect = ({ label, inputDefault, selectOptions, submit }) => {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -38,7 +39,10 @@ const CustomSelect = ({ label, inputDefault, selectOptions, submit }) => {
             setIsInputActive(true);
           }
         }}>
-        <span>{selectedOption}</span>
+        <span className='custom-select__value'>
+          {getSelectIcon(selectedOption)}
+          {selectedOption}
+        </span>
         <DropdownIcon className='dropdown-icon' />
       </div>
       {
@@ -51,12 +55,18 @@ const CustomSelect = ({ label, inputDefault, selectOptions, submit }) => {
             selectOptions.map(option => {
               if (inputDefault === option.name || inputDefault._id === option._id) {
                 return <div className='custom-select__option custom-select__option--selected' key={option._id} onClick={() => handleSelect(option)}>
-                  {option.name}
+                  <span className='custom-select__value'>
+                    {getSelectIcon(option.name)}
+                    {option.name}
+                  </span>
                   <CheckmarkIcon className='checkmark-icon' />
                 </div>
               } else {
                 return <div className='custom-select__option' key={option._id} onClick={() => handleSelect(option)}>
-                  {option.name}
+                  <span className='custom-select__value'>
+                    {getSelectIcon(option.name)}
+                    {option.name}
+                  </span>
                 </div>
               }
             })

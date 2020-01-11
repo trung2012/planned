@@ -1,15 +1,14 @@
 .user-profile-picture {
   display: flex;
+  font-size: 1.4rem;
   position: relative;
   justify-content: center;
   align-items: center;
   height: 3.25rem;
   width: 3.25rem;
   color: #fff;
-  padding: .9rem;
   border-radius: 50%;
   cursor: pointer;
-  letter-spacing: 1px;
   transition: transform .1s;
 
   &:active {

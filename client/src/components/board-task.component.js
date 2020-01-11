@@ -21,6 +21,7 @@ const BoardTask = ({ task, list, index }) => {
   const [showTaskOptions, setShowTaskOptions] = useState(false);
 
   const { handleAssignTask, handleUnassignTask } = handleTaskAssignment(socket, task._id, projectId, assignUserToTask, unassignUserFromTask);
+  const taskClassName = task.progress === 'Completed' ? 'board-task--completed' : 'board-task'
 
   const handleDeleteClick = () => {
     deleteTask({ taskId: task._id, listId: list._id });
@@ -39,7 +40,7 @@ const BoardTask = ({ task, list, index }) => {
       {
         (provided) => (
           <div
-            className='board-task'
+            className={taskClassName}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
             ref={provided.innerRef}
@@ -49,8 +50,8 @@ const BoardTask = ({ task, list, index }) => {
               }
             }
           >
-            <div className='board-task__top-content'>
-              <div className='board-task__heading'>
+            <div className={`${taskClassName}__top-content`}>
+              <div className={`${taskClassName}__heading`}>
                 <span
                   onClick={handleTaskDetailsToggle}
                 >
@@ -58,7 +59,7 @@ const BoardTask = ({ task, list, index }) => {
                 </span>
                 <OptionsIcon className='options-icon' onClick={() => setShowTaskOptions(!showTaskOptions)}>...</OptionsIcon>
               </div>
-              <div className='board-task__content' onClick={handleTaskDetailsToggle}>
+              <div className={`${taskClassName}__content`} onClick={handleTaskDetailsToggle}>
                 <div>icons</div>
               </div>
               {
@@ -72,7 +73,7 @@ const BoardTask = ({ task, list, index }) => {
             </div>
             {
               task.assignee &&
-              <div className='board-task__assignee'>
+              <div className={`${taskClassName}__assignee`}>
                 <TaskAssignment
                   assignee={task.assignee}
                   members={boardState.members}
@@ -89,4 +90,4 @@ const BoardTask = ({ task, list, index }) => {
   );
 }
 
-export default BoardTask;
+export default React.memo(BoardTask);

@@ -73,11 +73,11 @@ const BoardList = ({ list, index }) => {
             style={
               {
                 ...provided.draggableProps.style,
-                backgroundColor: snapshot.isDragging && 'white'
+                backgroundColor: snapshot.isDragging && '#e0e0e0'
               }
             }
           >
-            <div className='board-list__header'>
+            <div className='board-list__header' {...provided.dragHandleProps}>
               {
                 showListOptions &&
                 <MoreOptions dismiss={() => setShowListOptions(false)}>
@@ -102,7 +102,6 @@ const BoardList = ({ list, index }) => {
                   :
                   <React.Fragment>
                     <h4
-                      {...provided.dragHandleProps}
                       className='board-list__name'
                       onClick={() => setShowListNameEdit(true)}
                       style={{ cursor: 'pointer' }}
@@ -142,4 +141,4 @@ const BoardList = ({ list, index }) => {
   );
 }
 
-export default BoardList;
+export default React.memo(BoardList);

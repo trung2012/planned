@@ -36,8 +36,8 @@
 }
 
 .options-icon {
-  width: 1.5em;
-  height: 1.5em;
+  width: 1.55em;
+  height: 1.55em;
   cursor: pointer;
 
   &:hover {
@@ -73,4 +73,9 @@
   height: 2em;
   width: 2em;
   fill: $color-gray-medium;
+}
+
+.select-option-icon {
+  height: 1.35em;
+  width: 1.35em;
 }

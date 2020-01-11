@@ -12,6 +12,15 @@
     margin-bottom: .5rem;
   }
 
+  &__value {
+    display: flex;
+    align-items: center;
+
+    .select-option-icon {
+      margin-right: .5rem;
+    }
+  }
+
   &__input,
   &__input--active {
     position: relative;
@@ -46,6 +55,11 @@
   &__option {
     padding: .75rem;
     padding-left: 1.25rem;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $color-gray-extra-light;
+    }
 
     &--selected {
       display: flex;

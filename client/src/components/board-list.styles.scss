@@ -12,6 +12,7 @@
     position: relative;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-bottom: 1.5rem;
 
     .options-icon {
@@ -58,6 +59,7 @@
   display: flex;
   align-items: center;
   padding: .75rem;
+  margin: 0 .5rem;
   color: $color-green-dark;
   background-color: #fff;
   margin-bottom: 3rem;

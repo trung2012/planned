@@ -1,7 +1,9 @@
 @import '../sass/variables';
 @import '../sass/components';
+@import '../sass/animations';
 
-.board-task {
+.board-task,
+.board-task--completed {
   position: relative;
   background-color: #fff;
   margin-bottom: 1rem;
@@ -26,7 +28,31 @@
 
     span {
       flex: 1;
+      display: flex;
+      align-items: center;
       padding-bottom: 1rem;
+
+      &::before {
+        display: inline-block;
+        content: '';
+        background-image: url('../assets/progress-not-started.svg');
+        background-size: 1.5em 1.5em;
+        width: 1.5em;
+        height: 1.5em;
+        margin-right: .75rem;
+      }
+
+      &:hover {
+        &::before {
+          display: inline-block;
+          content: '';
+          background-image: url('../assets/progress-completed.svg');
+          background-size: 1.5em 1.5em;
+          width: 1.5em;
+          height: 1.5em;
+          margin-right: .75rem;
+        } 
+      }
     }
 
     .options-icon {
@@ -93,5 +119,13 @@
     right: 0;
     z-index: 100;
     cursor: pointer;
+  }
+}
+
+.board-task--completed {
+  &__heading {
+    span {
+      text-decoration: line-through;
+    }
   }
 }
