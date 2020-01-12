@@ -102,7 +102,7 @@
 }
 
 .priority-high {
-  fill: $color-red-dark;
+  fill: $color-red-light;
   stroke: #fff;
 }
 
@@ -112,4 +112,8 @@
 
 .no-results {
   padding: .5rem 0 .5rem 1rem;
+}
+
+.select-option-icon--comment {
+  fill: $color-gray-medium
 }

@@ -1,0 +1,64 @@
+@import '../sass/variables';
+
+.board-task,
+.board-task--completed {
+  &__icons {
+    display: flex;
+    align-items: center;
+    padding: .2rem 0;
+  
+    .icon-container,
+    .due-icon-container,
+    .action-icon-container {
+      display: flex;
+      align-items: center;
+      padding: .5rem;
+      margin-right: 1rem;
+    }
+
+    .action-icon-container {  
+      &:hover {
+        background-color: $color-gray-extra-light;
+      }
+    }
+
+    .select-option-icon {
+      height: 1em;
+      width: 1em;
+      margin: 0;
+  
+      &--calendar {
+        padding: .1rem 0;
+        margin-right: .25rem;
+        path,
+        rect {
+          fill: $color-gray-medium;
+        }
+      }
+  
+      &--attachment {
+        margin-right: .25rem;
+        fill: $color-gray-medium;
+      }
+    }
+  
+    .due-icon-container {  
+      &--late {
+        background-color: $color-red-light;
+        color: #fff;
+  
+        .select-option-icon--calendar {
+          path,
+          rect {
+            fill: #fff;
+          }
+        }
+      }
+  
+    }
+  
+    .icon-text {
+      font-size: 1.2rem;
+    }
+  }
+}

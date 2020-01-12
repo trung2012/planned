@@ -12,9 +12,9 @@
   display: inline-block;
   width: 5rem;
   height: 5rem;
-  border: 3px solid $color-gray-light;
+  border: 3px solid $color-gray-extra-light;
   border-radius: 50%;
-  border-top-color: $color-gray-dark;
-  animation: spin 0.5s ease-in-out infinite;
-  -webkit-animation: spin 1s ease-in-out infinite;
+  border-top-color: $color-green-dark;
+  animation: spin .5s ease-in-out infinite;
+  -webkit-animation: spin .5s ease-in-out infinite;
 }

@@ -3,6 +3,7 @@ import { useParams, useHistory, useRouteMatch } from 'react-router-dom';
 import { Draggable } from 'react-beautiful-dnd';
 
 import MoreOptions from './more-options.component';
+import BoardTaskIcons from './board-task-icons.component';
 import { ReactComponent as OptionsIcon } from '../assets/options.svg';
 import { SocketContext } from '../context/SocketContext';
 import { BoardContext } from '../context/BoardContext';
@@ -30,20 +31,32 @@ const BoardTask = ({ task, list, index }) => {
   const [showTaskOptions, setShowTaskOptions] = useState(false);
 
   const { handleAssignTask, handleUnassignTask } = handleTaskAssignment(socket, task._id, projectId, { assignUserToTask, unassignUserFromTask });
-  const { handleCompletionToggle } = handleTaskUpdate(socket, task._id, projectId, { updateTaskAttributes });
+  const { handleCompletionToggle, handleAttributeUpdate } = handleTaskUpdate(socket, task._id, projectId, { updateTaskAttributes });
 
   const taskClassName = task.progress === 'Completed' ? 'board-task--completed' : 'board-task'
 
-  const handleDeleteClick = () => {
+  const handleDeleteClick = event => {
+    event.stopPropagation();
     deleteTask({ taskId: task._id, listId: list._id });
     socket.emit('delete_task', { taskId: task._id, listId: list._id, projectId });
     setShowTaskOptions(false);
   }
 
-  const handleTaskDetailsToggle = () => {
+  const handleTaskDetailsToggle = event => {
+    event.stopPropagation();
     setCurrentlyOpenedTask(task._id);
     history.push(`${url}/${task._id}`);
     setShowTaskDetails(true);
+  }
+
+  const handleOptionsIconClick = event => {
+    event.stopPropagation();
+    setShowTaskOptions(!showTaskOptions);
+  }
+
+  const handleSetComplete = event => {
+    event.stopPropagation();
+    handleCompletionToggle(task.progress);
   }
 
   return (
@@ -61,10 +74,13 @@ const BoardTask = ({ task, list, index }) => {
               }
             }
           >
-            <div className={`${taskClassName}__top-content`}>
+            <div className={`${taskClassName}__top`} onClick={handleTaskDetailsToggle}>
               <div className={`${taskClassName}__heading`}>
                 <div className={`${taskClassName}__name-container`}>
-                  <span className={`${taskClassName}__name-icon`} onClick={() => handleCompletionToggle(task.progress)}>
+                  <span
+                    className={`${taskClassName}__name-icon`}
+                    title={task.progress === 'Completed' ? 'Reactivate task' : 'Set complete'}
+                    onClick={handleSetComplete}>
                     {
                       (task.progress === 'In progress')
                         ? getSelectIcon('Not started')
@@ -73,23 +89,20 @@ const BoardTask = ({ task, list, index }) => {
                   </span>
                   <span
                     className={`${taskClassName}__name`}
-                    onClick={handleTaskDetailsToggle}
                   >
                     {task.name}
                   </span>
                 </div>
-                <OptionsIcon className='options-icon' onClick={() => setShowTaskOptions(!showTaskOptions)}>...</OptionsIcon>
               </div>
-              <div className={`${taskClassName}__content`} onClick={handleTaskDetailsToggle}>
-                <div className={`${taskClassName}__icons`}>
-                  icons
-                </div>
+              <div className={`${taskClassName}__content`}>
+                <BoardTaskIcons task={task} taskClassName={taskClassName} handleAttributeUpdate={handleAttributeUpdate} />
+                <OptionsIcon className='options-icon' onClick={handleOptionsIconClick} title='More options'>...</OptionsIcon>
               </div>
               {
                 showTaskOptions &&
-                <MoreOptions dismiss={() => setShowTaskOptions(false)}>
-                  <div className='more-options-item'>Copy Task</div>
-                  <div className='more-options-item'>Assign</div>
+                <MoreOptions dismiss={() => setShowTaskOptions(false)} >
+                  <div className='more-options-item' onClick={event => event.stopPropagation()}>Copy Task</div>
+                  <div className='more-options-item' onClick={event => event.stopPropagation()}>Assign</div>
                   <div className='more-options-item' onClick={handleDeleteClick}>Delete</div>
                 </MoreOptions>
               }
@@ -108,7 +121,7 @@ const BoardTask = ({ task, list, index }) => {
           </div>
         )
       }
-    </Draggable>
+    </Draggable >
 
   );
 }

@@ -7,8 +7,16 @@ const MoreOptions = ({ children, dismiss, className }) => {
 
   return (
     <React.Fragment>
-      <div className='overlay' onClick={() => dismiss()}></div>
-      <div className={classNames}>
+      <div
+        className='overlay'
+        onClick={event => {
+          event.stopPropagation();
+          dismiss();
+        }}></div>
+      <div className={classNames}
+        onClick={event => {
+          event.stopPropagation();
+        }}>
         {children}
       </div>
     </React.Fragment>

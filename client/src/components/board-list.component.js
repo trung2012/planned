@@ -109,7 +109,7 @@ const BoardList = ({ list, index }) => {
                       >
                         {list.name}
                       </h4>
-                      <OptionsIcon className='options-icon' onClick={() => setShowListOptions(true)} />
+                      <OptionsIcon className='options-icon' onClick={() => setShowListOptions(true)} title='More options' />
                     </React.Fragment>
                 }
                 {

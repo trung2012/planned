@@ -45,7 +45,7 @@ const TaskAttachment = ({ file }) => {
             : <a className='task-attachment__name' href={file.url}>{file.name}</a>
         }
       </div>
-      <OptionsIcon className='options-icon' onClick={() => setShowAttachmentOptions(true)} />
+      <OptionsIcon className='options-icon' onClick={() => setShowAttachmentOptions(true)} title='More options' />
       {
         showAttachmentOptions &&
         <MoreOptions dismiss={() => setShowAttachmentOptions(false)}>

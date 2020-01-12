@@ -15,7 +15,7 @@
     box-shadow: $box-shadow-primary-hover;
   }
 
-  &__top-content {    
+  &__top {    
     padding: .75rem;
     padding-left: 1.25rem;
     cursor: pointer;
@@ -25,10 +25,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    .options-icon {
-      align-self: flex-start;
-    }
   }
   
   &__name-icon {
@@ -51,9 +47,11 @@
 
   &__content {
     position: relative;
-    padding-bottom: 1rem;
-    cursor: pointer;    
-    padding-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    cursor: pointer;
   }
 
   &__assignee {
@@ -109,6 +107,11 @@
     right: 0;
     z-index: 100;
     cursor: pointer;
+  }
+
+  .options-icon {
+    align-self: flex-end;
+    justify-self: flex-end;
   }
 }
 

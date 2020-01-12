@@ -53,7 +53,7 @@ const CustomSelect = ({ label, inputDefault, selectOptions, submit }) => {
         }}>
           {
             selectOptions.map(option => {
-              return <CustomSelectDropdown option={option} inputDefault={inputDefault} onClick={() => handleSelect(option)} />
+              return <CustomSelectDropdown key={option._id} option={option} inputDefault={inputDefault} onClick={() => handleSelect(option)} />
             })
           }
         </MoreOptions>

@@ -17,9 +17,14 @@ const TaskAssignment = ({ members, assignee, handleAssignTask, handleUnassignTas
     return user.name.toLowerCase().includes(memberSearchQuery.toLowerCase())
   });
 
+  const handleTaskAssignmentClick = event => {
+    event.stopPropagation();
+    setShowAssignmentDropdown(!showAssignmentDropdown);
+  }
+
   return (
     <div className='task-assignment-container'>
-      <div className='task-assignment' onClick={() => setShowAssignmentDropdown(!showAssignmentDropdown)} title='Assign to'>
+      <div className='task-assignment' onClick={handleTaskAssignmentClick} title='Assign to'>
         <AddUserIcon className='add-user-icon add-user-icon-before' title='Assign to' />
         {
           assignee ?
