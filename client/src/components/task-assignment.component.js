@@ -19,7 +19,7 @@ const TaskAssignment = ({ members, assignee, handleAssignTask, handleUnassignTas
 
   return (
     <div className='task-assignment-container'>
-      <div className='task-assignment' onClick={() => setShowAssignmentDropdown(!showAssignmentDropdown)}>
+      <div className='task-assignment' onClick={() => setShowAssignmentDropdown(!showAssignmentDropdown)} title='Assign to'>
         <AddUserIcon className='add-user-icon add-user-icon-before' title='Assign to' />
         {
           assignee ?
@@ -34,7 +34,7 @@ const TaskAssignment = ({ members, assignee, handleAssignTask, handleUnassignTas
             </div>
             : <span className='assign-button'>Assign</span>
         }
-        <AddUserIcon className='add-user-icon add-user-icon-after' title='Assign to' />
+        <AddUserIcon className='add-user-icon add-user-icon-after' />
       </div>
       {
         showAssignmentDropdown &&

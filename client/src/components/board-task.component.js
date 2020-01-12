@@ -65,7 +65,11 @@ const BoardTask = ({ task, list, index }) => {
               <div className={`${taskClassName}__heading`}>
                 <div className={`${taskClassName}__name-container`}>
                   <span className={`${taskClassName}__name-icon`} onClick={() => handleCompletionToggle(task.progress)}>
-                    {getSelectIcon(task.progress)}
+                    {
+                      (task.progress === 'In progress')
+                        ? getSelectIcon('Not started')
+                        : getSelectIcon(task.progress)
+                    }
                   </span>
                   <span
                     className={`${taskClassName}__name`}
@@ -77,7 +81,9 @@ const BoardTask = ({ task, list, index }) => {
                 <OptionsIcon className='options-icon' onClick={() => setShowTaskOptions(!showTaskOptions)}>...</OptionsIcon>
               </div>
               <div className={`${taskClassName}__content`} onClick={handleTaskDetailsToggle}>
-                <div>icons</div>
+                <div className={`${taskClassName}__icons`}>
+                  icons
+                </div>
               </div>
               {
                 showTaskOptions &&

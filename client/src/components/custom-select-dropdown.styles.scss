@@ -1,0 +1,27 @@
+@import '../sass/variables';
+
+.custom-select {
+  &__option {
+    padding: .75rem;
+    padding-left: 1.25rem;
+    cursor: pointer;
+  
+    &:hover {
+      background-color: $color-gray-extra-light;
+    }
+  
+    &--selected {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: $color-gray-extra-light;
+      padding: .25rem;
+      padding-left: 1.25rem;
+    }
+  }
+  
+  &__value {
+    display: flex;
+    align-items: center;
+  }
+}
