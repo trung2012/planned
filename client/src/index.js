@@ -5,7 +5,7 @@ import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { ProjectProvider } from './context/ProjectContext';
-import * as serviceWorker from './serviceWorker';
+// import * as serviceWorker from './serviceWorker';
 import { BoardProvider } from './context/BoardContext';
 import { SocketProvider } from './context/SocketContext';
 
@@ -22,4 +22,4 @@ ReactDOM.render(
     </BoardProvider>
   </SocketProvider>, document.getElementById('root'));
 
-serviceWorker.unregister();
+// serviceWorker.unregister();

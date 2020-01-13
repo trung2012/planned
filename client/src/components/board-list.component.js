@@ -1,6 +1,5 @@
 import React, { useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import { ObjectID } from 'bson';
 import { Draggable } from 'react-beautiful-dnd';
 
 import { SocketContext } from '../context/SocketContext';
@@ -13,12 +12,10 @@ import { ReactComponent as OptionsIcon } from '../assets/options.svg';
 import { BoardContext } from '../context/BoardContext';
 import BoardTaskAdd from './board-task-add.component';
 import { ReactComponent as AddIcon } from '../assets/add.svg';
-import { AuthContext } from '../context/AuthContext';
 import './board-list.styles.scss';
 
 const BoardList = ({ list, index }) => {
   const { projectId } = useParams();
-  const { authState } = useContext(AuthContext);
   const { socket } = useContext(SocketContext);
   const { deleteList, addTask, updateListName } = useContext(BoardContext);
   const [showListOptions, setShowListOptions] = useState(false);
@@ -42,20 +39,10 @@ const BoardList = ({ list, index }) => {
 
   const handleAddSubmit = (taskData) => {
     if (taskData) {
-      const firstComment = {
-        _id: new ObjectID().toString(),
-        text: `Task "${taskData.name}" created`,
-        author: authState.user,
-        task: taskData._id,
-        project: projectId,
-        createdAt: Date.now()
-      };
-
-      addTask({ ...taskData, comments: [firstComment] });
+      addTask(taskData);
       socket.emit('add_task', {
         taskData,
-        projectId,
-        firstComment
+        projectId
       });
 
       setShowTaskAdd(false);

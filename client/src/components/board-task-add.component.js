@@ -7,10 +7,12 @@ import CustomDatePicker from './custom-date-picker.component';
 import CustomInput from './custom-input.component';
 import TaskAssignment from './task-assignment.component';
 import { BoardContext } from '../context/BoardContext';
+import { AuthContext } from '../context/AuthContext';
 
 import './board-task-add.styles.scss';
 
 const BoardTaskAdd = ({ submit, listId, dismiss }) => {
+  const { authState } = useContext(AuthContext);
   const { boardState } = useContext(BoardContext);
   const [newTaskName, setNewTaskName] = useState('');
   const [dueDate, setDueDate] = useState(null);
@@ -34,13 +36,14 @@ const BoardTaskAdd = ({ submit, listId, dismiss }) => {
         updatedAt: Date.now(),
         assignee: taskAssignee,
         comments: [],
-        attachments: []
+        attachments: [],
+        createdBy: authState.user
       });
     }
   }
 
   return (
-    <>
+    <React.Fragment>
       <div className='board-task-add'>
         <div className='overlay' onClick={() => {
           if (newTaskName === '') {
@@ -71,7 +74,7 @@ const BoardTaskAdd = ({ submit, listId, dismiss }) => {
           <CustomButton text='Add Task' buttonType='submit-task' onClick={handleSubmit} />
         </form>
       </div>
-    </>
+    </React.Fragment>
   );
 }
 

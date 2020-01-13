@@ -22,7 +22,6 @@ const CustomDatePicker = ({ date, setDate, children }) => {
   return (
     <DatePicker
       showPopperArrow={false}
-      popperPlacement='bottom'
       popperModifiers={{
         flip: {
           behavior: ["bottom"] // don't allow it to flip to be above

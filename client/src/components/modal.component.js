@@ -4,7 +4,7 @@ import './modal.styles.scss';
 
 const Modal = ({ dismiss, modalTitle, children }) => {
   return (
-    <>
+    <React.Fragment>
       <div className='modal__overlay' onClick={dismiss}></div>
       <div className='modal'>
         <div className='modal__title'>
@@ -17,7 +17,7 @@ const Modal = ({ dismiss, modalTitle, children }) => {
           {children}
         </div>
       </div>
-    </>
+    </React.Fragment>
   );
 };
 

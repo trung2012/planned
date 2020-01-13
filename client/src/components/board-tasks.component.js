@@ -1,5 +1,5 @@
 import React from 'react';
-import BoardTaskContainer from './board-task-container.component';
+import BoardTask from './board-task.component';
 
 import './board-tasks.styles.scss';
 import { Droppable } from 'react-beautiful-dnd';
@@ -23,9 +23,11 @@ const BoardTasks = ({ list }) => {
             {
               list &&
               (
-                list.tasks.length > 0 &&
-                list.tasks.map((taskId, index) => (
-                  <BoardTaskContainer key={taskId} taskId={taskId} list={list} index={index} />
+                list.tasks && list.tasks.length > 0 &&
+                list.tasks.map((task, index) => (
+                  task ?
+                    <BoardTask key={task._id} task={task} list={list} index={index} />
+                    : null
                 ))
               )
             }

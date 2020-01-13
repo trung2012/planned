@@ -3,6 +3,7 @@ import moment from 'moment';
 import { ObjectID } from 'bson';
 import { useParams } from 'react-router-dom';
 
+import MemberProfileItem from './member-profile-item.component';
 import NameChangeForm from './name-change-form.component';
 import CommentList from './comment-list.component';
 import CustomDatePickerSelect from './custom-date-picker-select.component';
@@ -34,11 +35,11 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
     addComment
   } = useContext(BoardContext);
 
-  const { name, description, assignee, progress, priority, due, updatedAt, comments } = task;
+  const { _id, name, description, assignee, progress, priority, due, updatedAt, comments, createdBy, attachments } = task;
   const [showTaskNameEdit, setShowTaskNameEdit] = useState(false);
   const [newCommentText, setNewCommentText] = useState('');
   const [newDueDate, setNewDueDate] = useState(due);
-  const [newDescription, setNewDescription] = useState(task.description);
+  const [newDescription, setNewDescription] = useState(description);
 
   const listSelectOptions = boardState.currentProject.lists.map(listId => {
     return boardState.lists[listId];
@@ -52,9 +53,9 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
     setNewDueDate(due);
   }, [due])
 
-  const { handleAssignTask, handleUnassignTask } = handleTaskAssignment(socket, task._id, projectId, { assignUserToTask, unassignUserFromTask });
+  const { handleAssignTask, handleUnassignTask } = handleTaskAssignment(socket, _id, projectId, { assignUserToTask, unassignUserFromTask });
 
-  const { handleAttributeUpdate, handleCompletionToggle } = handleTaskUpdate(socket, task._id, projectId, { updateTaskAttributes })
+  const { handleAttributeUpdate, handleCompletionToggle } = handleTaskUpdate(socket, _id, projectId, { updateTaskAttributes })
 
   const handleSetNewDueDate = date => {
     setNewDueDate(date);
@@ -79,7 +80,7 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
       _id: new ObjectID().toString(),
       text: newCommentText,
       author: authState.user,
-      task: task._id,
+      task: _id,
       project: projectId,
       createdAt: Date.now()
     }
@@ -106,11 +107,11 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
           </span>
         <div className='board-task-details__header'>
           <div className='board-task-details__name'>
-            <span onClick={() => handleCompletionToggle(task.progress)}>
+            <span onClick={() => handleCompletionToggle(progress)}>
               {
-                (task.progress === 'In progress')
+                (progress === 'In progress')
                   ? getSelectIcon('Not started')
-                  : getSelectIcon(task.progress)
+                  : getSelectIcon(progress)
               }
             </span>
             {
@@ -155,8 +156,8 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
         </div>
         <div className='board-task-details__attachments'>
           <h4>Attachments</h4>
-          <FileUpload taskId={task._id} text='Add attachment' />
-          <TaskAttachmentList attachments={task.attachments} />
+          <FileUpload taskId={_id} text='Add attachment' />
+          <TaskAttachmentList attachments={attachments} />
         </div>
         <div className='board-task-details__comments'>
           <div className='board-task-details__comment-input'>
@@ -172,6 +173,17 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
             <CustomButton text='Save' buttonType='save-text' onClick={handleCommentSubmit} />
           </div>
           <CommentList comments={comments} />
+          <div className='comment'>
+            <div className='comment__header'>
+              <MemberProfileItem member={createdBy} />
+              <span className='comment__created-at'>{moment(task.createdAt).format('MMMM Do YYYY, h:mm a')}</span>
+            </div>
+            <div className='comment__content'>
+              Task
+              <span className='dummy-comment-task-name'>{name}</span>
+              created
+            </div>
+          </div>
         </div>
       </div>
     </div>

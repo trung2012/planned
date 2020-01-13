@@ -40,6 +40,7 @@ const ProjectAddForm = ({ dismiss }) => {
           }
         }}
         maxLength={27}
+        autoFocus
       />
       <textarea
         name='projectDescription'

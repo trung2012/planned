@@ -17,7 +17,7 @@ const BoardTaskIcons = ({ task, taskClassName, handleAttributeUpdate }) => {
   const [newDueDate, setNewDueDate] = useState(task.due);
 
   const todaysDate = new Date();
-  const isTaskLate = moment(task.due) < todaysDate && moment(task.due).dayOfYear() < moment(todaysDate).dayOfYear();
+  const isTaskLate = moment(task.due).isBefore(todaysDate, 'day');
 
   useEffect(() => {
     setNewDueDate(task.due);
@@ -51,9 +51,11 @@ const BoardTaskIcons = ({ task, taskClassName, handleAttributeUpdate }) => {
       {
         task.due
         &&
-        <CustomDatePicker date={Date.parse(newDueDate)} setDate={handleSetNewDueDate}>
-          <CustomDatePickerIcon isTaskLate={isTaskLate} />
-        </CustomDatePicker>
+        <div className='date-picker-container' onClick={event => event.stopPropagation()}>
+          <CustomDatePicker date={Date.parse(newDueDate)} setDate={handleSetNewDueDate}>
+            <CustomDatePickerIcon isTaskLate={isTaskLate} />
+          </CustomDatePicker>
+        </div>
       }
       {
         task.comments.length > 1 &&

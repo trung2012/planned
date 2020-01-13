@@ -6,14 +6,13 @@ import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { SocketContext } from '../context/SocketContext';
 import { BoardContext } from '../context/BoardContext';
 import NameChangeForm from './name-change-form.component';
-import BoardListContainer from './board-list-container.component';
+import BoardList from './board-list.component';
 import './board-lists.styles.scss';
 
-const BoardLists = () => {
+const BoardLists = ({ lists }) => {
   const { socket } = useContext(SocketContext)
   const { projectId } = useParams();
   const { boardState, addList, replaceSingleList, replaceMultipleListsAfterDragAndDrop, reorderLists } = useContext(BoardContext);
-  const { currentProject } = boardState;
   const [showListAdd, setShowListAdd] = useState(false);
 
   const handleAddSubmit = (listName = '') => {
@@ -120,10 +119,10 @@ const BoardLists = () => {
                 }}
               >
                 {
-                  currentProject && currentProject.lists && currentProject.lists.length > 0 &&
-                  currentProject.lists.map((listId, index) => {
+                  lists && lists.length > 0 &&
+                  lists.map((list, index) => {
                     return (
-                      <BoardListContainer key={listId} listId={listId} index={index} />
+                      <BoardList key={list._id} list={list} index={index} />
                     );
                   })
                 }

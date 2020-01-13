@@ -46,6 +46,10 @@ const taskSchema = new mongoose.Schema({
   updatedAt: {
     type: Date,
     default: Date.now()
+  },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
   }
 }, {
   toJSON: {
@@ -79,6 +83,9 @@ taskSchema.pre('remove', async function (next) {
       { new: true }
     ),
     require('./Comment').deleteMany(
+      { task: task._id }
+    ),
+    require('./File').deleteMany(
       { task: task._id }
     )
   ])

@@ -1,8 +1,8 @@
 import React from 'react';
+import moment from 'moment';
 
 import MemberProfileItem from './member-profile-item.component';
 import './comment.styles.scss';
-import moment from 'moment';
 
 const Comment = ({ comment }) => {
   return (

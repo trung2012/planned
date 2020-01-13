@@ -26,14 +26,21 @@ const listSchema = new mongoose.Schema({
 listSchema.pre('remove', async function (next) {
   const list = this;
 
-  await Promise.all([
-    require('./Task').deleteMany({ list: list._id }),
-    require('./Project').updateOne(
-      { _id: list.project },
-      { $pull: { lists: list._id } },
-      { new: true }
-    )
-  ])
+  const tasks = await require('./Task').find({ list: list._id });
+
+  tasks.forEach(async task => {
+    try {
+      await task.remove();
+    } catch (err) {
+      throw new Error(err);
+    }
+  })
+
+  await require('./Project').updateOne(
+    { _id: list.project },
+    { $pull: { lists: list._id } },
+    { new: true }
+  )
 
   next();
 })

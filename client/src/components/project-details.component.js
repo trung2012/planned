@@ -3,7 +3,7 @@ import { Route, useParams, useRouteMatch } from 'react-router-dom';
 
 import { BoardContext } from '../context/BoardContext';
 import { SocketContext } from '../context/SocketContext';
-import BoardLists from './board-lists.component';
+import BoardContainer from './board-container.component';
 import BoardHeader from './board-header.component';
 import Spinner from './spinner.component';
 import Snackbar from './snackbar.component';
@@ -187,7 +187,7 @@ const ProjectDetails = () => {
             <React.Fragment>
               <BoardHeader />
               <div className='project-details__main-content'>
-                <BoardLists />
+                <BoardContainer />
               </div>
               {
                 showErrorSnackbar &&

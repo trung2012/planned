@@ -69,6 +69,7 @@ io.on('connection', (socket) => {
             }
           })
           .populate('attachments')
+          .populate('createdBy')
         //   ,
         // Task.aggregate([
         //   {
@@ -175,19 +176,17 @@ io.on('connection', (socket) => {
     }
   })
 
-  socket.on('add_task', async ({ taskData, projectId, firstComment }) => {
+  socket.on('add_task', async ({ taskData, projectId }) => {
     try {
       const newTask = new Task({
         ...taskData,
         assignee: taskData.assignee ? taskData.assignee._id : null,
-        project: projectId
+        project: projectId,
+        createdBy: taskData.createdBy._id
       })
-
-      const newComment = new Comment(firstComment);
 
       await Promise.all([
         newTask.save(),
-        newComment.save(),
         List.updateOne(
           { _id: taskData.list },
           { $push: { tasks: taskData._id } },
@@ -195,7 +194,7 @@ io.on('connection', (socket) => {
         )
       ])
 
-      socket.to(projectId).emit('task_added', { ...taskData, comments: [firstComment] });
+      socket.to(projectId).emit('task_added', { ...taskData });
     } catch (err) {
       console.log(err)
       socket.emit('new_error', 'Error adding task');
