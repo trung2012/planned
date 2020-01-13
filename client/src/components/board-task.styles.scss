@@ -15,7 +15,8 @@
     box-shadow: $box-shadow-primary-hover;
   }
 
-  &__top {    
+  &__top {
+    position: relative;
     padding: .75rem;
     padding-left: 1.25rem;
     cursor: pointer;
@@ -50,7 +51,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 2rem;
+    margin-top: 1.25em;
     cursor: pointer;
   }
 
@@ -103,7 +104,7 @@
   }
   
   .more-options {
-    top: 3rem;
+    top: 100%;
     right: 0;
     z-index: 100;
     cursor: pointer;

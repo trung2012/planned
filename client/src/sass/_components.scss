@@ -88,6 +88,7 @@
 }
 
 .progress-in-progress {
+  padding: .15rem;
   path {
     fill: $color-blue-light;
   }
@@ -115,5 +116,5 @@
 }
 
 .select-option-icon--comment {
-  fill: $color-gray-medium
+  fill: $color-gray-medium;
 }

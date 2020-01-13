@@ -1,17 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import moment from 'moment';
+
+
 
 import { ReactComponent as PaperClipIcon } from '../assets/paper_clip.svg';
 import { ReactComponent as CommentIcon } from '../assets/comment.svg';
-import { ReactComponent as CalendarIcon } from '../assets/calendar.svg';
 import { progressOptions, priorityOptions } from '../utils/dropdownOptions';
+
+import CustomDatePicker from './custom-date-picker.component';
 
 import './board-task-icons.styles.scss';
 import ActionIcon from './action-icon.component';
+import CustomDatePickerIcon from './custom-date-picker-icon.component';
 
 const BoardTaskIcons = ({ task, taskClassName, handleAttributeUpdate }) => {
+  const [newDueDate, setNewDueDate] = useState(task.due);
+
   const todaysDate = new Date();
   const isTaskLate = moment(task.due) < todaysDate && moment(task.due).dayOfYear() < moment(todaysDate).dayOfYear();
+
+  useEffect(() => {
+    setNewDueDate(task.due);
+  }, [task.due])
+
+  const handleSetNewDueDate = date => {
+    setNewDueDate(date);
+    handleAttributeUpdate({ due: date });
+  }
 
   return (
     <div className={`${taskClassName}__icons`}>
@@ -36,21 +51,9 @@ const BoardTaskIcons = ({ task, taskClassName, handleAttributeUpdate }) => {
       {
         task.due
         &&
-        <div
-          className={isTaskLate ? 'due-icon-container due-icon-container--late' : 'due-icon-container'}
-          title={`Due ${moment(task.due).format('MMMM Do YYYY')}`}
-        >
-          <CalendarIcon className='select-option-icon select-option-icon--calendar' />
-          <span
-            className='icon-text'
-          >
-            {
-              moment(task.due).year() === moment().year()
-                ? moment(task.due).format('MM/DD')
-                : moment(task.due).format('MM/DD/YYYY')
-            }
-          </span>
-        </div>
+        <CustomDatePicker date={Date.parse(newDueDate)} setDate={handleSetNewDueDate}>
+          <CustomDatePickerIcon isTaskLate={isTaskLate} />
+        </CustomDatePicker>
       }
       {
         task.comments.length > 1 &&

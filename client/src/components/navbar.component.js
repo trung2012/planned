@@ -6,7 +6,7 @@ import MoreOptions from './more-options.component';
 import { AuthContext } from '../context/AuthContext';
 import { SocketContext } from '../context/SocketContext';
 
-import logo from '../assets/logo.png';
+import { ReactComponent as Logo } from '../assets/logo.svg';
 import './navbar.styles.scss';
 
 const NavBar = () => {
@@ -26,7 +26,7 @@ const NavBar = () => {
   return (
     <nav className='navbar'>
       <Link to='/' className='navbar__logo-container'>
-        <img className='navbar__logo' src={logo} alt='logo' />
+        <Logo className='logo' alt='logo' />
         <span className='navbar__logo-text'>Planned</span>
       </Link>
       <div className='navbar__navigation'>

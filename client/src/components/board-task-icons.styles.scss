@@ -2,32 +2,30 @@
 
 .board-task,
 .board-task--completed {
+
   &__icons {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     padding: .2rem 0;
   
-    .icon-container,
-    .due-icon-container,
-    .action-icon-container {
+    
+    .date-picker-icon {
       display: flex;
-      align-items: center;
-      padding: .5rem;
-      margin-right: 1rem;
+      align-items: flex-end;
     }
-
-    .action-icon-container {  
-      &:hover {
-        background-color: $color-gray-extra-light;
-      }
+    
+    .react-datepicker-wrapper {
+      min-width: 0;
     }
-
+    
     .select-option-icon {
       height: 1em;
       width: 1em;
       margin: 0;
-  
+      
       &--calendar {
+        height: 1em;
+        width: 1em;
         padding: .1rem 0;
         margin-right: .25rem;
         path,
@@ -35,30 +33,61 @@
           fill: $color-gray-medium;
         }
       }
-  
+      
       &--attachment {
         margin-right: .25rem;
         fill: $color-gray-medium;
       }
     }
-  
+    
+    .icon-container,
+    .action-icon-container {
+      display: flex;
+      align-items: center;
+      padding: .5rem;
+      margin-right: .75rem;
+    }
+
+    .action-icon-container,
     .due-icon-container {  
-      &--late {
-        background-color: $color-red-light;
-        color: #fff;
-  
-        .select-option-icon--calendar {
-          path,
-          rect {
-            fill: #fff;
-          }
+      &:hover {
+        background-color: $color-gray-extra-light;
+      }
+    }
+
+    .progress-in-progress {
+      padding: .1rem;
+    }
+
+    .due-icon-container,
+    .due-icon-container--late {
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: .25rem;
+      margin: 0 .75rem;
+      padding-bottom: .5rem;
+    }
+    
+    .due-icon-container--late {
+      background-color: $color-red-light;
+      color: #fff;
+
+      .select-option-icon--calendar {
+        path,
+        rect {
+          fill: #fff;
         }
       }
-  
+
+      .icon-text {
+        color: #fff;
+      }
     }
   
     .icon-text {
       font-size: 1.2rem;
+      color: $color-gray-medium;
     }
   }
 }

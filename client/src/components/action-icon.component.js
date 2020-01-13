@@ -20,10 +20,8 @@ const ActionIcon = ({ defaultValue, attributeName, submit, selectOptions }) => {
   }
 
   return (
-    <div className='action-icon-container' onClick={handleClick}>
-      <div className='action-icon' title={defaultValue} >
-        {getSelectIcon(defaultValue)}
-      </div>
+    <div className='action-icon-container' onClick={handleClick} title={defaultValue}>
+      {getSelectIcon(defaultValue)}
       {
         showDropdown &&
         <MoreOptions dismiss={() => {
