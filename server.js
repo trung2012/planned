@@ -300,7 +300,6 @@ io.on('connection', (socket) => {
 
   socket.on('delete_attachment', async ({ file, projectId }) => {
     try {
-      console.log(file.public_id)
       await Promise.all([
         File.findByIdAndDelete(file._id),
         Task.updateOne(

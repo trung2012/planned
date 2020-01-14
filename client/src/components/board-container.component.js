@@ -1,7 +1,10 @@
 import React, { useContext } from 'react';
 import { BoardContext } from '../context/BoardContext';
 
+import ChartContainer from './charts-container.component';
 import BoardLists from './board-lists.component';
+
+import './board-container.styles.scss';
 
 const BoardContainer = () => {
   const { boardState } = useContext(BoardContext);
@@ -15,7 +18,10 @@ const BoardContainer = () => {
 
   return (
     lists ?
-      <BoardLists lists={lists} />
+      <div className='board-container'>
+        <ChartContainer lists={lists} />
+        <BoardLists lists={lists} />
+      </div>
       : null
   );
 }

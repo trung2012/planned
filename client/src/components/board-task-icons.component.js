@@ -17,7 +17,7 @@ const BoardTaskIcons = ({ task, taskClassName, handleAttributeUpdate }) => {
   const [newDueDate, setNewDueDate] = useState(task.due);
 
   const todaysDate = new Date();
-  const isTaskLate = moment(task.due).isBefore(todaysDate, 'day');
+  const isTaskLate = moment(task.due).isBefore(todaysDate, 'day') && task.progress !== 'Completed';
 
   useEffect(() => {
     setNewDueDate(task.due);

@@ -84,30 +84,21 @@ taskSchema.pre('remove', async function (next) {
     ),
     require('./Comment').deleteMany(
       { task: task._id }
-    ),
-    require('./File').deleteMany(
-      { task: task._id }
     )
   ])
 
+  const files = await require('./File').find({ task: task._id });
+
+  files.forEach(async file => {
+    try {
+      await file.remove();
+    } catch (err) {
+      throw new Error(err);
+    }
+  })
+
   next();
 })
-
-// taskSchema.pre('findOne', function (next) {
-//   this.populate([
-//     {
-//       path: 'assignee',
-//       model: 'User'
-//     },
-//     {
-//       path: 'list',
-//       model: 'List',
-//       select: '-tasks -project'
-//     }
-//   ])
-
-//   next();
-// })
 
 const Task = mongoose.model('Task', taskSchema);
 

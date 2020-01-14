@@ -43,7 +43,6 @@ const BoardTask = ({ task, list, index }) => {
   }
 
   const handleTaskDetailsToggle = event => {
-    console.log(task)
     event.stopPropagation();
     setCurrentlyOpenedTask(task._id);
     history.push(`${url}/${task._id}`);
@@ -122,7 +121,7 @@ const BoardTask = ({ task, list, index }) => {
           </div>
         )
       }
-    </Draggable >
+    </Draggable>
 
   );
 }

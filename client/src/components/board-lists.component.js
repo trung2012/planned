@@ -104,7 +104,7 @@ const BoardLists = ({ lists }) => {
   }
 
   return (
-    <React.Fragment>
+    <div>
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId='all-lists' direction='horizontal' type='list'>
           {
@@ -141,7 +141,7 @@ const BoardLists = ({ lists }) => {
             Add new list
           </button>
       }
-    </React.Fragment>
+    </div>
   );
 }
 
