@@ -1,40 +1,33 @@
 export const progressOptions = [
   {
     _id: 0,
-    name: 'Not started',
-    iconImage: 'progress-not-started'
+    name: 'Not started'
   },
   {
     _id: 1,
-    name: 'In progress',
-    iconImage: 'progress-in-progress'
+    name: 'In progress'
   },
   {
     _id: 2,
-    name: 'Completed',
-    iconImage: 'progress-completed'
+    name: 'Completed'
   }
 ]
 
 export const priorityOptions = [
   {
     _id: 0,
-    name: 'Urgent',
-    iconImage: 'priority-urgent'
+    name: 'Urgent'
   },
   {
     _id: 1,
-    name: 'High',
-    iconImage: 'priority-high'
+    name: 'High'
   },
   {
     _id: 2,
-    name: 'Medium',
-    iconImage: 'priority-medium'
+    name: 'Medium'
   },
   {
     _id: 3,
-    name: 'Low',
-    iconImage: 'priority-low'
+    name: 'Low'
   }
 ]

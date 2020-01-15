@@ -4,7 +4,6 @@ import { Route, useParams, useRouteMatch } from 'react-router-dom';
 import { BoardContext } from '../context/BoardContext';
 import { SocketContext } from '../context/SocketContext';
 import BoardContainer from './board-container.component';
-import BoardHeader from './board-header.component';
 import Spinner from './spinner.component';
 import Snackbar from './snackbar.component';
 import BoardTaskDetailsContainer from './board-task-details-container.component';
@@ -185,10 +184,7 @@ const ProjectDetails = () => {
             <Spinner />
             :
             <React.Fragment>
-              <BoardHeader />
-              <div className='project-details__main-content'>
-                <BoardContainer />
-              </div>
+              <BoardContainer />
               {
                 showErrorSnackbar &&
                 <Snackbar text={boardState.errorMessage} type='error' actionText='reload' action={() => document.location.reload()} />

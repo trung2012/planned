@@ -1,6 +1,90 @@
-.charts-container {
+@import '../sass/variables';
+
+.no-task-message {
+  margin-top: 1rem;
+  margin-left: 4rem;
+  font-weight: normal;
+  color: $color-gray-dark;
+}
+
+.charts {
+  flex: 0;
   display: flex;
-  width: 100vw;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  height: 100vh;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem 10rem;
+}
+
+.charts-top {
+  display: flex;
+  flex: 1;
   height: 100%;
-  max-height: 50vh;
+  width: 100%;
+  margin-bottom: 3rem;
+}
+
+.charts-bottom {
+  display: flex;
+  flex: 1;
+  height: 100%;
+  width: 100%;
+  margin-bottom: 3rem;
+}
+
+.chart-left {
+  flex: 3;
+}
+
+.chart-right {
+  flex: 5;
+}
+
+.chart-container {
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  box-shadow: $box-shadow-primary;
+  margin: 0 1.5rem;
+  min-width: 36rem;
+  min-height: 30rem;
+
+  &:hover {
+    box-shadow: $box-shadow-primary-hover;
+  }
+}
+
+.chart-heading {
+  font-size: 1.6rem;
+  color: $color-gray-dark;
+  background-color: $color-gray-extra-light;
+  padding: 1rem 1.5rem;
+}
+
+.chart-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  min-width: 30rem;
+  width: 100%;
+  height: 100%;
+  padding: 4rem;
+}
+
+.chart-chart {
+  width: 16rem;
+  height: 16rem;
+}
+
+.center-text-top {
+  transform: translateY(-.75rem);
+}
+
+.center-text-bottom {
+  transform: translateY(.75rem);
 }

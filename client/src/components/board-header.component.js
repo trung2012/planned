@@ -6,7 +6,7 @@ import BoardMembersDisplay from './board-members-display.component';
 import './board-header.styles.scss';
 import BoardMembersDropdown from './board-members-dropdown.component';
 
-const BoardHeader = () => {
+const BoardHeader = ({ showChart, setShowChart }) => {
   const { boardState } = useContext(BoardContext);
   const { currentProject: project, members } = boardState;
   const [showMembersListDropdown, setShowMembersListDropdown] = useState(false);
@@ -30,8 +30,16 @@ const BoardHeader = () => {
       </div>
       <div className='board-header__project-options'>
         <div className='board-header__project-options__nav'>
-          <div className='board-header__project-options__nav__item board-header__project-options__nav__item--active'>Board</div>
-          <div className='board-header__project-options__nav__item'>Chart</div>
+          <div
+            className={showChart ? 'board-header__project-options__nav__item--active' : 'board-header__project-options__nav__item'}
+            onClick={() => setShowChart(true)}
+          >
+            Charts
+          </div>
+          <div
+            className={showChart ? 'board-header__project-options__nav__item' : 'board-header__project-options__nav__item--active'}
+            onClick={() => setShowChart(false)}
+          >Board</div>
         </div>
         <div className='board-header__project-options--filters'>
           <BoardMembersDisplay members={members} showMembersDropdown={() => setShowMembersListDropdown(!showMembersListDropdown)} />

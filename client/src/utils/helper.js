@@ -22,7 +22,7 @@ export const removeObjectProperty = (obj, property) => {
   return remaining;
 }
 
-const updateKey = (obj, val) => {
+const updateKeyWithCount = (obj, val) => {
   if (obj[val] === undefined) {
     obj[val] = {
       name: val,
@@ -32,6 +32,15 @@ const updateKey = (obj, val) => {
     obj[val].value++;
   }
 }
+
+const updateKeyWithoutCount = (obj, val) => {
+  if (obj[val] === undefined) {
+    obj[val] = {
+      name: val
+    }
+  }
+}
+
 
 export const calculateGroupsFromLists = lists => {
   let allTasks = [];
@@ -47,7 +56,7 @@ export const calculateGroupsFromLists = lists => {
   }, 0)
 
   //Group by list
-  const byList = lists.map(list => {
+  const tasksByList = lists.map(list => {
     const listObject = {};
     listObject.name = list.name;
 
@@ -71,56 +80,106 @@ export const calculateGroupsFromLists = lists => {
   });
 
   // Group by progress
-  const byProgress = {};
-  const byProgressArray = [];
+  const tasksByProgress = {};
+  const tasksByProgressArray = [];
 
   for (const task of allTasks) {
     if (moment(task.due).isBefore(Date.now(), 'day') && task.progress !== 'Completed') {
-      updateKey(byProgress, 'Late');
+      updateKeyWithCount(tasksByProgress, 'Late');
     } else {
-      updateKey(byProgress, task.progress);
+      updateKeyWithCount(tasksByProgress, task.progress);
     }
   }
 
-  for (const key in byProgress) {
-    byProgressArray.push(byProgress[key]);
+  for (const key in tasksByProgress) {
+    tasksByProgress[key]['color'] = getLegendColor(key);
+    tasksByProgressArray.push(tasksByProgress[key]);
   }
 
   // Group by priority  
-  const byPriority = {};
-  const byPriorityArray = [];
+  const tasksByPriority = {};
+  const tasksByPriorityArray = [];
 
   for (const task of allTasks) {
-    updateKey(byPriority, task.priority);
+    updateKeyWithCount(tasksByPriority, task.priority);
   }
 
-  for (const key in byPriority) {
-    byPriorityArray.push(byPriority[key]);
+  for (const key in tasksByPriority) {
+    tasksByPriority[key]['color'] = getLegendColor(key);
+    tasksByPriorityArray.push(tasksByPriority[key]);
   }
 
   // Group by assignee
-  const byAssignee = {};
-  const byAssigneeArray = [];
-
+  const tasksByAssignee = {};
+  const tasksByAssigneeArray = [];
 
   for (const task of allTasks) {
     if (!task.assignee) {
-      updateKey(byAssignee, 'Unassigned');
+      updateKeyWithoutCount(tasksByAssignee, 'Unassigned');
+
+      if (moment(task.due).isBefore(Date.now(), 'day') && task.progress !== 'Completed') {
+        if (tasksByAssignee['Unassigned']['Late'] === undefined) {
+          tasksByAssignee['Unassigned']['Late'] = 1;
+        } else {
+          tasksByAssignee['Unassigned']['Late']++;
+        }
+      } else {
+        if (tasksByAssignee['Unassigned'][task.progress] === undefined) {
+          tasksByAssignee['Unassigned'][task.progress] = 1;
+        } else {
+          tasksByAssignee['Unassigned'][task.progress]++;
+        }
+      }
     } else {
-      updateKey(byAssignee, task.assignee.name);
+      updateKeyWithoutCount(tasksByAssignee, task.assignee.name);
+
+      if (moment(task.due).isBefore(Date.now(), 'day') && task.progress !== 'Completed') {
+        if (tasksByAssignee[task.assignee.name]['Late'] === undefined) {
+          tasksByAssignee[task.assignee.name]['Late'] = 1;
+        } else {
+          tasksByAssignee[task.assignee.name]['Late']++;
+        }
+      } else {
+        if (tasksByAssignee[task.assignee.name][task.progress] === undefined) {
+          tasksByAssignee[task.assignee.name][task.progress] = 1;
+        } else {
+          tasksByAssignee[task.assignee.name][task.progress]++;
+        }
+      }
     }
   }
 
-  for (const key in byAssignee) {
-    byAssigneeArray.push(byAssignee[key]);
+  for (const key in tasksByAssignee) {
+    tasksByAssigneeArray.push(tasksByAssignee[key]);
   }
 
   return {
-    byProgressArray,
-    byPriorityArray,
-    byAssigneeArray,
-    byList,
+    tasksByProgressArray,
+    tasksByPriorityArray,
+    tasksByAssigneeArray,
+    tasksByList,
     tasksRemaining,
     tasksCount: allTasks.length
+  }
+}
+
+export const getLegendColor = (textValue) => {
+  switch (textValue) {
+    case 'Late':
+    case 'Urgent':
+      return '#db0033';
+    case 'Not started':
+      return '#5f5f5f';
+    case 'In progress':
+    case 'Medium':
+      return '#2b71db';
+    case 'Completed':
+      return '#418040';
+    case 'Low':
+      return '#0088FE';
+    case 'High':
+      return '#FF8042';
+    default:
+      return '#5f5f5f';
   }
 }

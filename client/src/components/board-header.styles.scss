@@ -48,7 +48,6 @@
       &__item,
       &__item--active {
         display: flex;
-        font-weight: 500;
         margin-right: 1.5rem;
         cursor: pointer;
         position: relative;
@@ -56,7 +55,7 @@
         &:hover {
           &::after {
             position: absolute;
-            top: 2.25rem;
+            top: 2.5rem;
             content: '';
             display: block;
             height: 2px;
@@ -67,9 +66,11 @@
       }
 
       &__item--active {
+        font-weight: bold;
+
         &::after {
           position: absolute;
-          top: 2.25rem;
+          top: 2.5rem;
           content: '';
           display: block;
           height: 2px;

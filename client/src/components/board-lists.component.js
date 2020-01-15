@@ -104,7 +104,7 @@ const BoardLists = ({ lists }) => {
   }
 
   return (
-    <div>
+    <div className='project-details__main-content'>
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId='all-lists' direction='horizontal' type='list'>
           {
