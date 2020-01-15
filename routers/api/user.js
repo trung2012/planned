@@ -35,7 +35,7 @@ router.post('/', async (req, res) => {
     newUser.password = hashedPassword;
     const user = await newUser.save()
 
-    jwt.sign({ id: user._id }, process.env.JWT_SECRET, (err, token) => {
+    jwt.sign({ id: user._id, name: user.name }, process.env.JWT_SECRET, (err, token) => {
       if (err) throw new Error(err);
       res.status(201).json({
         token,
@@ -69,7 +69,7 @@ router.post('/login', async (req, res) => {
       return res.status(401).send('Invalid credentials')
     }
 
-    jwt.sign({ id: existingUser._id }, process.env.JWT_SECRET, (err, token) => {
+    jwt.sign({ id: existingUser._id, name: existingUser.name }, process.env.JWT_SECRET, (err, token) => {
       if (err) throw Error(err);
 
       res.status(200).json({

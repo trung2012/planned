@@ -23,7 +23,15 @@ const ProjectAddForm = ({ dismiss }) => {
   }
 
   return (
-    <form className='project-add-form' onSubmit={handleSubmit}>
+    <form
+      className='project-add-form'
+      onSubmit={handleSubmit}
+      onKeyDown={event => {
+        if (event.keyCode === 27) {
+          dismiss();
+        }
+      }}
+    >
       {
         projectState.errorMessage && <ErrorDisplay text={projectState.errorMessage} />
       }
@@ -53,7 +61,7 @@ const ProjectAddForm = ({ dismiss }) => {
       />
       <div className='project-add-form__buttons'>
         <CustomButton text='Create' onClick={handleSubmit} />
-        <CustomButton text='Cancel' onClick={dismiss} />
+        <CustomButton type='button' text='Cancel' onClick={dismiss} />
       </div>
     </form>
   );

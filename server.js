@@ -36,11 +36,11 @@ io.use(socketioJwt.authorize({
 }));
 
 io.on('connection', (socket) => {
-  console.log(socket.decoded_token.id, ' connected');
+  console.log(socket.decoded_token.name, 'connected');
 
   socket.on('join', (projectId) => {
     socket.join(projectId);
-    console.log(`joined project ${projectId}`)
+    console.log(`${socket.decoded_token.name} joined project ${projectId}`)
   })
 
   socket.on('initial_data', async projectId => {
@@ -401,11 +401,11 @@ io.on('connection', (socket) => {
 
   socket.on('leave', (projectId) => {
     socket.leave(projectId);
-    console.log(`left project ${projectId}`)
+    console.log(`${socket.decoded_token.name} left project ${projectId}`)
   })
 
   socket.on('disconnect', () => {
-    console.log('User disconnected');
+    console.log(`${socket.decoded_token.name} disconnected`);
   })
 });
 

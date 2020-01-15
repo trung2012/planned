@@ -10,6 +10,7 @@ const initialState = {
   members: [],
   memberIds: [],
   users: [],
+  highlightedMemberId: null,
   errorMessage: null,
   updateMessage: null,
   isLoading: false,
@@ -48,6 +49,19 @@ const boardReducer = (state, action) => {
         members: state.members.filter(member => member._id !== action.payload),
         memberIds: state.memberIds.filter(memberId => memberId !== action.payload)
       }
+    case 'highlight_member': {
+      if (state.highlightedMemberId === action.payload) {
+        return {
+          ...state,
+          highlightedMemberId: null
+        }
+      } else {
+        return {
+          ...state,
+          highlightedMemberId: action.payload
+        }
+      }
+    }
     case 'add_list':
       return {
         ...state,
@@ -403,6 +417,10 @@ export const BoardProvider = ({ children }) => {
     dispatch({ type: 'remove_currently_opened_task', payload: taskId });
   }, [])
 
+  const highlightMemberTasks = memberId => {
+    dispatch({ type: 'highlight_member', payload: memberId });
+  }
+
 
   const setIsCurrentlyOpenedTaskDeleted = (value) => {
     dispatch({ type: 'set_is_currently_deleted', payload: value });
@@ -447,7 +465,8 @@ export const BoardProvider = ({ children }) => {
         renameTaskAttachment,
         replaceSingleList,
         replaceMultipleListsAfterDragAndDrop,
-        reorderLists
+        reorderLists,
+        highlightMemberTasks
       }}
     >
       {children}

@@ -7,8 +7,16 @@ import MoreOptions from './more-options.component';
 
 import './task-assignment-dropdown.styles.scss';
 
-const TaskAssignmentDropdown = ({ setShowAssignmentDropdown, memberSearchQuery, onInputChange, onMemberClick, assignee, removeMember, members }) => {
+const TaskAssignmentDropdown = ({ dismiss, onMemberClick, assignee, removeMember, members }) => {
   const [showSearchResults, setShowSearchResults] = useState(false);
+  const [memberSearchQuery, setMemberSearchQuery] = useState('');
+
+  const filteredMembers = members.filter(user => {
+    if (assignee) {
+      return user.name.toLowerCase().includes(memberSearchQuery.toLowerCase()) && assignee._id !== user._id
+    }
+    return user.name.toLowerCase().includes(memberSearchQuery.toLowerCase())
+  });
 
   const handleMemberClick = (user) => {
     onMemberClick(user);
@@ -17,7 +25,7 @@ const TaskAssignmentDropdown = ({ setShowAssignmentDropdown, memberSearchQuery, 
 
   return (
     <React.Fragment>
-      <div className='overlay' onClick={() => setShowAssignmentDropdown(false)}></div>
+      <div className='overlay' onClick={dismiss}></div>
       <div className='task-assignment-dropdown'>
         <div className='task-assignment-dropdown__header'>
           <h3>Assigned</h3>
@@ -25,7 +33,7 @@ const TaskAssignmentDropdown = ({ setShowAssignmentDropdown, memberSearchQuery, 
             placeholder='Enter name to add member'
             value={memberSearchQuery}
             onChange={(event) => {
-              onInputChange(event);
+              setMemberSearchQuery(event.target.value);
               if (!showSearchResults) {
                 setShowSearchResults(true);
               }
@@ -38,7 +46,7 @@ const TaskAssignmentDropdown = ({ setShowAssignmentDropdown, memberSearchQuery, 
           showSearchResults &&
           <MoreOptions className='member-search-result' dismiss={() => setShowSearchResults(false)}>
             {
-              members.length > 0 ? members.map(user => {
+              filteredMembers.length > 0 ? filteredMembers.map(user => {
                 return (
                   <MemberProfileItem onClick={() => handleMemberClick(user)} key={user._id} member={user} />
                 );

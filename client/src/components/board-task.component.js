@@ -2,14 +2,15 @@ import React, { useState, useContext } from 'react';
 import { useParams, useHistory, useRouteMatch } from 'react-router-dom';
 import { Draggable } from 'react-beautiful-dnd';
 
-import MoreOptions from './more-options.component';
-import BoardTaskIcons from './board-task-icons.component';
-import { ReactComponent as OptionsIcon } from '../assets/options.svg';
 import { SocketContext } from '../context/SocketContext';
 import { BoardContext } from '../context/BoardContext';
+import MoreOptions from './more-options.component';
+import BoardTaskIcons from './board-task-icons.component';
 import TaskAssignment from './task-assignment.component';
-import { handleTaskAssignment, handleTaskUpdate } from '../utils/useTaskUpdate';
+import TaskAssignmentDropdown from './task-assignment-dropdown.component';
+import { ReactComponent as OptionsIcon } from '../assets/options.svg';
 import getSelectIcon from '../utils/getSelectIcon';
+import { handleTaskAssignment, handleTaskUpdate } from '../utils/useTaskUpdate';
 
 import './board-task.styles.scss';
 
@@ -26,12 +27,19 @@ const BoardTask = ({ task, list, index }) => {
     assignUserToTask,
     unassignUserFromTask,
     setCurrentlyOpenedTask,
-    updateTaskAttributes
+    updateTaskAttributes,
   } = useContext(BoardContext);
-  const [showTaskOptions, setShowTaskOptions] = useState(false);
 
+  const [showTaskOptions, setShowTaskOptions] = useState(false);
+  const [showAssignmentDropdown, setShowAssignmentDropdown] = useState(false);
   const { handleAssignTask, handleUnassignTask } = handleTaskAssignment(socket, task._id, projectId, { assignUserToTask, unassignUserFromTask });
   const { handleCompletionToggle, handleAttributeUpdate } = handleTaskUpdate(socket, task._id, projectId, { updateTaskAttributes });
+
+  const highlighted = boardState.highlightedMemberId
+    && task.assignee
+    && boardState.highlightedMemberId === task.assignee._id
+    ? 'highlighted'
+    : ''
 
   const taskClassName = task.progress === 'Completed' ? 'board-task--completed' : 'board-task'
 
@@ -64,7 +72,7 @@ const BoardTask = ({ task, list, index }) => {
       {
         (provided) => (
           <div
-            className={taskClassName}
+            className={`${taskClassName} ${highlighted}`}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
             ref={provided.innerRef}
@@ -102,7 +110,16 @@ const BoardTask = ({ task, list, index }) => {
                 showTaskOptions &&
                 <MoreOptions dismiss={() => setShowTaskOptions(false)} >
                   <div className='more-options-item' onClick={event => event.stopPropagation()}>Copy Task</div>
-                  <div className='more-options-item' onClick={event => event.stopPropagation()}>Assign</div>
+                  <div
+                    className='more-options-item'
+                    onClick={event => {
+                      event.stopPropagation();
+                      setShowAssignmentDropdown(true);
+                      setShowTaskOptions(false);
+                    }}
+                  >
+                    Assign
+                    </div>
                   <div className='more-options-item' onClick={handleDeleteClick}>Delete</div>
                 </MoreOptions>
               }
@@ -117,6 +134,16 @@ const BoardTask = ({ task, list, index }) => {
                   handleUnassignTask={handleUnassignTask}
                 />
               </div>
+            }
+            {
+              showAssignmentDropdown &&
+              <TaskAssignmentDropdown
+                dismiss={() => setShowAssignmentDropdown(false)}
+                members={boardState.members}
+                assignee={task.assignee}
+                removeMember={handleUnassignTask}
+                onMemberClick={handleAssignTask}
+              />
             }
           </div>
         )

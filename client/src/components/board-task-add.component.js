@@ -44,7 +44,14 @@ const BoardTaskAdd = ({ submit, listId, dismiss }) => {
 
   return (
     <React.Fragment>
-      <div className='board-task-add'>
+      <div
+        className='board-task-add'
+        onKeyDown={event => {
+          if (event.keyCode === 27) {
+            dismiss();
+          }
+        }}
+      >
         <div className='overlay' onClick={() => {
           if (newTaskName === '') {
             dismiss();

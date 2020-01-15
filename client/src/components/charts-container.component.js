@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { calculateGroupsFromLists } from '../utils/helper';
 import ChartByProgress from './chart-by-progress.component';
 import ChartByPriority from './chart-by-priority.component';
 import ChartByAssignee from './chart-by-assignee.component';
 import ChartByList from './chart-by-list.component';
+import { calculateGroupsFromLists } from '../utils/helper';
 
 import './charts-container.styles.scss';
 

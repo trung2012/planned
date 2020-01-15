@@ -7,6 +7,7 @@ import { SocketContext } from '../context/SocketContext';
 import { BoardContext } from '../context/BoardContext';
 import NameChangeForm from './name-change-form.component';
 import BoardList from './board-list.component';
+
 import './board-lists.styles.scss';
 
 const BoardLists = ({ lists }) => {

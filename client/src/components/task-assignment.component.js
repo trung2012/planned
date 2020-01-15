@@ -7,15 +7,7 @@ import { ReactComponent as AddUserIcon } from '../assets/add_user.svg';
 import './task-assignment.styles.scss';
 
 const TaskAssignment = ({ members, assignee, handleAssignTask, handleUnassignTask }) => {
-  const [memberSearchQuery, setMemberSearchQuery] = useState('');
   const [showAssignmentDropdown, setShowAssignmentDropdown] = useState(false);
-
-  const filteredMembers = members.filter(user => {
-    if (assignee) {
-      return user.name.toLowerCase().includes(memberSearchQuery.toLowerCase()) && assignee._id !== user._id
-    }
-    return user.name.toLowerCase().includes(memberSearchQuery.toLowerCase())
-  });
 
   const handleTaskAssignmentClick = event => {
     event.stopPropagation();
@@ -44,11 +36,9 @@ const TaskAssignment = ({ members, assignee, handleAssignTask, handleUnassignTas
       {
         showAssignmentDropdown &&
         <TaskAssignmentDropdown
-          setShowAssignmentDropdown={setShowAssignmentDropdown}
-          memberSearchQuery={memberSearchQuery}
-          members={filteredMembers}
+          dismiss={() => setShowAssignmentDropdown(false)}
+          members={members}
           assignee={assignee}
-          onInputChange={event => setMemberSearchQuery(event.target.value)}
           removeMember={handleUnassignTask}
           onMemberClick={handleAssignTask}
         />

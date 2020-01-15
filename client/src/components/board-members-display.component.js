@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import UserProfilePicture from './user-profile-picture.component';
+import { BoardContext } from '../context/BoardContext';
 
 import './board-members-display.styles.scss';
 
 const BoardMembersDisplay = ({ members, showMembersDropdown }) => {
+  const { highlightMemberTasks } = useContext(BoardContext);
+
   return (
     <div className='board-members-display'>
       {
@@ -14,7 +17,10 @@ const BoardMembersDisplay = ({ members, showMembersDropdown }) => {
           .map((member) => {
             return (
               <React.Fragment key={member._id}>
-                <div className='board-members-display__member'>
+                <div
+                  className='board-members-display__member'
+                  onClick={() => highlightMemberTasks(member._id)}
+                >
                   <UserProfilePicture
                     backgroundColor={member.color}
                     initials={member.initials}
@@ -26,7 +32,9 @@ const BoardMembersDisplay = ({ members, showMembersDropdown }) => {
           })
       }
       <span className='remaining-members-count' onClick={showMembersDropdown}>
-        {members.length > 4 && `+ ${members.length - 4}`}
+        {
+          members.length > 4 && `+ ${members.length - 4}`
+        }
       </span>
     </div>
   );
