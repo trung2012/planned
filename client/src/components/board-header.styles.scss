@@ -87,11 +87,11 @@
 }
 
 .project-filters {
-  position: relative;
   display: flex;
   align-items: center;
 
   &__item {
+    position: relative;
     display: flex;
     align-items: center;
     padding: 1rem .5rem;
@@ -102,7 +102,7 @@
        background-color: $color-gray-extra-light;
     }
 
-    span {
+    &-title {
       flex-shrink: 0;
       margin: 0 .5rem;
     }

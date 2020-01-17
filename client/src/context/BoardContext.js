@@ -16,7 +16,12 @@ const initialState = {
   isLoading: false,
   showTaskDetails: false,
   currentlyOpenedTask: null,
-  isCurrentlyOpenedTaskDeleted: false
+  isCurrentlyOpenedTaskDeleted: false,
+  filterConditionName: '',
+  filterConditionPriority: [],
+  filterConditionAssignee: [],
+  filterConditionList: [],
+  filterConditionDue: []
 }
 
 const boardReducer = (state, action) => {
@@ -284,6 +289,76 @@ const boardReducer = (state, action) => {
         ...state,
         showTaskDetails: action.payload
       }
+    case 'clear_board_filters':
+      return {
+        ...state,
+        filterConditionName: '',
+        filterConditionPriority: [],
+        filterConditionAssignee: [],
+        filterConditionList: [],
+        filterConditionDue: []
+      }
+    case 'change_board_filters': {
+      const { type, value } = action.payload;
+
+      switch (type) {
+        case 'assignee':
+          if (state.filterConditionAssignee.includes(value)) {
+            return {
+              ...state,
+              filterConditionAssignee: state.filterConditionAssignee.filter(condition => condition !== value)
+            }
+          } else {
+            return {
+              ...state,
+              filterConditionAssignee: [...state.filterConditionAssignee, value]
+            }
+          }
+        case 'due':
+          if (state.filterConditionDue.includes(value)) {
+            return {
+              ...state,
+              filterConditionDue: state.filterConditionDue.filter(condition => condition !== value)
+            }
+          } else {
+            return {
+              ...state,
+              filterConditionDue: [...state.filterConditionDue, value]
+            }
+          }
+        case 'list':
+          if (state.filterConditionList.includes(value)) {
+            return {
+              ...state,
+              filterConditionList: state.filterConditionList.filter(condition => condition !== value)
+            }
+          } else {
+            return {
+              ...state,
+              filterConditionList: [...state.filterConditionList, value]
+            }
+          }
+        case 'priority':
+          if (state.filterConditionPriority.includes(value)) {
+            return {
+              ...state,
+              filterConditionPriority: state.filterConditionPriority.filter(condition => condition !== value)
+            }
+          } else {
+            return {
+              ...state,
+              filterConditionPriority: [...state.filterConditionPriority, value]
+            }
+          }
+        case 'name':
+          return {
+            ...state,
+            filterConditionName: value
+          }
+        default:
+          return state;
+      }
+    }
     case 'add_board_error':
       return {
         ...state,
@@ -421,6 +496,13 @@ export const BoardProvider = ({ children }) => {
     dispatch({ type: 'highlight_member', payload: memberId });
   }
 
+  const changeBoardFilters = (type, value) => {
+    dispatch({ type: 'change_board_filters', payload: { type, value } });
+  }
+
+  const clearBoardFilters = () => {
+    dispatch({ type: 'clear_board_filters' });
+  }
 
   const setIsCurrentlyOpenedTaskDeleted = (value) => {
     dispatch({ type: 'set_is_currently_deleted', payload: value });
@@ -466,7 +548,9 @@ export const BoardProvider = ({ children }) => {
         replaceSingleList,
         replaceMultipleListsAfterDragAndDrop,
         reorderLists,
-        highlightMemberTasks
+        highlightMemberTasks,
+        changeBoardFilters,
+        clearBoardFilters
       }}
     >
       {children}

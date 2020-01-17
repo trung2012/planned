@@ -2,11 +2,11 @@
 
 .board-members-dropdown {
   position: absolute;
-  top: 5rem;
-  right: 70%;
+  top: 100%;
+  right: 0;
   background-color: #fff;
-  width: 28rem;
-  box-shadow: $box-shadow-primary;
+  min-width: 28rem;
+  box-shadow: $box-shadow-dark;
   animation: fadeFromTop .3s cubic-bezier(0.1, 0.9, 0.2, 1);
   z-index: 100;
 

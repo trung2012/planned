@@ -31,3 +31,34 @@ export const priorityOptions = [
     name: 'Low'
   }
 ]
+
+export const dueFilterOptions = [
+  {
+    _id: 0,
+    name: 'Late'
+  },
+  {
+    _id: 1,
+    name: 'Today'
+  },
+  {
+    _id: 2,
+    name: 'Tomorrow'
+  },
+  {
+    _id: 3,
+    name: 'This week'
+  },
+  {
+    _id: 4,
+    name: 'Next week'
+  },
+  {
+    _id: 5,
+    name: 'Future'
+  },
+  {
+    _id: 6,
+    name: 'No date'
+  }
+]

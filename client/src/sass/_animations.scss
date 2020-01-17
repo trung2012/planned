@@ -42,3 +42,14 @@
     -webkit-transform: rotate(360deg);
   }
 }
+
+
+@keyframes rotate180up {
+  from {
+    transform: rotate(180deg);
+  }
+
+  to {
+    transform: rotate(0);
+  }
+}

@@ -1,0 +1,38 @@
+@import '../sass/variables';
+
+.board-filters-item,
+.board-filters-item--selected {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: .75rem .5rem .75rem 2rem;
+  cursor: pointer;
+  
+  &__text-container {
+    display: flex;
+    align-items: center;
+  }
+
+  .member-profile-item { 
+    padding: 0;
+  }
+}
+
+.board-filters-item {
+  .checkmark-icon {
+    opacity: 0;
+  }
+  &:hover {
+    background-color: $color-gray-extra-light;
+  }
+
+  &--selected {
+    background-color: $color-gray-extra-light;
+    
+    .checkmark-icon {
+      transition: opacity .1s;
+      opacity: 1;
+    }
+  }
+}
+

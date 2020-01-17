@@ -3,13 +3,16 @@ import React, { useContext, useState } from 'react';
 import { ReactComponent as DropdownIcon } from '../assets/dropdown.svg';
 import { BoardContext } from '../context/BoardContext';
 import BoardMembersDisplay from './board-members-display.component';
-import './board-header.styles.scss';
 import BoardMembersDropdown from './board-members-dropdown.component';
+import BoardFilters from './board-filters.component';
 
-const BoardHeader = ({ showChart, setShowChart }) => {
+import './board-header.styles.scss';
+
+const BoardHeader = ({ showChart, setShowChart, allAssignees, allLists }) => {
   const { boardState } = useContext(BoardContext);
   const { currentProject: project, members } = boardState;
   const [showMembersListDropdown, setShowMembersListDropdown] = useState(false);
+  const [showFiltersDropdown, setShowFiltersDropdown] = useState(false);
 
   return (
     <div className='board-header'>
@@ -44,24 +47,35 @@ const BoardHeader = ({ showChart, setShowChart }) => {
         <div className='board-header__project-options--filters'>
           <BoardMembersDisplay members={members} showMembersDropdown={() => setShowMembersListDropdown(!showMembersListDropdown)} />
           <div className='project-filters'>
-            <div className='project-filters__item project-filters__item--members' onClick={() => setShowMembersListDropdown(!showMembersListDropdown)}>
-              <span>Members</span>
+            <div className='project-filters__item project-filters__item--members' onClick={() => {
+              if (!showMembersListDropdown) {
+                setShowMembersListDropdown(true);
+              }
+            }}>
+              <span className='project-filters__item-title'>Members</span>
               <DropdownIcon className='dropdown-icon' />
+              {
+                showMembersListDropdown &&
+                <BoardMembersDropdown members={members} dismiss={() => setShowMembersListDropdown(false)} />
+              }
             </div>
-            {
-              showMembersListDropdown &&
-              <BoardMembersDropdown members={members} dismiss={() => setShowMembersListDropdown(false)} />
-            }
-            <div className='project-filters__item project-filters__item--filter'>
-              <span>Filter</span>
+            <div className='project-filters__item project-filters__item--filter' onClick={() => {
+              if (!showFiltersDropdown) {
+                setShowFiltersDropdown(true);
+              }
+            }}>
+              <span className='project-filters__item-title'>Filter</span>
               <DropdownIcon className='dropdown-icon' />
+              {
+                showFiltersDropdown &&
+                <BoardFilters dismiss={() => setShowFiltersDropdown(false)} allAssignees={allAssignees} allLists={allLists} />
+              }
             </div>
             <div className='project-filters__item project-filters__item--group'>
-              <span>Group by</span>
+              <span className='project-filters__item-title'>Group by</span>
               <DropdownIcon className='dropdown-icon' />
             </div>
           </div>
-          <div className=''></div>
         </div>
       </div>
     </div>

@@ -146,4 +146,4 @@ const BoardLists = ({ lists }) => {
   );
 }
 
-export default BoardLists;
+export default React.memo(BoardLists);

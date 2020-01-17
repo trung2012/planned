@@ -13,7 +13,7 @@
   background-color: #fff;
   min-width: 18rem;
   padding: 1rem .5rem;
-  box-shadow: 0 0 1rem rgba(#333, .3);
+  box-shadow: $box-shadow-dark;
   border-radius: 2px;
   z-index: 100;
   overflow-y: auto;

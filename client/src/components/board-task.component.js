@@ -10,7 +10,7 @@ import TaskAssignment from './task-assignment.component';
 import TaskAssignmentDropdown from './task-assignment-dropdown.component';
 import { ReactComponent as OptionsIcon } from '../assets/options.svg';
 import getSelectIcon from '../utils/getSelectIcon';
-import { handleTaskAssignment, handleTaskUpdate } from '../utils/useTaskUpdate';
+import { handleTaskAssignment, handleTaskUpdate } from '../utils/updateTasks';
 
 import './board-task.styles.scss';
 

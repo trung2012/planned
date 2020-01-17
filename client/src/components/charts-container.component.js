@@ -4,19 +4,10 @@ import ChartByProgress from './chart-by-progress.component';
 import ChartByPriority from './chart-by-priority.component';
 import ChartByAssignee from './chart-by-assignee.component';
 import ChartByList from './chart-by-list.component';
-import { calculateGroupsFromLists } from '../utils/helper';
 
 import './charts-container.styles.scss';
 
-const ChartContainer = ({ lists }) => {
-  const {
-    tasksByProgressArray,
-    tasksByPriorityArray,
-    tasksByAssigneeArray,
-    tasksByList,
-    tasksRemaining,
-    tasksCount
-  } = calculateGroupsFromLists(lists);
+const ChartContainer = ({ tasksByProgressArray, tasksByPriorityArray, tasksByAssigneeArray, tasksByList, tasksRemaining, tasksCount }) => {
 
   return (
     tasksCount > 0

@@ -42,7 +42,7 @@ const updateKeyWithoutCount = (obj, val) => {
 const updateListKeyWithTask = (obj, key, task, type) => {
   if (obj[key] === undefined) {
     obj[key] = {
-      _id: new ObjectID().toString(),
+      _id: type === 'assignee' ? task.assignee._id : new ObjectID().toString(),
       name: key,
       initials: type === 'assignee' ? task.assignee.initials : null,
       color: type === 'assignee' ? task.assignee.color : null,
@@ -273,7 +273,7 @@ export const calculateGroupsFromLists = lists => {
 
   const listsByAssignee = {
     'Unassigned': {
-      _id: new ObjectID().toString(),
+      _id: null,
       name: 'Unassigned',
       initials: 'U',
       color: '#666'
@@ -293,10 +293,15 @@ export const calculateGroupsFromLists = lists => {
     listsByAssigneeArr.push(listsByAssignee[key]);
   }
 
-  console.log(listsByProgressArr)
-  console.log(listsByPriorityArr)
-  console.log(listsByAssigneeArr)
+  const allAssignees = listsByAssigneeArr.map(assignee => {
+    const { tasks: _, ...rest } = assignee;
+    return rest;
+  });
 
+  const allLists = lists.map(list => {
+    const { tasks: _, ...rest } = list;
+    return rest;
+  });
 
   return {
     tasksByProgressArray,
@@ -304,6 +309,8 @@ export const calculateGroupsFromLists = lists => {
     tasksByAssigneeArray,
     tasksByList,
     tasksRemaining,
+    allAssignees,
+    allLists,
     tasksCount: allTasks.length
   }
 }

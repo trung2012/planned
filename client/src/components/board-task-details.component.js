@@ -15,7 +15,7 @@ import { AuthContext } from '../context/AuthContext';
 import { progressOptions, priorityOptions } from '../utils/dropdownOptions';
 import CustomDatePicker from './custom-date-picker.component';
 import TaskAssignment from './task-assignment.component';
-import { handleTaskAssignment, handleTaskUpdate } from '../utils/useTaskUpdate';
+import { handleTaskAssignment, handleTaskUpdate } from '../utils/updateTasks';
 import FileUpload from './file-upload.component';
 import TaskAttachmentList from './task-attachment-list.component';
 import getSelectIcon from '../utils/getSelectIcon';

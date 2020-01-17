@@ -1,0 +1,50 @@
+@import '../sass/variables';
+@import '../sass/animations';
+
+.board-filters {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #fff;
+  box-shadow: $box-shadow-dark;
+  animation: fadeFromTop .3s cubic-bezier(0.1, 0.9, 0.2, 1);
+  z-index: 100;
+  min-width: 29rem;
+  max-height: 38rem;
+  cursor: auto;
+
+  &__header {
+    padding: 1.5rem;
+    padding-bottom: .5rem;
+    margin-bottom: 1rem;
+  }
+
+  &__header-title {
+    font-weight: 500;
+    font-size: 1.7rem;
+  }
+
+  &__header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  &__clear-button {
+    border: none;
+    font-family: inherit;
+    font-size: inherit;
+    background-color: #fff;
+    color: $color-green-dark;
+    cursor: pointer;
+    outline: none;
+  }
+
+  &__groups {
+    flex: 1;
+    overflow-y: auto;
+  }
+}

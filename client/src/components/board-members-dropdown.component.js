@@ -6,7 +6,7 @@ import { SocketContext } from '../context/SocketContext';
 import CustomInput from './custom-input.component';
 import MemberProfileItem from './member-profile-item.component';
 import MoreOptions from './more-options.component';
-import useDebounce from '../utils/useDebounce';
+import useDebounce from '../hooks/useDebounce';
 import BoardMembersDropdownList from './board-members-dropdown-list.component';
 import './board-members-dropdown.styles.scss';
 
