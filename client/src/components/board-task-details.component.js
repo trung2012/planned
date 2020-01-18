@@ -37,6 +37,7 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
 
   const { _id, name, description, assignee, progress, priority, due, updatedAt, comments, createdBy, attachments } = task;
   const [showTaskNameEdit, setShowTaskNameEdit] = useState(false);
+  const [showTaskDescriptionEdit, setShowTaskDescriptionEdit] = useState(false);
   const [newCommentText, setNewCommentText] = useState('');
   const [newDueDate, setNewDueDate] = useState(due);
   const [newDescription, setNewDescription] = useState(description);
@@ -68,7 +69,8 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
         task,
         oldListId: list._id,
         newListId,
-        updatedAt: Date.now()
+        updatedAt: Date.now(),
+        updatedBy: authState.user
       };
       assignTaskToNewList(data);
       socket.emit('assign_task_to_new_list', { data, projectId });
@@ -140,19 +142,33 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
         </div>
         <div className='board-task-details__description'>
           <h4>Description</h4>
-          <textarea
-            placeholder='Add a description or notes'
-            name='description-input'
-            type='text'
-            className='board-task-details__text-input'
-            value={newDescription}
-            onChange={event => setNewDescription(event.target.value)}
-            onBlur={() => {
-              if (description !== newDescription) {
-                handleAttributeUpdate({ description: newDescription });
-              }
-            }}
-          />
+          {
+            showTaskDescriptionEdit
+              ? <textarea
+                placeholder='Add a description or notes'
+                name='description-input'
+                type='text'
+                className='board-task-details__text-input'
+                autoFocus
+                value={newDescription}
+                onChange={event => setNewDescription(event.target.value)}
+                onFocus={event => {
+                  let temp = event.target.value;
+                  event.target.value = ''
+                  event.target.value = temp;
+                }}
+                onBlur={() => {
+                  if (description !== newDescription) {
+                    handleAttributeUpdate({ description: newDescription });
+                  }
+                  setShowTaskDescriptionEdit(false);
+                }}
+              />
+              : <pre className='board-task-details__text-input' onClick={() => setShowTaskDescriptionEdit(true)}>
+                {newDescription}
+              </pre>
+          }
+
         </div>
         <div className='board-task-details__attachments'>
           <h4>Attachments</h4>

@@ -6,6 +6,7 @@ import CustomChartLegends from './custom-chart-legends.component';
 import './chart-by-priority.styles.scss';
 
 const ChartByPriority = ({ data, tasksCount }) => {
+  const filteredData = data.filter(entry => entry.value !== 0);
 
   return (
     <div className='chart-container chart-left'>
@@ -17,7 +18,7 @@ const ChartByPriority = ({ data, tasksCount }) => {
           <ResponsiveContainer>
             <PieChart>
               <Pie
-                data={data}
+                data={filteredData}
                 dataKey='value'
                 innerRadius={70}
                 outerRadius={80}
@@ -30,7 +31,7 @@ const ChartByPriority = ({ data, tasksCount }) => {
                   value="tasks total" position="centerTop" className='center-text-bottom' fontSize='14px'
                 />
                 {
-                  data.map((entry, index) => <Cell key={entry.name} fill={entry.color} />)
+                  filteredData.map(entry => <Cell key={entry.name} fill={entry.color} />)
                 }
               </Pie>
               <Tooltip />

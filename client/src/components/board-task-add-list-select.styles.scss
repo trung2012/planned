@@ -1,0 +1,27 @@
+@import '../sass/variables';
+
+.board-task-add-list-select {
+  position: relative;
+
+  .list-icon {
+    margin-right: 1.5rem;
+  }
+
+  &__header {
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    color: $color-green-dark;
+  }
+
+  &__name {    
+    font-size: 1.3rem;
+  }
+
+  .more-options {
+    top: 100%;
+    right: 0;
+  }
+}

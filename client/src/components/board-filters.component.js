@@ -9,12 +9,16 @@ import './board-filters.styles.scss';
 
 const BoardFilters = ({ dismiss, allAssignees, allLists }) => {
   const [taskNameFilterKeyword, setTaskNameFilterKeyword] = useState('');
-  const { boardState: {
-    filterConditionPriority,
-    filterConditionAssignee,
-    filterConditionList,
-    filterConditionDue
-  }, changeBoardFilters } = useContext(BoardContext);
+  const {
+    boardState: {
+      filterConditionPriority,
+      filterConditionAssignee,
+      filterConditionList,
+      filterConditionDue
+    },
+    changeBoardFilters,
+    clearBoardFilters
+  } = useContext(BoardContext);
 
   const handleFilterTasksByName = event => {
     const { value } = event.target;
@@ -29,7 +33,9 @@ const BoardFilters = ({ dismiss, allAssignees, allLists }) => {
         <div className='board-filters__header'>
           <div className='board-filters__header-top'>
             <h3 className='board-filters__header-title'>Filter</h3>
-            <button className='board-filters__clear-button'>Clear</button>
+            <button className='board-filters__clear-button' onClick={clearBoardFilters}>
+              Clear
+            </button>
           </div>
           <CustomInput
             placeholder='Filter by task name'

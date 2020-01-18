@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 
 import { ReactComponent as CheckmarkIcon } from '../assets/checkmark.svg';
 import MemberProfileItem from './member-profile-item.component';
@@ -9,8 +9,8 @@ import { BoardContext } from '../context/BoardContext';
 import './board-filters-group.styles.scss';
 
 const BoardFiltersGroup = ({ groupName, options, filterList }) => {
-  const { changeBoardFilters } = useContext(BoardContext);
-  const [isActive, setIsActive] = useState(false);
+  const { boardState: { expandedFilters }, changeBoardFilters, expandBoardFilter } = useContext(BoardContext);
+  const isActive = expandedFilters.includes(groupName);
   const groupClassname = isActive ? 'board-filters__group--active' : 'board-filters__group';
 
   const handleFilterClick = (value) => {
@@ -31,7 +31,7 @@ const BoardFiltersGroup = ({ groupName, options, filterList }) => {
   if (groupName === 'Assignee') {
     return (
       <div className={`${groupClassname}`}>
-        <div className={`${groupClassname}__header`} onClick={() => setIsActive(!isActive)}>
+        <div className={`${groupClassname}__header`} onClick={() => expandBoardFilter(groupName)}>
           <h3 className={`${groupClassname}__title`}>
             Assignee
             </h3>
@@ -59,7 +59,7 @@ const BoardFiltersGroup = ({ groupName, options, filterList }) => {
   } else if (groupName === 'List') {
     return (
       <div className={`${groupClassname}`}>
-        <div className={`${groupClassname}__header`} onClick={() => setIsActive(!isActive)}>
+        <div className={`${groupClassname}__header`} onClick={() => expandBoardFilter(groupName)}>
           <h3 className={`${groupClassname}__title`}>
             {groupName}
           </h3>
@@ -83,7 +83,7 @@ const BoardFiltersGroup = ({ groupName, options, filterList }) => {
 
   return (
     <div className={`${groupClassname}`}>
-      <div className={`${groupClassname}__header`} onClick={() => setIsActive(!isActive)}>
+      <div className={`${groupClassname}__header`} onClick={() => expandBoardFilter(groupName)}>
         <h3 className={`${groupClassname}__title`}>
           {groupName}
         </h3>

@@ -7,9 +7,7 @@ const CustomDatePickerSelect = ({ onClick, value }, ref) => {
       <h4 className='custom-select__label'>Due date</h4>
       <div className='custom-select__input' title={value}>
         <span>{value}</span>
-        {
-          <CalendarIcon className='dropdown-icon' />
-        }
+        <CalendarIcon className='dropdown-icon' />
       </div>
     </div>
   );

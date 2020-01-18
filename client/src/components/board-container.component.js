@@ -6,6 +6,7 @@ import BoardLists from './board-lists.component';
 
 import { calculateGroupsFromLists } from '../utils/helper';
 import useListFilters from '../hooks/useListFilters';
+import getBoardLists from '../utils/getBoardLists';
 import './board-container.styles.scss';
 
 const BoardContainer = () => {
@@ -20,6 +21,8 @@ const BoardContainer = () => {
       return list;
     })
     : [];
+
+
   const {
     tasksByProgressArray,
     tasksByPriorityArray,
@@ -28,7 +31,11 @@ const BoardContainer = () => {
     tasksRemaining,
     tasksCount,
     allAssignees,
-    allLists
+    allLists,
+    listsByProgressArray,
+    listsByPriorityArray,
+    listsByAssigneeArray,
+    listsByDueDateArray
   } = calculateGroupsFromLists(lists);
 
   const filteredLists = useListFilters(lists);
@@ -48,7 +55,9 @@ const BoardContainer = () => {
                 tasksRemaining={tasksRemaining}
                 tasksCount={tasksCount}
               />
-              : <BoardLists lists={filteredLists} />
+              : boardState.groupBy === 'List'
+                ? <BoardLists lists={filteredLists} />
+                : getBoardLists({ groupBy: boardState.groupBy, listsByProgressArray, listsByPriorityArray, listsByAssigneeArray, listsByDueDateArray })
           }
         </div>
       </React.Fragment>

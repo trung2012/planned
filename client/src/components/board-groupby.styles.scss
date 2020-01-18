@@ -1,0 +1,12 @@
+.board-group-by {
+  display: flex;
+  align-items: center;
+}
+
+.project-filters__item--group {
+  .more-options {
+    top: 100%;
+    right: 0;
+    padding: 0;
+  }
+}

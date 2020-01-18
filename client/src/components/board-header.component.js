@@ -7,10 +7,10 @@ import BoardMembersDropdown from './board-members-dropdown.component';
 import BoardFilters from './board-filters.component';
 
 import './board-header.styles.scss';
+import BoardGroupBy from './board-groupby.component';
 
 const BoardHeader = ({ showChart, setShowChart, allAssignees, allLists }) => {
-  const { boardState } = useContext(BoardContext);
-  const { currentProject: project, members } = boardState;
+  const { boardState: { currentProject: project, members } } = useContext(BoardContext);
   const [showMembersListDropdown, setShowMembersListDropdown] = useState(false);
   const [showFiltersDropdown, setShowFiltersDropdown] = useState(false);
 
@@ -71,10 +71,7 @@ const BoardHeader = ({ showChart, setShowChart, allAssignees, allLists }) => {
                 <BoardFilters dismiss={() => setShowFiltersDropdown(false)} allAssignees={allAssignees} allLists={allLists} />
               }
             </div>
-            <div className='project-filters__item project-filters__item--group'>
-              <span className='project-filters__item-title'>Group by</span>
-              <DropdownIcon className='dropdown-icon' />
-            </div>
+            <BoardGroupBy />
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import CustomInput from './custom-input.component';
-import BoardMembersDropdownList from './board-members-dropdown-list.component';
+import { ReactComponent as RemoveUserIcon } from '../assets/remove-user.svg';
 import MemberProfileItem from './member-profile-item.component'
 import MoreOptions from './more-options.component';
 
@@ -28,7 +28,7 @@ const TaskAssignmentDropdown = ({ dismiss, onMemberClick, assignee, removeMember
       <div className='overlay' onClick={dismiss}></div>
       <div className='task-assignment-dropdown'>
         <div className='task-assignment-dropdown__header'>
-          <h3>Assigned</h3>
+          <h3>Assign</h3>
           <CustomInput
             placeholder='Enter name to add member'
             value={memberSearchQuery}
@@ -38,22 +38,35 @@ const TaskAssignmentDropdown = ({ dismiss, onMemberClick, assignee, removeMember
                 setShowSearchResults(true);
               }
             }}
-            onFocus={() => setShowSearchResults(true)}
+            onFocus={() => {
+              if (!showSearchResults) {
+                setShowSearchResults(true);
+              }
+            }}
           />
+          {
+            showSearchResults &&
+            <MoreOptions className='member-search-result' dismiss={() => setShowSearchResults(false)}>
+              {
+                filteredMembers.length > 0 ? filteredMembers.map(user => {
+                  return (
+                    <MemberProfileItem onClick={() => handleMemberClick(user)} key={user._id} member={user} />
+                  );
+                })
+                  : <span className='no-results'>No results found</span>
+              }
+            </MoreOptions>
+          }
         </div>
-        <BoardMembersDropdownList members={assignee ? [assignee] : []} removeMember={removeMember} removeIconText='Remove assignment' />
         {
-          showSearchResults &&
-          <MoreOptions className='member-search-result' dismiss={() => setShowSearchResults(false)}>
-            {
-              filteredMembers.length > 0 ? filteredMembers.map(user => {
-                return (
-                  <MemberProfileItem onClick={() => handleMemberClick(user)} key={user._id} member={user} />
-                );
-              })
-                : <span className='no-results'>No results found</span>
-            }
-          </MoreOptions>
+          assignee ?
+            <div className='board-members-dropdown-list'>
+              <div className='board-members-dropdown-list__item' title={assignee.name} key={assignee._id} >
+                <MemberProfileItem member={assignee} />
+                <RemoveUserIcon className='remove-user-icon' title='Remove assignment' onClick={() => removeMember(assignee._id)} />
+              </div>
+            </div>
+            : <span className='unassigned-text'>Unassigned</span>
         }
       </div>
     </React.Fragment>

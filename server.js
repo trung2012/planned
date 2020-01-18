@@ -70,6 +70,7 @@ io.on('connection', (socket) => {
           })
           .populate('attachments')
           .populate('createdBy')
+          .populate('updatedBy')
         //   ,
         // Task.aggregate([
         //   {

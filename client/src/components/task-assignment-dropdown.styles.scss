@@ -8,12 +8,11 @@
   width: 100%;
   box-shadow: $box-shadow-primary;
   animation: fadeFromTop .2s cubic-bezier(0.1, 0.9, 0.2, 1) both;
-  z-index: 2;
+  z-index: 1;
 
   &__header {    
-    position: sticky;
-    top: 0;
-    z-index: 1;
+    position: relative;
+    z-index: 2;
     background-color: #fff;
     padding: 1rem 1.5rem;
   }
@@ -23,7 +22,6 @@
     font-size: 1.8rem;
     font-weight: 500;
     margin-bottom: 1rem;
-    z-index: 2;
   }
 
   .member-profile-item {
@@ -42,4 +40,12 @@
     position: relative;
     z-index: 2;
   }
+}
+
+.unassigned-text {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 500;
+  padding: 1rem 0;
+  margin-left: 1.5rem;
 }

@@ -78,3 +78,8 @@
 .react-datepicker__day--selected {
   background-color: $color-green-dark;
 }
+
+.react-datepicker-popper {  
+  background-color: #fff;
+  z-index: 100;
+}

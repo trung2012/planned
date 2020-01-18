@@ -25,10 +25,10 @@ export const removeObjectProperty = (obj, property) => {
 
 const updateKeyWithCount = (obj, val) => {
   if (obj[val].value === undefined) {
-    obj[val].value = 1;
-  } else {
-    obj[val].value++;
+    obj[val].value = 0;
   }
+
+  obj[val].value++;
 }
 
 const updateKeyWithoutCount = (obj, val) => {
@@ -41,12 +41,20 @@ const updateKeyWithoutCount = (obj, val) => {
 
 const updateListKeyWithTask = (obj, key, task, type) => {
   if (obj[key] === undefined) {
-    obj[key] = {
-      _id: type === 'assignee' ? task.assignee._id : new ObjectID().toString(),
-      name: key,
-      initials: type === 'assignee' ? task.assignee.initials : null,
-      color: type === 'assignee' ? task.assignee.color : null,
-      tasks: [task]
+    if (type === 'assignee') {
+      obj[key] = {
+        _id: task.assignee._id,
+        name: key,
+        initials: task.assignee.initials,
+        color: task.assignee.color,
+        tasks: [task]
+      }
+    } else {
+      obj[key] = {
+        _id: new ObjectID().toString(),
+        name: key,
+        tasks: [task]
+      }
     }
   } else {
     if (obj[key].tasks === undefined) {
@@ -105,22 +113,22 @@ export const calculateGroupsFromLists = lists => {
     'Not started': {
       _id: new ObjectID().toString(),
       name: 'Not started',
-      val: 0
+      value: 0
     },
     'In progress': {
       _id: new ObjectID().toString(),
       name: 'In progress',
-      val: 0
+      value: 0
     },
     'Completed': {
       _id: new ObjectID().toString(),
       name: 'Completed',
-      val: 0
+      value: 0
     },
     'Late': {
       _id: new ObjectID().toString(),
       name: 'Late',
-      val: 0
+      value: 0
     }
   };
 
@@ -144,22 +152,22 @@ export const calculateGroupsFromLists = lists => {
     'Low': {
       _id: new ObjectID().toString(),
       name: 'Low',
-      val: 0
+      value: 0
     },
     'Medium': {
       _id: new ObjectID().toString(),
       name: 'Medium',
-      val: 0
+      value: 0
     },
     'High': {
       _id: new ObjectID().toString(),
       name: 'High',
-      val: 0
+      value: 0
     },
     'Urgent': {
       _id: new ObjectID().toString(),
       name: 'Urgent',
-      val: 0
+      value: 0
     }
   };
   const tasksByPriorityArray = [];
@@ -233,14 +241,14 @@ export const calculateGroupsFromLists = lists => {
     }
   };
 
-  const listsByProgressArr = [];
+  const listsByProgressArray = [];
 
   for (const task of allTasks) {
     updateListKeyWithTask(listsByProgress, task.progress, task);
   }
 
   for (const key in listsByProgress) {
-    listsByProgressArr.push(listsByProgress[key]);
+    listsByProgressArray.push(listsByProgress[key]);
   }
 
   const listsByPriority = {
@@ -261,14 +269,14 @@ export const calculateGroupsFromLists = lists => {
       name: 'Urgent'
     }
   };
-  const listsByPriorityArr = [];
+  const listsByPriorityArray = [];
 
   for (const task of allTasks) {
     updateListKeyWithTask(listsByPriority, task.priority, task);
   }
 
   for (const key in listsByPriority) {
-    listsByPriorityArr.push(listsByPriority[key]);
+    listsByPriorityArray.push(listsByPriority[key]);
   }
 
   const listsByAssignee = {
@@ -279,7 +287,8 @@ export const calculateGroupsFromLists = lists => {
       color: '#666'
     }
   };
-  const listsByAssigneeArr = [];
+
+  const listsByAssigneeArray = [];
 
   for (const task of allTasks) {
     if (!task.assignee) {
@@ -290,10 +299,25 @@ export const calculateGroupsFromLists = lists => {
   }
 
   for (const key in listsByAssignee) {
-    listsByAssigneeArr.push(listsByAssignee[key]);
+    listsByAssigneeArray.push(listsByAssignee[key]);
   }
 
-  const allAssignees = listsByAssigneeArr.map(assignee => {
+  const listsByDueDate = {};
+  const listsByDueDateArray = [];
+
+  for (const task of allTasks) {
+    if (!task.due) {
+      updateListKeyWithTask(listsByDueDate, 'No date', task);
+    } else {
+      updateListKeyWithTask(listsByDueDate, getDueCategory(task.due), task);
+    }
+  }
+
+  for (const key in listsByDueDate) {
+    listsByDueDateArray.push(listsByDueDate[key]);
+  }
+
+  const allAssignees = listsByAssigneeArray.map(assignee => {
     const { tasks: _, ...rest } = assignee;
     return rest;
   });
@@ -311,7 +335,11 @@ export const calculateGroupsFromLists = lists => {
     tasksRemaining,
     allAssignees,
     allLists,
-    tasksCount: allTasks.length
+    tasksCount: allTasks.length,
+    listsByProgressArray,
+    listsByPriorityArray,
+    listsByAssigneeArray,
+    listsByDueDateArray
   }
 }
 
@@ -334,4 +362,53 @@ export const getLegendColor = (textValue) => {
     default:
       return '#5f5f5f';
   }
+}
+
+export const getDueDate = category => {
+  switch (category.toLowerCase()) {
+    case 'late':
+      return moment().subtract(1, 'days').toDate();
+    case 'today':
+      return moment().toDate();
+    case 'tomorrow':
+      return moment().add(1, 'days').toDate();
+    case 'this week':
+      return moment().endOf('week').toDate();
+    case 'next week':
+      return moment().endOf('week').add(1, 'weeks').toDate();
+    case 'future':
+      return moment().endOf('week').add(8, 'days').toDate();
+    default:
+      return moment().toDate();
+  }
+}
+
+const getDueCategory = date => {
+  const todaysDate = new Date();
+
+  if (moment(date).isBefore(todaysDate, 'day')) {
+    return 'Late';
+  }
+
+  if (moment(date).isSame(todaysDate, 'day')) {
+    return 'Today';
+  }
+
+  if (moment(date).subtract(1, 'days').isSame(todaysDate, 'day')) {
+    return 'Tomorrow';
+  }
+
+  if (moment(date).isBetween(moment().startOf('week'), moment().endOf('week'))) {
+    return 'This week';
+  }
+
+  if (moment(date).subtract(1, 'weeks').isBetween(moment().startOf('week'), moment().endOf('week'))) {
+    return 'Next week';
+  }
+
+  if (moment(date).subtract(1, 'weeks').isAfter(moment().endOf('week'))) {
+    return 'Future';
+  }
+
+  return 'No date';
 }

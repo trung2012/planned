@@ -21,7 +21,9 @@ const initialState = {
   filterConditionPriority: [],
   filterConditionAssignee: [],
   filterConditionList: [],
-  filterConditionDue: []
+  filterConditionDue: [],
+  expandedFilters: [],
+  groupBy: 'List'
 }
 
 const boardReducer = (state, action) => {
@@ -298,6 +300,24 @@ const boardReducer = (state, action) => {
         filterConditionList: [],
         filterConditionDue: []
       }
+    case 'expand_board_filter': {
+      if (state.expandedFilters.includes(action.payload)) {
+        return {
+          ...state,
+          expandedFilters: state.expandedFilters.filter(filterName => filterName !== action.payload)
+        }
+      } else {
+        return {
+          ...state,
+          expandedFilters: [...state.expandedFilters, action.payload]
+        }
+      }
+    }
+    case 'set_board_groupby':
+      return {
+        ...state,
+        groupBy: action.payload
+      }
     case 'change_board_filters': {
       const { type, value } = action.payload;
 
@@ -496,12 +516,20 @@ export const BoardProvider = ({ children }) => {
     dispatch({ type: 'highlight_member', payload: memberId });
   }
 
+  const expandBoardFilter = (filterName) => {
+    dispatch({ type: 'expand_board_filter', payload: filterName });
+  }
+
   const changeBoardFilters = (type, value) => {
     dispatch({ type: 'change_board_filters', payload: { type, value } });
   }
 
   const clearBoardFilters = () => {
     dispatch({ type: 'clear_board_filters' });
+  }
+
+  const setBoardGroupby = (value) => {
+    dispatch({ type: 'set_board_groupby', payload: value });
   }
 
   const setIsCurrentlyOpenedTaskDeleted = (value) => {
@@ -550,7 +578,9 @@ export const BoardProvider = ({ children }) => {
         reorderLists,
         highlightMemberTasks,
         changeBoardFilters,
-        clearBoardFilters
+        clearBoardFilters,
+        expandBoardFilter,
+        setBoardGroupby
       }}
     >
       {children}

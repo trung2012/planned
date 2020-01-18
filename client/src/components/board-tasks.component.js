@@ -5,8 +5,10 @@ import './board-tasks.styles.scss';
 import { Droppable } from 'react-beautiful-dnd';
 
 const BoardTasks = ({ list }) => {
+  const listId = list._id || '0';
+
   return (
-    <Droppable droppableId={list._id}>
+    <Droppable droppableId={listId}>
       {
         (provided, snapshot) => (
           <div

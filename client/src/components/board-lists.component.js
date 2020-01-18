@@ -11,7 +11,7 @@ import BoardList from './board-list.component';
 import './board-lists.styles.scss';
 
 const BoardLists = ({ lists }) => {
-  const { socket } = useContext(SocketContext)
+  const { socket } = useContext(SocketContext);
   const { projectId } = useParams();
   const { boardState, addList, replaceSingleList, replaceMultipleListsAfterDragAndDrop, reorderLists } = useContext(BoardContext);
   const [showListAdd, setShowListAdd] = useState(false);
