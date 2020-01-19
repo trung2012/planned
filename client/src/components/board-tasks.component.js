@@ -4,11 +4,9 @@ import BoardTask from './board-task.component';
 import './board-tasks.styles.scss';
 import { Droppable } from 'react-beautiful-dnd';
 
-const BoardTasks = ({ list }) => {
-  const listId = list._id || '0';
-
+const BoardTasks = ({ list, isGrouped }) => {
   return (
-    <Droppable droppableId={listId}>
+    <Droppable droppableId={list._id}>
       {
         (provided, snapshot) => (
           <div
@@ -28,7 +26,7 @@ const BoardTasks = ({ list }) => {
                 list.tasks && list.tasks.length > 0 &&
                 list.tasks.map((task, index) => (
                   task ?
-                    <BoardTask key={task._id} task={task} list={list} index={index} />
+                    <BoardTask key={task._id} task={task} list={list} index={index} isGrouped={isGrouped} />
                     : null
                 ))
               )

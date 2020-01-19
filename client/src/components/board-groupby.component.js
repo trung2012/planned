@@ -12,8 +12,12 @@ const BoardGroupBy = () => {
   const [showGroupbyDropdown, setShowGroupbyDropdown] = useState(false);
 
   return (
-    <div className='project-filters__item project-filters__item--group'>
-      <div className='board-group-by' onClick={() => setShowGroupbyDropdown(true)}>
+    <div className='project-filters__item project-filters__item--group' onClick={() => {
+      if (!showGroupbyDropdown) {
+        setShowGroupbyDropdown(true);
+      }
+    }}>
+      <div className='board-group-by'>
         <span className='project-filters__item-title'>
           Group by {groupBy}
         </span>

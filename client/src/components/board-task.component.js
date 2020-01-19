@@ -14,7 +14,7 @@ import { handleTaskAssignment, handleTaskUpdate } from '../utils/updateTasks';
 
 import './board-task.styles.scss';
 
-const BoardTask = ({ task, list, index }) => {
+const BoardTask = ({ task, index }) => {
   const { url } = useRouteMatch();
   const { projectId } = useParams();
   const history = useHistory();
@@ -45,8 +45,8 @@ const BoardTask = ({ task, list, index }) => {
 
   const handleDeleteClick = event => {
     event.stopPropagation();
-    deleteTask({ taskId: task._id, listId: list._id });
-    socket.emit('delete_task', { taskId: task._id, listId: list._id, projectId });
+    deleteTask({ taskId: task._id, listId: task.list });
+    socket.emit('delete_task', { taskId: task._id, listId: task.list, projectId });
     setShowTaskOptions(false);
   }
 

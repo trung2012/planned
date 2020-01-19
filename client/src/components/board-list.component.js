@@ -70,7 +70,7 @@ const BoardList = ({ list, index, isGrouped }) => {
         <div
           className='board-list__bottom'
         >
-          <BoardTasks list={list} />
+          <BoardTasks list={list} isGrouped={true} />
         </div>
       </div>
     );

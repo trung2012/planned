@@ -24,10 +24,7 @@ const BoardTaskAdd = ({ submit, list, dismiss, isGrouped }) => {
     return boardState.lists[listId];
   })
 
-  console.log(dueDate)
-
   const [newTaskList, setNewTaskList] = useState(listSelectOptions[0]);
-
 
   const handleSubmitGrouped = () => {
     const taskData = {
@@ -50,7 +47,11 @@ const BoardTaskAdd = ({ submit, list, dismiss, isGrouped }) => {
     switch (boardState.groupBy) {
       case 'Assigned to':
         const { tasks: _, ...taskAssignee } = list;
-        taskData.assignee = taskAssignee;
+        if (taskAssignee._id === 'Unassigned') {
+          taskData.assignee = null;
+        } else {
+          taskData.assignee = taskAssignee;
+        }
         break;
       case 'Progress':
         taskData.progress = list.name;
@@ -67,7 +68,6 @@ const BoardTaskAdd = ({ submit, list, dismiss, isGrouped }) => {
 
   const handleSubmit = event => {
     event.preventDefault();
-    console.log(newTaskList)
 
     if (newTaskName === '') {
       return setInputError('Please enter task name');

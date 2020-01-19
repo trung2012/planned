@@ -51,7 +51,7 @@ const updateListKeyWithTask = (obj, key, task, type) => {
       }
     } else {
       obj[key] = {
-        _id: new ObjectID().toString(),
+        _id: key,
         name: key,
         tasks: [task]
       }
@@ -228,15 +228,15 @@ export const calculateGroupsFromLists = lists => {
 
   const listsByProgress = {
     'Not started': {
-      _id: new ObjectID().toString(),
+      _id: 'Not started',
       name: 'Not started'
     },
     'In progress': {
-      _id: new ObjectID().toString(),
+      _id: 'In progress',
       name: 'In progress'
     },
     'Completed': {
-      _id: new ObjectID().toString(),
+      _id: 'Completed',
       name: 'Completed'
     }
   };
@@ -253,19 +253,19 @@ export const calculateGroupsFromLists = lists => {
 
   const listsByPriority = {
     'Low': {
-      _id: new ObjectID().toString(),
+      _id: 'Low',
       name: 'Low'
     },
     'Medium': {
-      _id: new ObjectID().toString(),
+      _id: 'Medium',
       name: 'Medium'
     },
     'High': {
-      _id: new ObjectID().toString(),
+      _id: 'High',
       name: 'High'
     },
     'Urgent': {
-      _id: new ObjectID().toString(),
+      _id: 'Urgent',
       name: 'Urgent'
     }
   };
@@ -281,7 +281,7 @@ export const calculateGroupsFromLists = lists => {
 
   const listsByAssignee = {
     'Unassigned': {
-      _id: null,
+      _id: 'Unassigned',
       name: 'Unassigned',
       initials: 'U',
       color: '#666'
@@ -302,7 +302,39 @@ export const calculateGroupsFromLists = lists => {
     listsByAssigneeArray.push(listsByAssignee[key]);
   }
 
-  const listsByDueDate = {};
+  const listsByDueDate = {
+    'No date': {
+      _id: 'No date',
+      name: 'No date',
+      tasks: []
+    },
+    'Late': {
+      _id: 'Late',
+      name: 'Late',
+      tasks: []
+    },
+    'Today': {
+      _id: 'Today',
+      name: 'Today',
+      tasks: []
+    },
+    'This week': {
+      _id: 'This week',
+      name: 'This week',
+      tasks: []
+    },
+    'Next week': {
+      _id: 'Next week',
+      name: 'Next week',
+      tasks: []
+    },
+    'Future': {
+      _id: 'Future',
+      name: 'Future',
+      tasks: []
+    }
+  };
+
   const listsByDueDateArray = [];
 
   for (const task of allTasks) {
@@ -314,7 +346,9 @@ export const calculateGroupsFromLists = lists => {
   }
 
   for (const key in listsByDueDate) {
-    listsByDueDateArray.push(listsByDueDate[key]);
+    if (listsByDueDate[key].tasks.length > 0) {
+      listsByDueDateArray.push(listsByDueDate[key]);
+    }
   }
 
   const allAssignees = listsByAssigneeArray.map(assignee => {
@@ -366,20 +400,22 @@ export const getLegendColor = (textValue) => {
 
 export const getDueDate = category => {
   switch (category.toLowerCase()) {
+    case 'no date':
+      return null;
     case 'late':
-      return moment().subtract(1, 'days').toDate();
+      return moment().subtract(1, 'days').format();
     case 'today':
-      return moment().toDate();
+      return moment().format();
     case 'tomorrow':
-      return moment().add(1, 'days').toDate();
+      return moment().add(1, 'days').format();
     case 'this week':
-      return moment().endOf('week').toDate();
+      return moment().endOf('week').format();
     case 'next week':
-      return moment().endOf('week').add(1, 'weeks').toDate();
+      return moment().endOf('week').add(1, 'weeks').format();
     case 'future':
-      return moment().endOf('week').add(8, 'days').toDate();
+      return moment().endOf('week').add(8, 'days').format();
     default:
-      return moment().toDate();
+      return null;
   }
 }
 
@@ -409,6 +445,4 @@ const getDueCategory = date => {
   if (moment(date).subtract(1, 'weeks').isAfter(moment().endOf('week'))) {
     return 'Future';
   }
-
-  return 'No date';
 }

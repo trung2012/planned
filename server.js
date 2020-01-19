@@ -183,7 +183,8 @@ io.on('connection', (socket) => {
         ...taskData,
         assignee: taskData.assignee ? taskData.assignee._id : null,
         project: projectId,
-        createdBy: taskData.createdBy._id
+        createdBy: taskData.createdBy._id,
+        updatedBy: taskData.updatedBy._id
       })
 
       await Promise.all([
@@ -266,7 +267,7 @@ io.on('connection', (socket) => {
       await Task.updateOne(
         { _id: taskId },
         { $set: data },
-        { new: true }
+        { runValidators: true }
       )
 
       socket.to(projectId).emit('task_attributes_updated', { taskId, data });

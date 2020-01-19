@@ -46,8 +46,8 @@ const BoardContainer = () => {
         <BoardHeader showChart={showChart} setShowChart={setShowChart} allLists={allLists} allAssignees={allAssignees} />
         <div className='board-container'>
           {
-            showChart
-              ? <ChartContainer
+            /* showChart
+               ? <ChartContainer
                 tasksByProgressArray={tasksByProgressArray}
                 tasksByPriorityArray={tasksByPriorityArray}
                 tasksByAssigneeArray={tasksByAssigneeArray}
@@ -55,9 +55,10 @@ const BoardContainer = () => {
                 tasksRemaining={tasksRemaining}
                 tasksCount={tasksCount}
               />
-              : boardState.groupBy === 'List'
-                ? <BoardLists lists={filteredLists} />
-                : getBoardLists({ groupBy: boardState.groupBy, listsByProgressArray, listsByPriorityArray, listsByAssigneeArray, listsByDueDateArray })
+              :  */
+            boardState.groupBy === 'List'
+              ? <BoardLists lists={filteredLists} />
+              : getBoardLists({ groupBy: boardState.groupBy, listsByProgressArray, listsByPriorityArray, listsByAssigneeArray, listsByDueDateArray })
           }
         </div>
       </React.Fragment>
