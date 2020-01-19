@@ -1,0 +1,35 @@
+@import '../sass/variables';
+@import '../sass/animations';
+
+.board-tasks-completed,
+.board-tasks-completed--active {
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: $color-gray-medium;
+    margin-bottom: 2rem;
+    cursor: pointer;
+  }
+
+  &__title {
+    padding-left: .75rem;    
+  }
+  
+  &__show-button {
+    margin-right: 1.5rem;
+  }
+}
+
+.board-tasks-completed {
+  .dropdown-icon {
+    animation: rotate180up .2s ease-in-out;
+  }
+}
+
+.board-tasks-completed--active {
+  .dropdown-icon {
+    transition: all .2s ease-in-out;
+    transform: rotate(180deg);
+  }
+}
