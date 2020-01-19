@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import { ReactComponent as DropdownIcon } from '../assets/dropdown.svg';
 import { BoardContext } from '../context/BoardContext';
@@ -6,10 +7,10 @@ import BoardMembersDisplay from './board-members-display.component';
 import BoardMembersDropdown from './board-members-dropdown.component';
 import BoardFilters from './board-filters.component';
 
-import './board-header.styles.scss';
 import BoardGroupBy from './board-groupby.component';
+import './board-header.styles.scss';
 
-const BoardHeader = ({ showChart, setShowChart, allAssignees, allLists }) => {
+const BoardHeader = ({ showChart, allAssignees, allLists }) => {
   const { boardState: { currentProject: project, members } } = useContext(BoardContext);
   const [showMembersListDropdown, setShowMembersListDropdown] = useState(false);
   const [showFiltersDropdown, setShowFiltersDropdown] = useState(false);
@@ -33,16 +34,16 @@ const BoardHeader = ({ showChart, setShowChart, allAssignees, allLists }) => {
       </div>
       <div className='board-header__project-options'>
         <div className='board-header__project-options__nav'>
-          <div
+          <Link to={`/projects/${project._id}?view=chart`}
             className={showChart ? 'board-header__project-options__nav__item--active' : 'board-header__project-options__nav__item'}
-            onClick={() => setShowChart(true)}
           >
             Charts
-          </div>
-          <div
+          </Link>
+          <Link to={`/projects/${project._id}`}
             className={showChart ? 'board-header__project-options__nav__item' : 'board-header__project-options__nav__item--active'}
-            onClick={() => setShowChart(false)}
-          >Board</div>
+          >
+            Board
+          </Link>
         </div>
         <div className='board-header__project-options--filters'>
           <BoardMembersDisplay members={members} showMembersDropdown={() => setShowMembersListDropdown(!showMembersListDropdown)} />

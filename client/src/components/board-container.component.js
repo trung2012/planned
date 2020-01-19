@@ -1,17 +1,21 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
+import { useLocation } from 'react-router-dom';
+
 import { BoardContext } from '../context/BoardContext';
 import BoardHeader from './board-header.component';
 import ChartContainer from './charts-container.component';
 import BoardLists from './board-lists.component';
-
-import { calculateGroupsFromLists } from '../utils/helper';
-import useListFilters from '../hooks/useListFilters';
 import getBoardLists from '../utils/getBoardLists';
+import useListFilters from '../hooks/useListFilters';
+import { calculateGroupsFromLists } from '../utils/helper';
 import './board-container.styles.scss';
 
 const BoardContainer = () => {
+  const query = new URLSearchParams(useLocation().search);
   const { boardState } = useContext(BoardContext);
-  const [showChart, setShowChart] = useState(true);
+  // const [showChart, setShowChart] = useState(true);
+  const selectedView = query.get('view');
+  const showChart = selectedView === 'chart';
 
   const lists = boardState.currentProject.lists
     ? boardState.currentProject.lists.map(listId => {
@@ -43,11 +47,11 @@ const BoardContainer = () => {
   return (
     lists.length > 0 ?
       <React.Fragment>
-        <BoardHeader showChart={showChart} setShowChart={setShowChart} allLists={allLists} allAssignees={allAssignees} />
+        <BoardHeader showChart={showChart} allLists={allLists} allAssignees={allAssignees} />
         <div className='board-container'>
           {
-            /* showChart
-               ? <ChartContainer
+            showChart
+              ? <ChartContainer
                 tasksByProgressArray={tasksByProgressArray}
                 tasksByPriorityArray={tasksByPriorityArray}
                 tasksByAssigneeArray={tasksByAssigneeArray}
@@ -55,10 +59,10 @@ const BoardContainer = () => {
                 tasksRemaining={tasksRemaining}
                 tasksCount={tasksCount}
               />
-              :  */
-            boardState.groupBy === 'List'
-              ? <BoardLists lists={filteredLists} />
-              : getBoardLists({ groupBy: boardState.groupBy, listsByProgressArray, listsByPriorityArray, listsByAssigneeArray, listsByDueDateArray })
+              :
+              boardState.groupBy === 'List'
+                ? <BoardLists lists={filteredLists} />
+                : getBoardLists({ groupBy: boardState.groupBy, listsByProgressArray, listsByPriorityArray, listsByAssigneeArray, listsByDueDateArray })
           }
         </div>
       </React.Fragment>

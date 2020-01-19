@@ -1,8 +1,8 @@
 import React from 'react';
 import BoardTask from './board-task.component';
 
-import './board-tasks.styles.scss';
 import { Droppable } from 'react-beautiful-dnd';
+import './board-tasks.styles.scss';
 
 const BoardTasks = ({ list, isGrouped }) => {
   return (

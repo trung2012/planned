@@ -5,6 +5,10 @@
   display: flex;
   margin-bottom: 2.5rem;
   padding: .5rem 2rem .5rem 2.5rem;
+
+  a:active {
+    color: inherit; 
+  }
   
   &__project-info {
     display: flex;

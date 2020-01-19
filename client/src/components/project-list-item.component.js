@@ -27,7 +27,7 @@ const ProjectListItem = ({ project }) => {
   return (
     <div className='project-list-item'>
       <Link
-        to={`/projects/${project._id}`}
+        to={`/projects/${project._id}?view=chart`}
         className='project-picture-container'
       >
         <div
@@ -38,10 +38,10 @@ const ProjectListItem = ({ project }) => {
       </Link>
       <div className='project-list-item__content'>
         <div className='project-list-item__content--top'>
-          <Link to={`/projects/${project._id}`} className='project-list-item__name'>{project.name}</Link>
+          <Link to={`/projects/${project._id}?view=chart`} className='project-list-item__name'>{project.name}</Link>
           <OptionsIcon className='options-icon' onClick={() => setShowProjectOptions(!showProjectOptions)} title='More options' />
         </div>
-        <Link to={`/projects/${project._id}`} className='project-list-item__description'>
+        <Link to={`/projects/${project._id}?view=chart`} className='project-list-item__description'>
           {
             project.description.length > 32 ?
               project.description.substring(0, 32) + '...'
@@ -69,7 +69,7 @@ const ProjectListItem = ({ project }) => {
           />
         </Modal>
       }
-    </div >
+    </div>
   );
 }
 
