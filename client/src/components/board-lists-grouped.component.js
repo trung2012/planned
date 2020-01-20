@@ -12,22 +12,53 @@ import './board-lists-grouped.styles.scss';
 
 const BoardListsGrouped = ({ lists }) => {
   const { socket } = useContext(SocketContext);
-  const { boardState: { groupBy, members }, assignUserToTask, unassignUserFromTask, updateTaskAttributes } = useContext(BoardContext);
+  const {
+    boardState: {
+      groupBy,
+      members
+    },
+    assignUserToTask,
+    unassignUserFromTask,
+    updateTaskAttributes,
+    setDisabledDroppable
+  } = useContext(BoardContext);
   const { projectId } = useParams();
 
+  const onDragStart = ({ source }) => {
+    setDisabledDroppable(source.droppableId);
+  }
+
   const onDragEnd = ({ destination, source, draggableId }) => {
+    setDisabledDroppable(null);
     const { handleAssignTask, handleUnassignTask } = handleTaskAssignment(socket, draggableId, projectId, { assignUserToTask, unassignUserFromTask });
-    const { handleAttributeUpdate } = handleTaskUpdate(socket, draggableId, projectId, { updateTaskAttributes });
+    const { handleAttributeUpdate, handleCompletionToggle } = handleTaskUpdate(socket, draggableId, projectId, { updateTaskAttributes });
 
     if (!destination) {
       return;
     }
 
-    if (
-      destination.droppableId === source.droppableId &&
-      destination.index === source.index
-    ) {
+    if (destination.droppableId === source.droppableId && destination.index === source.index) {
       return;
+    }
+
+    if (source.droppableId.includes('-completed')) {
+      source.droppableId = source.droppableId.replace('-completed', '');
+
+      if (!destination.droppableId.includes('-completed')) {
+        handleCompletionToggle('Completed');
+      } else {
+        destination.droppableId = destination.droppableId.replace('-completed', '');
+      }
+    }
+
+    if (destination.droppableId.includes('-completed')) {
+      destination.droppableId = destination.droppableId.replace('-completed', '');
+
+      if (!source.droppableId.includes('-completed')) {
+        handleCompletionToggle('Not started');
+      } else {
+        source.droppableId = source.droppableId.replace('-completed', '');
+      }
     }
 
     switch (groupBy) {
@@ -50,7 +81,7 @@ const BoardListsGrouped = ({ lists }) => {
   }
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
+    <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
       <div className='board-lists'>
         {
           lists && lists.length > 0 &&
@@ -65,4 +96,4 @@ const BoardListsGrouped = ({ lists }) => {
   );
 }
 
-export default BoardListsGrouped;
+export default React.memo(BoardListsGrouped);

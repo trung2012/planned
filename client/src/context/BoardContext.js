@@ -23,7 +23,8 @@ const initialState = {
   filterConditionList: [],
   filterConditionDue: [],
   expandedFilters: [],
-  groupBy: 'List'
+  groupBy: 'List',
+  disabledDroppableId: null
 }
 
 const boardReducer = (state, action) => {
@@ -379,6 +380,11 @@ const boardReducer = (state, action) => {
           return state;
       }
     }
+    case 'set_disabled_droppable':
+      return {
+        ...state,
+        disabledDroppableId: action.payload
+      }
     case 'add_board_error':
       return {
         ...state,
@@ -528,8 +534,12 @@ export const BoardProvider = ({ children }) => {
     dispatch({ type: 'clear_board_filters' });
   }
 
-  const setBoardGroupby = (value) => {
+  const setBoardGroupby = value => {
     dispatch({ type: 'set_board_groupby', payload: value });
+  }
+
+  const setDisabledDroppable = id => {
+    dispatch({ type: 'set_disabled_droppable', payload: id });
   }
 
   const setIsCurrentlyOpenedTaskDeleted = (value) => {
@@ -580,7 +590,8 @@ export const BoardProvider = ({ children }) => {
         changeBoardFilters,
         clearBoardFilters,
         expandBoardFilter,
-        setBoardGroupby
+        setBoardGroupby,
+        setDisabledDroppable
       }}
     >
       {children}

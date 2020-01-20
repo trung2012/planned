@@ -9,6 +9,7 @@ const ProjectAddForm = ({ dismiss }) => {
   const { projectState, createProject } = useContext(ProjectContext);
   const [projectInfo, setProjectInfo] = useState({ projectName: '', projectDescription: '' });
   const { projectName, projectDescription } = projectInfo;
+  const [isPublic, setIsPublic] = useState(false);
 
   const handleChange = event => {
     const { value, name } = event.target;
@@ -18,7 +19,7 @@ const ProjectAddForm = ({ dismiss }) => {
   const handleSubmit = async event => {
     event.preventDefault();
 
-    createProject({ projectName, projectDescription });
+    createProject({ projectName, projectDescription, isPublic });
     dismiss();
   }
 
@@ -59,6 +60,32 @@ const ProjectAddForm = ({ dismiss }) => {
         onChange={handleChange}
         maxLength={60}
       />
+      <div className='project-add-form__privacy'>
+        <input
+          className='radio-button'
+          type='radio'
+          id='isPublicTrue'
+          name='isPublic'
+          value={true}
+          checked={isPublic}
+          onChange={() => setIsPublic(true)}
+        />
+        <label htmlFor='isPublicTrue' className='project-add-form__radio-input'>
+          <span className='project-add-form__radio-text'>Public (Anyone can see project contents)</span>
+        </label>
+        <input
+          className='radio-button'
+          type='radio'
+          id='isPublicFalse'
+          name='isPublic'
+          value={false}
+          checked={!isPublic}
+          onChange={() => setIsPublic(false)}
+        />
+        <label htmlFor='isPublicFalse' className='project-add-form__radio-input'>
+          <span className='project-add-form__radio-text'>Private (Only members can see project contents)</span>
+        </label>
+      </div>
       <div className='project-add-form__buttons'>
         <CustomButton text='Create' onClick={handleSubmit} />
         <CustomButton type='button' text='Cancel' onClick={dismiss} />

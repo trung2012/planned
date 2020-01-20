@@ -13,7 +13,6 @@ import './board-container.styles.scss';
 const BoardContainer = () => {
   const query = new URLSearchParams(useLocation().search);
   const { boardState } = useContext(BoardContext);
-  // const [showChart, setShowChart] = useState(true);
   const selectedView = query.get('view');
   const showChart = selectedView === 'chart';
 

@@ -7,13 +7,21 @@ import { SocketContext } from '../context/SocketContext';
 import { BoardContext } from '../context/BoardContext';
 import NameChangeForm from './name-change-form.component';
 import BoardList from './board-list.component';
+import { handleTaskUpdate } from '../utils/updateTasks';
 
 import './board-lists.styles.scss';
 
 const BoardLists = ({ lists }) => {
   const { socket } = useContext(SocketContext);
   const { projectId } = useParams();
-  const { boardState, addList, replaceSingleList, replaceMultipleListsAfterDragAndDrop, reorderLists } = useContext(BoardContext);
+  const {
+    boardState,
+    addList,
+    replaceSingleList,
+    replaceMultipleListsAfterDragAndDrop,
+    reorderLists,
+    updateTaskAttributes
+  } = useContext(BoardContext);
   const [showListAdd, setShowListAdd] = useState(false);
 
   const handleAddSubmit = (listName = '') => {
@@ -32,6 +40,8 @@ const BoardLists = ({ lists }) => {
   }
 
   const onDragEnd = ({ destination, source, draggableId, type }) => {
+    const { handleCompletionToggle } = handleTaskUpdate(socket, draggableId, projectId, { updateTaskAttributes });
+
     if (!destination) {
       return;
     }
@@ -41,6 +51,26 @@ const BoardLists = ({ lists }) => {
       destination.index === source.index
     ) {
       return;
+    }
+
+    if (source.droppableId.includes('-completed')) {
+      source.droppableId = source.droppableId.replace('-completed', '');
+
+      if (source.droppableId !== destination.droppableId) {
+        if (!destination.droppableId.includes('-completed')) {
+          handleCompletionToggle('Completed');
+        } else {
+          destination.droppableId = destination.droppableId.replace('-completed', '');
+        }
+
+      } else {
+        handleCompletionToggle('Completed');
+      }
+    }
+
+    if (destination.droppableId.includes('-completed')) {
+      destination.droppableId = destination.droppableId.replace('-completed', '');
+      handleCompletionToggle('Not started');
     }
 
     if (type === 'list') {

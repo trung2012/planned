@@ -11,7 +11,7 @@ const getRandomColor = require('../../utils/getRandomColor')
 router.post('/create', auth, async (req, res) => {
   try {
     if (req.user) {
-      const { name, description } = req.body;
+      const { name, description, isPublic } = req.body;
 
       const existingProject = await Project.findOne({ name })
 
@@ -24,7 +24,8 @@ router.post('/create', auth, async (req, res) => {
         description,
         owner: req.user._id,
         members: [req.user._id],
-        color: getRandomColor()
+        color: getRandomColor(),
+        isPublic
       })
 
       const defaultList = new List({
@@ -51,10 +52,14 @@ router.get('/all', auth, async (req, res) => {
   try {
     if (req.user) {
       const { user } = req;
-
       await user.populate('projects').execPopulate();
 
-      res.send(user.projects);
+      const projects = await Project.find().or([
+        { _id: { $in: user.projects } },
+        { isPublic: true }
+      ])
+
+      res.send(projects);
     }
   } catch (err) {
     res.status(500).send('Internal Server Error. Please try again')

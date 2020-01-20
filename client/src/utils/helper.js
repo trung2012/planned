@@ -229,15 +229,18 @@ export const calculateGroupsFromLists = lists => {
   const listsByProgress = {
     'Not started': {
       _id: 'Not started',
-      name: 'Not started'
+      name: 'Not started',
+      tasks: []
     },
     'In progress': {
       _id: 'In progress',
-      name: 'In progress'
+      name: 'In progress',
+      tasks: []
     },
     'Completed': {
       _id: 'Completed',
-      name: 'Completed'
+      name: 'Completed',
+      tasks: []
     }
   };
 
@@ -254,19 +257,23 @@ export const calculateGroupsFromLists = lists => {
   const listsByPriority = {
     'Low': {
       _id: 'Low',
-      name: 'Low'
+      name: 'Low',
+      tasks: []
     },
     'Medium': {
       _id: 'Medium',
-      name: 'Medium'
+      name: 'Medium',
+      tasks: []
     },
     'High': {
       _id: 'High',
-      name: 'High'
+      name: 'High',
+      tasks: []
     },
     'Urgent': {
       _id: 'Urgent',
-      name: 'Urgent'
+      name: 'Urgent',
+      tasks: []
     }
   };
   const listsByPriorityArray = [];

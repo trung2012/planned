@@ -6,14 +6,16 @@ import { BoardContext } from '../context/BoardContext';
 import BoardMembersDisplay from './board-members-display.component';
 import BoardMembersDropdown from './board-members-dropdown.component';
 import BoardFilters from './board-filters.component';
-
 import BoardGroupBy from './board-groupby.component';
+
 import './board-header.styles.scss';
+import MoreOptions from './more-options.component';
 
 const BoardHeader = ({ showChart, allAssignees, allLists }) => {
   const { boardState: { currentProject: project, members } } = useContext(BoardContext);
   const [showMembersListDropdown, setShowMembersListDropdown] = useState(false);
   const [showFiltersDropdown, setShowFiltersDropdown] = useState(false);
+  const [showPrivacyPopup, setShowPrivacyPopup] = useState(false);
 
   return (
     <div className='board-header'>
@@ -26,6 +28,14 @@ const BoardHeader = ({ showChart, allAssignees, allLists }) => {
           >
             {project.name && project.name.substring(0, 1).toUpperCase()}
           </div>
+          <div className='info-icon' title='Privacy' onClick={() => setShowPrivacyPopup(true)}>i</div>
+          {
+            showPrivacyPopup &&
+            <MoreOptions dismiss={() => setShowPrivacyPopup(false)}>
+              <h3 className='project-privacy__header'>Privacy</h3>
+              <span className='project-privacy__text'>{project.isPublic ? 'Public - Anyone can see project contents' : 'Private - Only members can see project contents'}</span>
+            </MoreOptions>
+          }
         </div>
         <div className='board-header__project-info--details'>
           <h3 className='board-header__project-info--details__name'>{project.name || ''}</h3>

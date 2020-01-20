@@ -9,11 +9,18 @@ import './board-tasks.styles.scss';
 const BoardTasks = ({ list, isGrouped }) => {
   const { boardState } = useContext(BoardContext);
   const listHasTasks = list && list.tasks && list.tasks.length > 0;
-  const unfinishedTasks = listHasTasks && list.tasks.filter(task => task.progress !== 'Completed');
-  const completedTasks = listHasTasks && list.tasks.filter(task => task.progress === 'Completed');
+  const listWithRealIndexes = {
+    ...list,
+    tasks: list.tasks.map((task, index) => {
+      const newTask = { ...task, realIndex: index };
+      return newTask;
+    })
+  }
+  const unfinishedTasks = listHasTasks ? listWithRealIndexes.tasks.filter(task => task.progress !== 'Completed') : [];
+  const completedTasks = listHasTasks ? listWithRealIndexes.tasks.filter(task => task.progress === 'Completed') : [];
 
-  if (boardState.groupBy === 'Assigned to') {
-    return <Droppable droppableId={list._id}>
+  if (boardState.groupBy === 'Progress') {
+    return <Droppable droppableId={list._id} isDropDisabled={list._id === boardState.disabledDroppableId}>
       {
         (provided, snapshot) => (
           <div
@@ -43,8 +50,8 @@ const BoardTasks = ({ list, isGrouped }) => {
   }
 
   return (
-    <React.Fragment>
-      <Droppable droppableId={list._id}>
+    <div className='board-tasks-container'>
+      <Droppable droppableId={list._id} isDropDisabled={list._id === boardState.disabledDroppableId}>
         {
           (provided, snapshot) => (
             <div
@@ -59,9 +66,9 @@ const BoardTasks = ({ list, isGrouped }) => {
               }
             >
               {
-                unfinishedTasks.map((task, index) => (
+                unfinishedTasks.map(task => (
                   task ?
-                    <BoardTask key={task._id} task={task} index={index} isGrouped={isGrouped} />
+                    <BoardTask key={task._id} task={task} index={task.realIndex} isGrouped={isGrouped} />
                     : null
                 ))
               }
@@ -72,9 +79,9 @@ const BoardTasks = ({ list, isGrouped }) => {
       </Droppable>
       {
         completedTasks.length > 0 &&
-        <BoardTasksComleted tasks={completedTasks} listId={list._id} />
+        <BoardTasksComleted tasks={completedTasks} listId={list._id} isGrouped={isGrouped} />
       }
-    </React.Fragment>
+    </div>
   );
 }
 

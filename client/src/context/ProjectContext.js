@@ -63,12 +63,13 @@ export const ProjectProvider = ({ children }) => {
     }
   }, [])
 
-  const createProject = async ({ projectName, projectDescription }) => {
+  const createProject = async ({ projectName, projectDescription, isPublic }) => {
     const requestConfig = generateRequestConfig();
 
     const requestBody = {
       name: projectName,
-      description: projectDescription
+      description: projectDescription,
+      isPublic
     }
 
     if (requestConfig) {

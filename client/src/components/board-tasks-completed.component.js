@@ -1,20 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Droppable } from 'react-beautiful-dnd';
 
 import BoardTask from './board-task.component';
 import { ReactComponent as DropdownIcon } from '../assets/dropdown.svg';
+import { BoardContext } from '../context/BoardContext';
 import './board-tasks-completed.styles.scss';
 
-const BoardTasksComleted = ({ tasks, listId }) => {
+const BoardTasksCompleted = ({ tasks, listId, isGrouped }) => {
+  const { boardState } = useContext(BoardContext);
   const [showCompleted, setShowCompleted] = useState(false);
   const activeClassname = showCompleted ? 'board-tasks-completed--active' : 'board-tasks-completed'
 
   return (
-    <Droppable droppableId={`${listId}-completed`}>
+    <Droppable droppableId={`${listId}-completed`} isDropDisabled={`${listId}-completed` === boardState.disabledDroppableId}>
       {
         (provided, snapshot) => (
-          <div className={activeClassname} onClick={() => setShowCompleted(!showCompleted)}>
-            <div className={`${activeClassname}__header`}>
+          <div className={activeClassname}>
+            <div className={`${activeClassname}__header`} onClick={() => setShowCompleted(!showCompleted)}>
               <div className={`${activeClassname}__title`}>
                 {
                   showCompleted
@@ -39,7 +41,7 @@ const BoardTasksComleted = ({ tasks, listId }) => {
               {
                 showCompleted &&
                 tasks.map((task, index) => (
-                  <BoardTask key={task._id} task={task} index={index} />
+                  <BoardTask key={task._id} task={task} index={isGrouped ? index : task.realIndex} />
                 ))
               }
               {provided.placeholder}
@@ -51,4 +53,4 @@ const BoardTasksComleted = ({ tasks, listId }) => {
   );
 }
 
-export default BoardTasksComleted;
+export default BoardTasksCompleted;

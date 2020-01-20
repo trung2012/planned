@@ -1,6 +1,7 @@
 @import '../sass/variables';
 
 .project-picture-container {
+  position: relative;
   flex: 0 0 8rem;
   display: flex;
   justify-content: center;
@@ -8,6 +9,31 @@
   width: 8rem;
   height: 8rem;
   padding: 1.25rem;
+
+  .more-options {
+    left: 100%;
+    top: 100%;
+    padding: 2rem;
+    width: 30rem;
+  }
+
+  .project-privacy {
+    &__header {
+      font-size: 1.6rem;
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+
+    &__text {
+      font-size: 1.4rem;
+    }
+  }
+
+  .info-icon {
+    position: absolute;
+    right: 0;
+    top: 75%;
+  }
 }
 
 .project-picture {
@@ -80,10 +106,26 @@
   fill: $color-gray-medium;
 }
 
+.info-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 1.5em;
+  width: 1.5em;
+  color: black;
+  background-color: #fff;
+  border-radius: 50%;
+  border: 1px solid black;
+  cursor: pointer;
+
+  &:active {
+    transform: scale(.97);
+  }
+}
+
 .list-icon {
   height: 1.5em;
   width: 1.5em;
-  fill: $color-gray-medium;
 }
 
 .select-option-icon {

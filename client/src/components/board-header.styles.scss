@@ -5,10 +5,6 @@
   display: flex;
   margin-bottom: 2.5rem;
   padding: .5rem 2rem .5rem 2.5rem;
-
-  a:active {
-    color: inherit; 
-  }
   
   &__project-info {
     display: flex;
@@ -51,10 +47,11 @@
 
       &__item,
       &__item--active {
+        position: relative;
         display: flex;
+        color: $color-gray-dark;
         margin-right: 1.5rem;
         cursor: pointer;
-        position: relative;
 
         &:hover {
           &::after {

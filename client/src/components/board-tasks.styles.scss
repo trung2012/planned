@@ -1,3 +1,8 @@
+.board-tasks-container {
+  display: flex;
+  flex-direction: column;
+}
+
 .board-tasks {
   width: 28rem;
   height: 100%;

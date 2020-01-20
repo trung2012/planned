@@ -36,8 +36,8 @@ export const handleTaskUpdate = (socket, taskId, projectId, { updateTaskAttribut
     updateTaskAttributes(updatedTask);
   }
 
-  const handleCompletionToggle = progress => {
-    if (progress === 'Completed') {
+  const handleCompletionToggle = currentProgress => {
+    if (currentProgress.toLowerCase() === 'completed') {
       handleAttributeUpdate({
         progress: 'Not started'
       });
