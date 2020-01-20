@@ -21,8 +21,7 @@ const ChartByList = ({ data }) => {
               dataKey='name'
               type='category'
               tick={{
-                fontSize: 14,
-                transform: 'translate(-10, 0)'
+                fontSize: 14
               }} />
             <CartesianGrid vertical={true} horizontal={false} />
             <Tooltip cursor={{ fill: 'transparent' }} />

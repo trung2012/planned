@@ -24,10 +24,10 @@ const CustomDatePicker = ({ date, setDate, children }) => {
       showPopperArrow={false}
       popperModifiers={{
         flip: {
-          behavior: ["bottom"] // don't allow it to flip to be above
+          behavior: ["bottom", "top"] // don't allow it to flip to be above
         },
         preventOverflow: {
-          enabled: false // tell it not to try to stay within the view (this prevents the popper from covering the element you clicked)
+          enabled: true // tell it not to try to stay within the view (this prevents the popper from covering the element you clicked)
         },
         hide: {
           enabled: false // turn off since needs preventOverflow to be enabled

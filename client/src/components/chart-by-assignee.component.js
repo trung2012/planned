@@ -15,14 +15,14 @@ const ChartByAssignee = ({ data }) => {
           <BarChart
             data={data}
           >
-            <YAxis type='number' allowDecimals={false} />
+            <YAxis type='number' allowDecimals={false} tick={{ transform: 'translate(-10,0)' }} />
             <XAxis
               dataKey='name'
               type='category'
               tick={
                 <CustomizedAxisTick />
               } />
-            <CartesianGrid vertical={true} horizontal={false} />
+            <CartesianGrid vertical={false} horizontal={true} />
             <Tooltip cursor={{ fill: 'transparent' }} />
             <Bar dataKey='Late' stackId='status' fill='#db0033' barSize={10} />
             <Bar dataKey='Not started' stackId='status' fill='#5f5f5f' barSize={10} />

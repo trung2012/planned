@@ -28,15 +28,16 @@
   }
 
   .logo {
-    width: 1.25em;
-    height: 1.25em;
+    width: 1em;
+    height: 1em;
     path {
       fill: #fff;
     }
   }
 
   &__logo-text {
-    font-size: 1.7rem;
+    font-size: 1.6rem;
+    font-weight: 500;
     padding-left: 1rem;
   }
 

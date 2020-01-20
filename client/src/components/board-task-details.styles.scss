@@ -40,7 +40,11 @@
 
   &__name {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+
+    .select-option-icon {
+      transform: translateY(.2rem);
+    }
 
     h2,
     .name-change-form {

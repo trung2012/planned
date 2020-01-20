@@ -6,7 +6,7 @@ import { ReactComponent as DropdownIcon } from '../assets/dropdown.svg';
 import { BoardContext } from '../context/BoardContext';
 import './board-tasks-completed.styles.scss';
 
-const BoardTasksCompleted = ({ tasks, listId, isGrouped }) => {
+const BoardTasksCompleted = ({ tasks, listId }) => {
   const { boardState } = useContext(BoardContext);
   const [showCompleted, setShowCompleted] = useState(false);
   const activeClassname = showCompleted ? 'board-tasks-completed--active' : 'board-tasks-completed'
@@ -40,8 +40,8 @@ const BoardTasksCompleted = ({ tasks, listId, isGrouped }) => {
             >
               {
                 showCompleted &&
-                tasks.map((task, index) => (
-                  <BoardTask key={task._id} task={task} index={isGrouped ? index : task.realIndex} />
+                tasks.map((task) => (
+                  <BoardTask key={task._id} task={task} index={task.realIndex} />
                 ))
               }
               {provided.placeholder}

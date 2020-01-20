@@ -79,7 +79,7 @@ const BoardTasks = ({ list, isGrouped }) => {
       </Droppable>
       {
         completedTasks.length > 0 &&
-        <BoardTasksComleted tasks={completedTasks} listId={list._id} isGrouped={isGrouped} />
+        <BoardTasksComleted tasks={completedTasks} listId={list._id} />
       }
     </div>
   );

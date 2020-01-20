@@ -23,6 +23,7 @@ const ChartByPriority = ({ data, tasksCount }) => {
                 innerRadius={70}
                 outerRadius={80}
                 paddingAngle={2}
+                animationDuration={1000}
               >
                 <Label
                   value={tasksCount} position="centerBottom" className='center-text-top' fontSize='24px'

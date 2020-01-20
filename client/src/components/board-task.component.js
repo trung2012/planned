@@ -95,11 +95,11 @@ const BoardTask = ({ task, index }) => {
                         : getSelectIcon(task.progress)
                     }
                   </span>
-                  <span
+                  <p
                     className={`${taskClassName}__name`}
                   >
                     {task.name}
-                  </span>
+                  </p>
                 </div>
               </div>
               <div className={`${taskClassName}__content`}>
@@ -109,7 +109,6 @@ const BoardTask = ({ task, index }) => {
               {
                 showTaskOptions &&
                 <MoreOptions dismiss={() => setShowTaskOptions(false)} >
-                  <div className='more-options-item' onClick={event => event.stopPropagation()}>Copy Task</div>
                   <div
                     className='more-options-item'
                     onClick={event => {

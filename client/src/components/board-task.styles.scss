@@ -37,13 +37,13 @@
   &__name-container {
     flex: 1;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
   }
 
   &__name {
-    flex: 1;
-    display: flex;
-    align-items: flex-start;
+    flex: 1 ;
+    padding-right: 2rem;
+    word-break: break-word;
   }
 
   &__content {

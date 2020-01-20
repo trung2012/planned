@@ -22,7 +22,6 @@
 .charts-top {
   display: flex;
   flex: 1;
-  height: 100%;
   width: 100%;
   margin-bottom: 3rem;
 }
@@ -30,7 +29,6 @@
 .charts-bottom {
   display: flex;
   flex: 1;
-  height: 100%;
   width: 100%;
   margin-bottom: 3rem;
 }
@@ -48,9 +46,8 @@
   flex-shrink: 0;
   flex-direction: column;
   width: 100%;
-  height: 100%;
   box-shadow: $box-shadow-primary;
-  margin: 0 1.5rem;
+  margin: 1.5rem;
   min-width: 36rem;
   min-height: 30rem;
 
@@ -73,12 +70,15 @@
   min-width: 30rem;
   width: 100%;
   height: 100%;
-  padding: 4rem;
+  padding: 3rem;
 }
 
 .chart-chart {
+  min-width: 16rem;
+  min-height: 16rem;
   width: 16rem;
   height: 16rem;
+  margin-left: 3rem;
 }
 
 .center-text-top {
