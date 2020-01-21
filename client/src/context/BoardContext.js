@@ -45,6 +45,15 @@ const boardReducer = (state, action) => {
         ...state,
         users: action.payload.filter(user => !state.memberIds.includes(user._id))
       }
+    case 'updated_user_avatar':
+      const newState = { ...state };
+      newState.members = newState.members.map(member => member._id === action.payload._id ? action.payload : member);
+      for (const key in newState.tasks) {
+        if (newState.tasks[key].assignee && newState.tasks[key].assignee._id === action.payload._id) {
+          newState.tasks[key].assignee = { ...action.payload };
+        }
+      }
+      return newState;
     case 'add_member':
       return {
         ...state,
@@ -542,6 +551,10 @@ export const BoardProvider = ({ children }) => {
     dispatch({ type: 'set_disabled_droppable', payload: id });
   }
 
+  const updateUserAvatar = user => {
+    dispatch({ type: 'updated_user_avatar', payload: user });
+  }
+
   const setIsCurrentlyOpenedTaskDeleted = (value) => {
     dispatch({ type: 'set_is_currently_deleted', payload: value });
   }
@@ -591,7 +604,8 @@ export const BoardProvider = ({ children }) => {
         clearBoardFilters,
         expandBoardFilter,
         setBoardGroupby,
-        setDisabledDroppable
+        setDisabledDroppable,
+        updateUserAvatar
       }}
     >
       {children}

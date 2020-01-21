@@ -10,6 +10,7 @@ const MemberProfileItem = ({ member, onClick }) => {
       <UserProfilePicture
         backgroundColor={member.color}
         initials={member.initials}
+        avatarUrl={member.avatar && member.avatar.url}
       />
       <span className='member-profile-item__user-name'>
         {member.name}

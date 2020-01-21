@@ -40,7 +40,8 @@ const returnRouter = (io) => {
         })
       }
     } catch (err) {
-      res.status(500).send(error);
+      console.log(err)
+      res.status(500).send(err);
     }
   })
 

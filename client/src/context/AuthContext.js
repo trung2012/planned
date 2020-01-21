@@ -10,7 +10,15 @@ const authReducer = (state, action) => {
     case 'add_auth_error':
       return { ...state, errorMessage: action.payload };
     case 'signin':
-      return { errorMessage: null, token: action.payload.token, user: action.payload.user };
+      return { ...state, errorMessage: null, token: action.payload.token, user: action.payload.user };
+    case 'set_user_profile_pic':
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          avatar: action.payload.avatar
+        }
+      }
     case 'clear_auth_error_message':
       return { ...state, errorMessage: null };
     case 'signout':
@@ -84,6 +92,27 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const setUserProfilePicture = user => {
+    dispatch({ type: 'set_user_profile_pic', payload: user });
+  }
+
+  const changePassword = async (passwordData, callback) => {
+    const requestConfig = generateRequestConfig();
+
+    if (requestConfig) {
+      try {
+        await axios.put('/api/users/password', JSON.stringify(passwordData), requestConfig);
+
+        if (callback) {
+          callback();
+        }
+
+      } catch (err) {
+        addAuthError(err.response.data);
+      }
+    }
+  }
+
   const addAuthError = (errorMessage) => {
     dispatch({ type: 'add_auth_error', payload: errorMessage });
   }
@@ -93,7 +122,18 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ authState, signIn, signOut, signUp, addAuthError, clearAuthErrorMessage, loadUser }}>
+    <AuthContext.Provider
+      value={{
+        authState,
+        signIn,
+        signOut,
+        signUp,
+        addAuthError,
+        clearAuthErrorMessage,
+        loadUser,
+        setUserProfilePicture,
+        changePassword
+      }}>
       {children}
     </AuthContext.Provider>
   );

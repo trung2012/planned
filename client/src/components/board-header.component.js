@@ -33,7 +33,9 @@ const BoardHeader = ({ showChart, allAssignees, allLists }) => {
             showPrivacyPopup &&
             <MoreOptions dismiss={() => setShowPrivacyPopup(false)}>
               <h3 className='project-privacy__header'>Privacy</h3>
-              <span className='project-privacy__text'>{project.isPublic ? 'Public - Anyone can see project contents' : 'Private - Only members can see project contents'}</span>
+              <span className='project-privacy__text'>
+                {project.isPublic ? 'Public - Anyone can see project contents' : 'Private - Only members can see project contents'}
+              </span>
             </MoreOptions>
           }
         </div>

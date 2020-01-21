@@ -30,8 +30,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: '#0b61d9'
   },
-  avatarUrl: {
-    type: String
+  avatar: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'File'
   }
 }, { id: false })
 
@@ -41,13 +42,26 @@ userSchema.virtual('projects', {
   foreignField: 'members'
 });
 
+
+userSchema.pre('find', function (next) {
+  this.populate('avatar')
+
+  next();
+})
+
+userSchema.pre('findOne', function (next) {
+  this.populate('avatar')
+
+  next();
+})
+
 userSchema.set('toObject', { virtuals: true });
 userSchema.set('toJSON', { virtuals: true });
 
 userSchema.methods.toJSON = function () {
-  const { _id, name, email, initials, color, avatarUrl } = this;
+  const { _id, name, email, initials, color, avatar } = this;
 
-  return { _id, name, email, initials, color, avatarUrl }
+  return { _id, name, email, initials, color, avatar }
 }
 
 const User = mongoose.model('User', userSchema);

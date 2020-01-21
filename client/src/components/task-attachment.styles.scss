@@ -28,6 +28,7 @@
   &__name {
     color: $color-gray-dark;
     text-decoration: none;
+    cursor: pointer;
 
     &:hover {
       text-decoration: underline;

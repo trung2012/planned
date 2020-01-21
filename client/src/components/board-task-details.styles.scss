@@ -109,7 +109,8 @@
     }
   }
 
-  &__text-input {    
+  &__text-input {
+    display: block;
     font-family: inherit;
     font-size: inherit;
     width: 100%;
@@ -119,6 +120,7 @@
     background-color: $color-gray-extra-light;
     min-height: 9rem;
     cursor: text;
+    margin-bottom: 2rem;
   }
 
   &__assignment {

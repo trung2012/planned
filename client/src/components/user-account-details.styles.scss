@@ -1,0 +1,69 @@
+@import '../sass/variables';
+@import '../sass/components';
+
+.navbar {
+  .modal__title-text,
+  .modal__close {
+    color: $color-gray-dark;
+  }
+}
+
+.user-account-page {
+  padding: 1rem 0 2rem;
+
+  &__header {
+    margin-bottom: 4rem;
+
+    .file-upload {
+      margin-bottom: 0;
+      margin-right: 2rem;
+    }
+
+    &__buttons {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+    }
+  }
+
+  &__user-name-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+
+    .user-profile-picture {
+      width: 6rem;
+      height: 6rem;
+      font-size: 2.5rem;
+      font-weight: 500;
+      margin-right: 2rem;
+      border: 1px solid $color-gray-light;
+      border-radius: 0;
+
+      .user-avatar {
+        border-radius: 0;
+      }
+    }
+  }
+
+  &__user-name {
+    display: block;
+    font-size: 3.5rem;
+    font-weight: normal;
+    height: 100%;
+  }
+
+  &__info-item {
+    margin-bottom: 1rem;
+
+    &-name,
+    &-value {
+      display: block;
+    }
+
+    &-value {
+      font-size: 1.7rem;
+      font-weight: 500;
+    }
+  }
+}

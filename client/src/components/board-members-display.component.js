@@ -25,6 +25,7 @@ const BoardMembersDisplay = ({ members, showMembersDropdown }) => {
                     backgroundColor={member.color}
                     initials={member.initials}
                     name={member.name}
+                    avatarUrl={member.avatar && member.avatar.url}
                   />
                 </div>
               </React.Fragment>

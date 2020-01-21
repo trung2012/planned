@@ -172,7 +172,7 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
         </div>
         <div className='board-task-details__attachments'>
           <h4>Attachments</h4>
-          <FileUpload taskId={_id} text='Add attachment' />
+          <FileUpload url={`/api/files/upload/${projectId}/${_id}`} text='Add attachment' />
           <TaskAttachmentList attachments={attachments} />
         </div>
         <div className='board-task-details__comments'>

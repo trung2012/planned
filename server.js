@@ -54,7 +54,10 @@ io.on('connection', (socket) => {
         List.find({ project: projectId }).lean(),
         Task.find({ project: projectId }).lean().populate({
           path: 'assignee',
-          select: '-password'
+          select: '-password',
+          populate: {
+            path: 'avatar'
+          }
         })
           .populate({
             path: 'comments',

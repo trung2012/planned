@@ -24,6 +24,7 @@ const TaskAssignment = ({ members, assignee, handleAssignTask, handleUnassignTas
               <UserProfilePicture
                 backgroundColor={assignee.color}
                 initials={assignee.initials}
+                avatarUrl={assignee.avatar && assignee.avatar.url}
               />
               <span className='member-profile-item__user-name'>
                 {assignee.name}

@@ -1,12 +1,17 @@
 const express = require('express');
+const router = new express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const auth = require('../../middleware/auth');
-const router = new express.Router();
+const fs = require('fs');
+const parser = require('../../middleware/multer');
+const cloudinary = require('cloudinary');
 
+const File = require('../../models/File');
+const auth = require('../../middleware/auth');
 const User = require('../../models/User');
 const getInitials = require('../../utils/getInitials')
 const getRandomColor = require('../../utils/getRandomColor')
+
 
 //Register User
 router.post('/', async (req, res) => {
@@ -87,15 +92,21 @@ router.post('/login', async (req, res) => {
 router.put('/password', auth, async (req, res) => {
   try {
     const { user } = req;
-    const { oldPassword, newPassword } = req.body;
-    const isMatch = await bcrypt.compare(oldPassword, user.password)
 
-    if (!user) {
-      return res.status(404).send('Not Authorized')
+    const { oldPassword, newPassword, confirmNewPassword } = req.body;
+
+    if (oldPassword === newPassword) {
+      return res.status(400).send('New password cannot be the same as old password')
     }
 
+    if (newPassword !== confirmNewPassword) {
+      return res.status(400).send('Passwords do not match')
+    }
+
+    const isMatch = await bcrypt.compare(oldPassword, user.password)
+
     if (!isMatch) {
-      return res.status(400).send('Incorrect password. Please try again')
+      return res.status(400).send('Old password is incorrect. Please try again')
     }
 
     user.password = await bcrypt.hash(newPassword, 10);
@@ -139,6 +150,58 @@ router.get('/all', auth, async (req, res) => {
     }
   } catch (err) {
     res.status(401).send('Authorization failed')
+  }
+})
+
+// Change profile picture
+
+router.post('/avatar/:fileName', [auth, parser.single('file')], async (req, res) => {
+  try {
+    if (req.user) {
+      const { file } = req;
+
+      cloudinary.v2.uploader.upload(file.path, { resource_type: 'image', use_filename: true, folder: 'planned_files' }, async (error, result) => {
+        if (error) {
+          fs.unlinkSync(file.path);
+          if (error.message.toLowerCase().includes('invalid')) {
+            return res.status(400).send('Invalid file input')
+          }
+          return res.status(500).send('Internal Server Error');
+        }
+
+        fs.unlinkSync(file.path);
+
+        const newFile = new File({
+          name: req.params.fileName,
+          url: result.url,
+          public_id: result.public_id
+        });
+
+        await newFile.save();
+        const oldFile = await File.findById(req.user.avatar);
+
+        req.user.avatar = newFile._id;
+
+        if (oldFile) {
+          cloudinary.v2.uploader.destroy(oldFile.public_id, (error, result) => {
+            if (error) {
+              throw new Error(error)
+            }
+          })
+          await oldFile.remove();
+        }
+
+        await req.user.save();
+
+        res.send({
+          ...req.user.toObject(),
+          avatar: newFile
+        });
+      })
+    }
+  } catch (err) {
+    console.log(err)
+    res.status(500).send(err);
   }
 })
 

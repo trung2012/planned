@@ -14,21 +14,20 @@
     color: $color-gray-dark;
     font-size: 1.4rem;
     font-weight: 500;
+    font-family: inherit;
     border: 1px solid $color-gray-light;
     box-shadow: $box-shadow-button;
     padding: .75rem 1.75rem;
     cursor: pointer;
     transition: all .1s;
   
-    @media screen and (min-width: 600px) {
-      &:hover,
-      &:active {
-        background-color: $color-gray-extra-light;
-      }
-  
-      &:active {
-        transform: scale(.98);
-      }
+    &:hover,
+    &:active {
+      background-color: $color-gray-extra-light;
+    }
+
+    &:active {
+      transform: scale(.98);
     }
   }
 }

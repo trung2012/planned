@@ -42,7 +42,7 @@ const TaskAttachment = ({ file }) => {
         {
           showAttachmentRename ?
             <NameChangeForm name={file.name} submit={handleAttachmentRename} dismiss={() => setShowAttachmentRename(false)} type='file' />
-            : <a className='task-attachment__name' href={file.url}>{file.name}</a>
+            : <span className='task-attachment__name' onClick={() => window.open(file.url)}>{file.name}</span>
         }
       </div>
       <OptionsIcon className='options-icon' onClick={() => setShowAttachmentOptions(true)} title='More options' />

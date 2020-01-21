@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
 
 import Progress from './progress.component';
 import { BoardContext } from '../context/BoardContext';
@@ -8,8 +7,7 @@ import { generateRequestConfig } from '../utils/helper';
 
 import './file-upload.styles.scss';
 
-const FileUpload = ({ text, taskId }) => {
-  const { projectId } = useParams();
+const FileUpload = ({ text, url }) => {
   const { addBoardError } = useContext(BoardContext);
   const [uploadPercentage, setUploadPercentage] = useState(0);
 
@@ -26,7 +24,7 @@ const FileUpload = ({ text, taskId }) => {
       try {
         const response = await axios({
           method: 'post',
-          url: `/api/files/upload/${projectId}/${taskId}/${fileName}`,
+          url: url + `/${fileName}`,
           data: formData,
           headers: requestConfig.headers,
           onUploadProgress: progressEvent => {

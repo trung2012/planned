@@ -5,6 +5,10 @@
   flex: 1 1 22rem;
   padding: 2rem;
   margin-left: 3rem;
+
+  @media screen and (max-width: 1200px) {
+    margin-left: .5rem;
+  }
 }
 
 

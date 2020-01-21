@@ -71,6 +71,10 @@
   width: 100%;
   height: 100%;
   padding: 3rem;
+
+  @media screen and (max-width: 1200px) {
+    padding: 1rem;
+  }
 }
 
 .chart-chart {
@@ -79,6 +83,10 @@
   width: 16rem;
   height: 16rem;
   margin-left: 3rem;
+
+  @media screen and (max-width: 1200px) {
+    margin-left: 0;
+  }
 }
 
 .center-text-top {
