@@ -13,7 +13,7 @@ import './board-members-dropdown.styles.scss';
 const BoardMembersDropdown = ({ members, dismiss }) => {
   const { projectId } = useParams();
   const { socket } = useContext(SocketContext);
-  const { boardState, fetchUsers } = useContext(BoardContext);
+  const { boardState, fetchUsers, addMember, deleteMember } = useContext(BoardContext);
   const [memberName, setMemberName] = useState('');
   const [showMemberSearchResults, setShowMemberSearchResults] = useState(false);
   const debouncedSearchInput = useDebounce(memberName, 350);
@@ -23,12 +23,14 @@ const BoardMembersDropdown = ({ members, dismiss }) => {
   }
 
   const handleAddMember = user => {
+    addMember(user);
     socket.emit('add_member', { user, projectId });
     setShowMemberSearchResults(false);
     setMemberName('');
   }
 
   const handleDeleteMember = _id => {
+    deleteMember(_id);
     socket.emit('delete_member', { _id, projectId });
   }
 

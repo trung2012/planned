@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 import { ReactComponent as DropdownIcon } from '../assets/dropdown.svg';
 import './custom-select.styles.scss';
 import MoreOptions from './more-options.component';
 import getSelectIcon from '../utils/getSelectIcon';
 import CustomSelectDropdown from './custom-select-dropdown.component';
+import { AuthContext } from '../context/AuthContext';
 
 const CustomSelect = ({ label, inputDefault, selectOptions, submit }) => {
+  const { authState } = useContext(AuthContext);
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedOption, setSelectedOption] = useState(typeof inputDefault === 'string' ? inputDefault : inputDefault.name);
   const [isInputActive, setIsInputActive] = useState(false);
@@ -22,7 +24,11 @@ const CustomSelect = ({ label, inputDefault, selectOptions, submit }) => {
       if (label === 'List') {
         submit(option._id);
       } else {
-        submit({ [label.toLowerCase()]: option.name });
+        if (option.name === 'Completed') {
+          submit({ [label.toLowerCase()]: option.name, completedBy: authState.user });
+        } else {
+          submit({ [label.toLowerCase()]: option.name });
+        }
       }
       setShowDropdown(false);
     }

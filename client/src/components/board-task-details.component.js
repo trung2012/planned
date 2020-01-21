@@ -165,7 +165,7 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
                 }}
               />
               : <pre className='board-task-details__text-input' onClick={() => setShowTaskDescriptionEdit(true)}>
-                {newDescription}
+                {newDescription || <span className='description-placeholder'>Add a description or notes</span>}
               </pre>
           }
 

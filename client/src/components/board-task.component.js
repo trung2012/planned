@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import moment from 'moment';
 import { useParams, useHistory, useRouteMatch } from 'react-router-dom';
 import { Draggable } from 'react-beautiful-dnd';
 
@@ -11,6 +12,8 @@ import TaskAssignmentDropdown from './task-assignment-dropdown.component';
 import { ReactComponent as OptionsIcon } from '../assets/options.svg';
 import getSelectIcon from '../utils/getSelectIcon';
 import { handleTaskAssignment, handleTaskUpdate } from '../utils/updateTasks';
+import { AuthContext } from '../context/AuthContext';
+import UserProfilePicture from './user-profile-picture.component';
 
 import './board-task.styles.scss';
 
@@ -19,7 +22,7 @@ const BoardTask = ({ task, index }) => {
   const { projectId } = useParams();
   const history = useHistory();
   const { socket } = useContext(SocketContext);
-
+  const { authState } = useContext(AuthContext);
   const {
     boardState,
     deleteTask,
@@ -65,6 +68,11 @@ const BoardTask = ({ task, index }) => {
   const handleSetComplete = event => {
     event.stopPropagation();
     handleCompletionToggle(task.progress);
+    if (task.progress === 'Completed') {
+      handleAttributeUpdate({ completedBy: null });
+    } else {
+      handleAttributeUpdate({ completedBy: authState.user });
+    }
   }
 
   return (
@@ -109,30 +117,47 @@ const BoardTask = ({ task, index }) => {
               {
                 showTaskOptions &&
                 <MoreOptions dismiss={() => setShowTaskOptions(false)} >
-                  <div
-                    className='more-options-item'
-                    onClick={event => {
-                      event.stopPropagation();
-                      setShowAssignmentDropdown(true);
-                      setShowTaskOptions(false);
-                    }}
-                  >
-                    Assign
+                  {
+                    !task.completedBy &&
+                    <div
+                      className='more-options-item'
+                      onClick={event => {
+                        event.stopPropagation();
+                        setShowAssignmentDropdown(true);
+                        setShowTaskOptions(false);
+                      }}
+                    >
+                      Assign
                     </div>
+                  }
                   <div className='more-options-item' onClick={handleDeleteClick}>Delete</div>
                 </MoreOptions>
               }
             </div>
             {
-              task.assignee &&
-              <div className={`${taskClassName}__assignee`}>
-                <TaskAssignment
-                  assignee={task.assignee}
-                  members={boardState.members}
-                  handleAssignTask={handleAssignTask}
-                  handleUnassignTask={handleUnassignTask}
-                />
-              </div>
+              task.completedBy ?
+                <div className={`${taskClassName}__assignee`}>
+                  <div className={`${taskClassName}__completed-by`}>
+                    <UserProfilePicture
+                      backgroundColor={task.completedBy.color}
+                      initials={task.completedBy.initials}
+                      name={task.completedBy.name}
+                      avatarUrl={task.completedBy.avatar && task.completedBy.avatar.url}
+                    />
+                    <div className='completed-by-text' title={`Completed by ${task.completedBy.name} on ${moment(task.updatedBy).format('MM/DD/YYYY')}`}>
+                      {`Completed by ${task.completedBy.name} on ${moment(task.updatedBy).format('MM/DD/YYYY')}`}
+                    </div>
+                  </div>
+                </div>
+                : task.assignee
+                && <div className={`${taskClassName}__assignee`}>
+                  <TaskAssignment
+                    assignee={task.assignee}
+                    members={boardState.members}
+                    handleAssignTask={handleAssignTask}
+                    handleUnassignTask={handleUnassignTask}
+                  />
+                </div>
             }
             {
               showAssignmentDropdown &&

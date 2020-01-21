@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 
-
+import Snackbar from './snackbar.component';
 import { ProjectContext } from '../context/ProjectContext';
 import ProjectList from './project-list.component';
 import Modal from './modal.component';
@@ -11,9 +11,17 @@ import CustomButton from './custom-button.component';
 import './project-overview.styles.scss';
 
 const ProjectOverview = () => {
-  const { projectState, fetchProjects } = useContext(ProjectContext);
+  const { projectState, fetchProjects, clearProjectErrorMessage } = useContext(ProjectContext);
   const { projects, isLoading } = projectState;
   const [showCreateProjectModal, setShowCreateProjectModal] = useState(false);
+
+  useEffect(() => {
+    if (projectState.errorMessage) {
+      setTimeout(() => {
+        clearProjectErrorMessage();
+      }, 3000)
+    }
+  }, [projectState.errorMessage, clearProjectErrorMessage])
 
   useEffect(() => {
     fetchProjects();
@@ -23,6 +31,10 @@ const ProjectOverview = () => {
     isLoading ? <Spinner />
       :
       <div className='project-overview'>
+        {
+          projectState.errorMessage &&
+          <Snackbar text={projectState.errorMessage} />
+        }
         {
           showCreateProjectModal &&
           <Modal

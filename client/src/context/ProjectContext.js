@@ -95,13 +95,13 @@ export const ProjectProvider = ({ children }) => {
     }
   }
 
-  const addProjectError = async (errorMessage) => {
+  const addProjectError = async errorMessage => {
     dispatch({ type: 'add_project_error', payload: errorMessage });
   }
 
-  const clearProjectErrorMessage = () => {
+  const clearProjectErrorMessage = useCallback(() => {
     dispatch({ type: 'clear_project_error_message' });
-  };
+  }, []);
 
   return (
     <ProjectContext.Provider

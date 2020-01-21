@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useLayoutEffect } from 'react';
 
 import CustomInput from './custom-input.component';
 import { ReactComponent as RemoveUserIcon } from '../assets/remove-user.svg';
@@ -10,6 +10,8 @@ import './task-assignment-dropdown.styles.scss';
 const TaskAssignmentDropdown = ({ dismiss, onMemberClick, assignee, removeMember, members }) => {
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [memberSearchQuery, setMemberSearchQuery] = useState('');
+  const [style, setStyle] = useState(null);
+  const taskAssignmentDropdownRef = useRef();
 
   const filteredMembers = members.filter(user => {
     if (assignee) {
@@ -17,6 +19,16 @@ const TaskAssignmentDropdown = ({ dismiss, onMemberClick, assignee, removeMember
     }
     return user.name.toLowerCase().includes(memberSearchQuery.toLowerCase())
   });
+
+  useLayoutEffect(() => {
+    const { bottom } = taskAssignmentDropdownRef.current.getBoundingClientRect();
+    if (bottom > (window.innerHeight || document.documentElement.clientHeight)) {
+      setStyle({
+        top: '-6rem',
+        animation: 'fadeFromBottom .2s cubic-bezier(0.1, 0.9, 0.2, 1)'
+      })
+    }
+  }, [])
 
   const handleMemberClick = (user) => {
     onMemberClick(user);
@@ -26,7 +38,7 @@ const TaskAssignmentDropdown = ({ dismiss, onMemberClick, assignee, removeMember
   return (
     <React.Fragment>
       <div className='overlay' onClick={dismiss}></div>
-      <div className='task-assignment-dropdown'>
+      <div className='task-assignment-dropdown' ref={taskAssignmentDropdownRef} style={style}>
         <div className='task-assignment-dropdown__header'>
           <h3>Assign</h3>
           <CustomInput

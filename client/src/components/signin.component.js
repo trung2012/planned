@@ -33,6 +33,13 @@ const SignIn = () => {
     });
   }
 
+  const handleSubmitGuest = () => {
+    signIn({ email: 'guest@example.com', password: 'planned_guest' }, () => {
+      reconnectSocket(socket);
+      history.replace(from);
+    });
+  }
+
   const clearError = () => {
     if (authState.errorMessage) {
       clearAuthErrorMessage();
@@ -79,6 +86,15 @@ const SignIn = () => {
               }
             >
               Register Now
+              </span>
+          </div>
+          <div className='more-auth-options'>
+            <span className='no-account'>Or</span>
+            <span
+              className='register-link'
+              onClick={handleSubmitGuest}
+            >
+              Log in as Guest
               </span>
           </div>
         </form>

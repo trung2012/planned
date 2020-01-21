@@ -80,6 +80,7 @@
     .task-last-updated {
       font-size: 1.2rem;
       color: $color-gray-medium;
+      padding-left: 3.5rem;
     }
   }
 
@@ -93,6 +94,10 @@
 
   &__description {
     margin-bottom: 2rem;
+  }
+
+  .description-placeholder {
+    color: $color-gray-medium;
   }
 
   &__attachments {

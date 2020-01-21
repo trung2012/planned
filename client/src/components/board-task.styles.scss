@@ -32,6 +32,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-right: 1rem;
   }
 
   &__name-container {
@@ -55,15 +56,29 @@
     cursor: pointer;
   }
 
+  &__completed-by {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    padding-left: 1.25rem;  
+    
+    .completed-by-text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-left: 1rem;
+    }
+  }
+
   &__assignee {
     border-top: 1px solid $color-gray-light;
     cursor: pointer;
-
+    
     .task-assignment {
       display: flex;
       padding-right: 1rem;
     }
-    
+
     &:hover {
       background-color: $color-gray-extra-light;
 
@@ -110,32 +125,36 @@
     align-self: flex-end;
     justify-self: flex-end;
   }
+
+  .select-option-icon {
+    margin: 0;
+  }
 }
 
-// .board-task {
-//   &__name-icon {
-//     border: none;
-//     border-radius: 50%;
-//     transform: scale(.86);
-//     transition: background-color .3s ease-out;
+.board-task {
+  &__name-icon {
+    border: none;
+    border-radius: 50%;
+    transform: scale(.86);
+    transition: background-color .2s;
 
-//     &:hover {
-//       background-color: #2BB673;
-//       fill: none;
+    &:hover {
+      background-color: #2BB673;
+      fill: none;
 
-//       &::after {
-//         content: '';
-//         position: absolute;
-//         display: block;
-//         border-left: 1.3px #fff solid;  
-//         border-bottom: 1.3px #fff solid;
-//         height: 3px;
-//         width: 7.5px;
-//         transform: rotate(-45deg) translateY(-.5px);
-//       }
-//     }
-//   }
-// }
+      &::after {
+        content: '';
+        position: absolute;
+        display: block;
+        border-left: 1.3px #fff solid;  
+        border-bottom: 1.3px #fff solid;
+        height: 3px;
+        width: 7.5px;
+        transform: rotate(-45deg) translateY(-.5px);
+      }
+    }
+  }
+}
 
 .board-task--completed {
   &__heading {
@@ -144,23 +163,24 @@
     }
   }
 
-  // &__name-icon {
-  //   transform: scale(.7);
-  //   border: none;
-  //   border-radius: 50%;
+  &__name-icon {
+    transform: scale(.7);
+    border: none;
+    border-radius: 50%;    
+    border: 1px solid transparent;
 
-  //   .select-option-icon {
-  //     transform: scale(1.4);
-  //   }
+    .select-option-icon {
+      transform: scale(1.4);
+    }
 
-  //   &:hover {
-  //     border: 1px solid black;
+    &:hover {
+      border: 1px solid black;
       
-  //     path {
-  //       fill: none;
-  //     }
-  //   }
-  // }
+      path {
+        fill: none;
+      }
+    }
+  }
 }
 
 .highlighted {

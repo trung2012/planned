@@ -10,7 +10,7 @@ const getRandomColor = require('../../utils/getRandomColor')
 // Create new project
 router.post('/create', auth, async (req, res) => {
   try {
-    if (req.user) {
+    if (req.user && !req.user.name.toLowerCase().includes('guest')) {
       const { name, description, isPublic } = req.body;
 
       const existingProject = await Project.findOne({ name })
@@ -80,25 +80,10 @@ router.delete('/:_id', auth, async (req, res) => {
 
       return res.send(deleted);
     } else {
-      res.status(401).send('Not Authorized')
+      res.status(401).send('You are not authorized to perform this action');
     }
   } catch (err) {
     res.status(500).send('Internal Server Error. Please try again')
-  }
-})
-
-router.post('/members', auth, async (req, res) => {
-  try {
-    const { projectId, memberId } = req.body;
-
-    if (req.user) {
-      const project = await Project.findById(projectId.toString())
-      project.members.push(memberId)
-      await project.save()
-      res.send(project)
-    }
-  } catch (err) {
-    res.status(500).send('Internal Server Error')
   }
 })
 

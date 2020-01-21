@@ -49,8 +49,12 @@ const boardReducer = (state, action) => {
       const newState = { ...state };
       newState.members = newState.members.map(member => member._id === action.payload._id ? action.payload : member);
       for (const key in newState.tasks) {
-        if (newState.tasks[key].assignee && newState.tasks[key].assignee._id === action.payload._id) {
+        if (
+          (newState.tasks[key].assignee && newState.tasks[key].assignee._id === action.payload._id) ||
+          (newState.tasks[key].completedBy && newState.tasks[key].completedBy._id === action.payload._id)
+        ) {
           newState.tasks[key].assignee = { ...action.payload };
+          newState.tasks[key].completedBy = { ...action.payload };
         }
       }
       return newState;
