@@ -10,19 +10,16 @@ import './charts-container.styles.scss';
 const ChartContainer = ({ tasksByProgressArray, tasksByPriorityArray, tasksByAssigneeArray, tasksByList, tasksRemaining, tasksCount }) => {
 
   return (
-    tasksCount > 0
-      ?
-      <div className='charts'>
-        <div className='charts-top'>
-          <ChartByProgress data={tasksByProgressArray} tasksRemaining={tasksRemaining} />
-          <ChartByList data={tasksByList} />
-        </div>
-        <div className='charts-bottom'>
-          <ChartByPriority data={tasksByPriorityArray} tasksCount={tasksCount} />
-          <ChartByAssignee data={tasksByAssigneeArray} />
-        </div>
+    <div className='charts'>
+      <div className='charts-top'>
+        <ChartByProgress data={tasksByProgressArray} tasksRemaining={tasksRemaining} />
+        <ChartByList data={tasksByList} />
       </div>
-      : <h2 className='no-task-message'>No Tasks</h2>
+      <div className='charts-bottom'>
+        <ChartByPriority data={tasksByPriorityArray} tasksCount={tasksCount} />
+        <ChartByAssignee data={tasksByAssigneeArray} />
+      </div>
+    </div>
   );
 }
 

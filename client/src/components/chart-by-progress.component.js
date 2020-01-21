@@ -6,7 +6,7 @@ import CustomChartLegends from './custom-chart-legends.component';
 import './chart-by-progress.styles.scss';
 
 const ChartByProgress = ({ data, tasksRemaining }) => {
-  const filteredData = data.filter(entry => entry.value !== 0);
+  const filteredData = data.every(entry => entry.value === 0) ? data.map(entry => ({ ...entry, value: 1 })) : data.filter(entry => entry.value !== 0);
 
   return (
     <div className='chart-container chart-left'>

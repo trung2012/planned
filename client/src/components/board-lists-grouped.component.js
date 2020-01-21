@@ -7,11 +7,13 @@ import { BoardContext } from '../context/BoardContext';
 import { handleTaskAssignment, handleTaskUpdate } from '../utils/updateTasks';
 import { getDueDate } from '../utils/helper';
 import { SocketContext } from '../context/SocketContext';
+import { AuthContext } from '../context/AuthContext';
 
 import './board-lists-grouped.styles.scss';
 
 const BoardListsGrouped = ({ lists }) => {
   const { socket } = useContext(SocketContext);
+  const { authState } = useContext(AuthContext);
   const {
     boardState: {
       groupBy,
@@ -46,6 +48,7 @@ const BoardListsGrouped = ({ lists }) => {
 
       if (!destination.droppableId.includes('-completed')) {
         handleCompletionToggle('Completed');
+        handleAttributeUpdate({ completedBy: null });
       } else {
         destination.droppableId = destination.droppableId.replace('-completed', '');
       }
@@ -56,6 +59,7 @@ const BoardListsGrouped = ({ lists }) => {
 
       if (!source.droppableId.includes('-completed')) {
         handleCompletionToggle('Not started');
+        handleAttributeUpdate({ completedBy: authState.user });
       } else {
         source.droppableId = source.droppableId.replace('-completed', '');
       }

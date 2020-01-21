@@ -144,8 +144,8 @@ const BoardTask = ({ task, index }) => {
                       name={task.completedBy.name}
                       avatarUrl={task.completedBy.avatar && task.completedBy.avatar.url}
                     />
-                    <div className='completed-by-text' title={`Completed by ${task.completedBy.name} on ${moment(task.updatedBy).format('MM/DD/YYYY')}`}>
-                      {`Completed by ${task.completedBy.name} on ${moment(task.updatedBy).format('MM/DD/YYYY')}`}
+                    <div className='completed-by-text' title={`Completed by ${task.completedBy.name} on ${moment(task.updatedAt).format('MM/DD/YYYY')}`}>
+                      {`Completed by ${task.completedBy.name} on ${moment(task.updatedAt).format('MM/DD/YYYY')}`}
                     </div>
                   </div>
                 </div>

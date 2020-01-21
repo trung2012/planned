@@ -42,14 +42,11 @@ const BoardFiltersGroup = ({ groupName, options, filterList }) => {
             options.map(assignee => (
               <div
                 key={assignee._id}
-                className='board-filters-item'
+                className={filterList.includes(assignee._id) ? 'board-filters-item--selected' : 'board-filters-item'}
                 onClick={() => handleFilterClick(assignee._id)}
               >
                 <MemberProfileItem member={assignee} />
-                {
-                  filterList.includes(assignee._id) &&
-                  <CheckmarkIcon className='checkmark-icon' />
-                }
+                <CheckmarkIcon className='checkmark-icon' />
               </div>
             ))
           }

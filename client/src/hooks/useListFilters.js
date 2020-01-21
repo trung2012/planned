@@ -17,7 +17,7 @@ const useListFilters = (lists) => {
 
   const includePriority = filtersArray => item => filtersArray.includes(item.priority);
 
-  const includeAssignee = filtersArray => item => filtersArray.includes(item.assignee ? item.assignee._id : item.assignee);
+  const includeAssignee = filtersArray => item => filtersArray.includes(item.assignee ? item.assignee._id : 'Unassigned');
 
   const includeList = filtersArray => item => filtersArray.includes(item.list);
 
