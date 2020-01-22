@@ -12,7 +12,7 @@ const populateProjectTasks = require('../../utils/populateProjectTasks');
 // Create new project
 router.post('/create', auth, async (req, res) => {
   try {
-    if (req.user && !req.user.name.toLowerCase().includes('guest')) {
+    if (!req.user.name.toLowerCase().includes('guest')) {
       const { name, description, isPublic } = req.body;
 
       const existingProject = await Project.findOne({ name })
@@ -53,6 +53,9 @@ router.post('/create', auth, async (req, res) => {
 router.get('/all', auth, async (req, res) => {
   try {
     const { user } = req;
+
+    const favoriteProjectIds = user.favoriteProjects;
+
     await user
       .populate('projects')
       .populate('favoriteProjects')
@@ -67,7 +70,8 @@ router.get('/all', auth, async (req, res) => {
 
     res.send({
       projects,
-      favoriteProjects
+      favoriteProjects,
+      favoriteProjectIds
     });
   } catch (err) {
     console.log(err);
@@ -99,7 +103,7 @@ router.delete('/:_id', auth, async (req, res) => {
 router.post('/favorite/add', auth, async (req, res) => {
   try {
     const { project } = req.body;
-    req.user.favoriteProjects.push(project._id);
+    req.user.favoriteProjects.push(project._id);    
     await req.user.save();
     const tasks = await Task.find({ project: project._id }).lean().populate({
       path: 'assignee',
@@ -110,6 +114,20 @@ router.post('/favorite/add', auth, async (req, res) => {
       ...project,
       tasks
     })
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Internal Server Error. Please try again')
+  }
+})
+
+router.post('/favorite/remove', auth, async (req, res) => {
+  try {
+    const { projectId } = req.body;
+    req.user.favoriteProjects = req.user.favoriteProjects.filter(project => project._id.toString() !== projectId.toString());
+    await req.user.save();
+
+    res.send(projectId);
 
   } catch (err) {
     console.log(err);

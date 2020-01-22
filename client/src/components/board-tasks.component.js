@@ -85,4 +85,4 @@ const BoardTasks = ({ list, isGrouped }) => {
   );
 }
 
-export default BoardTasks;
+export default React.memo(BoardTasks);

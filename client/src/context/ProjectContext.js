@@ -21,10 +21,17 @@ const projectReducer = (state, action) => {
         ...state,
         projects: [...state.projects, action.payload]
       }
-    case 'add_project_to_favorite':
+    case 'add_project_to_favorites':
       return {
         ...state,
-        favoriteProjects: [...state.favoriteProjects, action.payload]
+        favoriteProjects: [...state.favoriteProjects, action.payload],
+        favoriteProjectIds: [...state.favoriteProjects, action.payload._id]
+      }
+    case 'remove_project_from_favorites':
+      return {
+        ...state,
+        favoriteProjects: state.favoriteProjects.filter(project => project._id !== action.payload),
+        favoriteProjectIds: state.favoriteProjectIds.filter(projectId => projectId !== action.payload)
       }
     case 'delete_project':
       return {
@@ -52,6 +59,7 @@ export const ProjectProvider = ({ children }) => {
   const [projectState, dispatch] = useReducer(projectReducer, {
     projects: [],
     favoriteProjects: [],
+    favoriteProjectIds: [],
     errorMessage: null,
     isLoading: false
   });
@@ -88,13 +96,27 @@ export const ProjectProvider = ({ children }) => {
     }
   }
 
-  const addProjectToFavorite = async project => {
+  const addProjectToFavorites = async project => {
     const requestConfig = generateRequestConfig();
 
     if (requestConfig) {
       try {
         const response = await axios.post('/api/projects/favorite/add', JSON.stringify({ project }), requestConfig);
-        dispatch({ type: 'add_project_to_favorite', payload: response.data })
+        dispatch({ type: 'add_project_to_favorites', payload: response.data })
+      } catch (err) {
+        addProjectError(err.response.data);
+      }
+    }
+  }
+
+  const removeProjectFromFavorites = async projectId => {
+    const requestConfig = generateRequestConfig();
+
+    if (requestConfig) {
+      dispatch({ type: 'remove_project_from_favorites', payload: projectId });
+
+      try {
+        await axios.post('/api/projects/favorite/remove', JSON.stringify({ projectId }), requestConfig);
       } catch (err) {
         addProjectError(err.response.data);
       }
@@ -124,7 +146,16 @@ export const ProjectProvider = ({ children }) => {
 
   return (
     <ProjectContext.Provider
-      value={{ projectState, fetchProjects, createProject, deleteProject, addProjectError, clearProjectErrorMessage, addProjectToFavorite }}
+      value={{
+        projectState,
+        fetchProjects,
+        createProject,
+        deleteProject,
+        addProjectError,
+        clearProjectErrorMessage,
+        addProjectToFavorites,
+        removeProjectFromFavorites
+      }}
     >
       {children}
     </ProjectContext.Provider>

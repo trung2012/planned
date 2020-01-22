@@ -60,6 +60,18 @@ io.on('connection', (socket) => {
           }
         })
           .populate({
+            path: 'createdBy',
+            select: '-password'
+          })
+          .populate({
+            path: 'updatedBy',
+            select: '-password'
+          })
+          .populate({
+            path: 'completedBy',
+            select: '-password'
+          })
+          .populate({
             path: 'comments',
             options: {
               sort: {
@@ -72,9 +84,6 @@ io.on('connection', (socket) => {
             }
           })
           .populate('attachments')
-          .populate('createdBy')
-          .populate('updatedBy')
-          .populate('completedBy')
       ])
 
       const memberIds = project.members.map(member => member._id);

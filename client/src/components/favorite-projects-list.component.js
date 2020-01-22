@@ -3,7 +3,7 @@ import React from 'react';
 import { getChartData } from '../utils/helper';
 
 import './favorite-projects-list.styles.scss';
-import ChartByProgress from './chart-by-progress.component';
+import FavoriteProjectChart from './favorite-project-chart.component';
 
 const FavoriteProjectsList = ({ projects }) => {
   return (
@@ -12,7 +12,7 @@ const FavoriteProjectsList = ({ projects }) => {
         projects.map(project => {
           const { tasksByProgressArray, tasksRemaining } = getChartData(project.tasks);
 
-          return <ChartByProgress key={project._id} data={tasksByProgressArray} tasksRemaining={tasksRemaining} />
+          return <FavoriteProjectChart key={project._id} project={project} data={tasksByProgressArray} tasksRemaining={tasksRemaining} />
         })
       }
     </div>

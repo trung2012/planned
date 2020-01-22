@@ -1,21 +1,27 @@
 import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import { ReactComponent as NonFavoriteIcon } from '../assets/star-unfilled.svg';
+import { ReactComponent as FavoriteIcon } from '../assets/star-filled.svg';
 import { ReactComponent as DropdownIcon } from '../assets/dropdown.svg';
+import { ProjectContext } from '../context/ProjectContext';
 import { BoardContext } from '../context/BoardContext';
 import BoardMembersDisplay from './board-members-display.component';
 import BoardMembersDropdown from './board-members-dropdown.component';
 import BoardFilters from './board-filters.component';
 import BoardGroupBy from './board-groupby.component';
-
-import './board-header.styles.scss';
 import MoreOptions from './more-options.component';
 
+import './board-header.styles.scss';
+
 const BoardHeader = ({ showChart, allAssignees, allLists }) => {
+  const { projectState, addProjectToFavorites, removeProjectFromFavorites } = useContext(ProjectContext);
   const { boardState: { currentProject: project, members } } = useContext(BoardContext);
   const [showMembersListDropdown, setShowMembersListDropdown] = useState(false);
   const [showFiltersDropdown, setShowFiltersDropdown] = useState(false);
   const [showPrivacyPopup, setShowPrivacyPopup] = useState(false);
+
+  const isProjectFavorite = projectState.favoriteProjectIds.includes(project._id);
 
   return (
     <div className='board-header'>
@@ -40,7 +46,14 @@ const BoardHeader = ({ showChart, allAssignees, allLists }) => {
           }
         </div>
         <div className='board-header__project-info--details'>
-          <h3 className='board-header__project-info--details__name'>{project.name || ''}</h3>
+          <div className='board-header__project-info--details__name-container'>
+            <h3 className='board-header__project-info--details__name'>{project.name || ''}</h3>
+            {
+              isProjectFavorite
+                ? <FavoriteIcon className='favorite-icon' title='Remove from favorites' onClick={() => removeProjectFromFavorites(project._id)} />
+                : <NonFavoriteIcon className='non-favorite-icon' title='Add to favorites' onClick={() => addProjectToFavorites(project)} />
+            }
+          </div>
           <span className='board-header__project-info--details__description'>{project.description || ''}</span>
         </div>
       </div>

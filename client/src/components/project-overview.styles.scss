@@ -1,8 +1,9 @@
 @import '../sass/variables';
 
 .project-overview {
-  margin-top: 8rem;
+  margin-top: 3rem;
   padding: 0 4rem;
+  padding-bottom: 5rem;
 
   &__header {
     display: flex;
@@ -19,10 +20,12 @@
   }
 
   &__list {
+    margin-bottom: 4rem;
+    padding-left: 1rem;
+
     &-header {
       color: $color-gray-dark;
-      padding-left: 1rem;
-      margin-bottom: 2rem;
+      margin-bottom: 3.5rem;
     }
   }
 }

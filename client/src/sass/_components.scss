@@ -189,3 +189,17 @@
     transform: scale(.98);
   }
 }
+
+.favorite-icon {
+  height: 1.1em;
+  width: 1.1em;
+  cursor: pointer;
+  transform: translateY(-.35rem);
+}
+
+.non-favorite-icon {
+  height: 1.1em;
+  width: 1.1em;
+  cursor: pointer;
+  transform: translateY(-.35rem);
+}

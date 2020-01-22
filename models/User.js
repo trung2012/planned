@@ -65,9 +65,9 @@ userSchema.set('toObject', { virtuals: true });
 userSchema.set('toJSON', { virtuals: true });
 
 userSchema.methods.toJSON = function () {
-  const { _id, name, email, initials, color, avatar } = this;
+  const { _id, name, email, initials, color, avatar, favoriteProjects } = this;
 
-  return { _id, name, email, initials, color, avatar }
+  return { _id, name, email, initials, color, avatar, favoriteProjects }
 }
 
 const User = mongoose.model('User', userSchema);

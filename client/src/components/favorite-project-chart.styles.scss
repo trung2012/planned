@@ -1,0 +1,44 @@
+@import '../sass/variables';
+
+.favorite-project-chart {
+  display: inline-flex;
+  flex-direction: column;
+  border: 1px solid $color-gray-light;
+  box-shadow: $box-shadow-primary;
+  margin-right: 2rem;
+  margin-bottom: 2rem;
+  cursor: pointer;
+
+  .favorite-icon,
+  .non-favorite-icon {
+    opacity: 0;
+  }
+
+  &:hover {
+    box-shadow: $box-shadow-primary-hover;
+    
+    .favorite-icon,
+    .non-favorite-icon {
+      opacity: 1;
+    }
+  }
+
+  .project-list-item {
+    margin: .5rem .5rem 0;
+    border: none;
+    box-shadow: none;
+
+    &__icons {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .chart-content {
+    padding-top: 0;
+  }
+
+  .favorite-icon {
+    margin-right: 1rem;
+  }
+}

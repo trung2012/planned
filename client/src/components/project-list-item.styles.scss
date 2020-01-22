@@ -4,7 +4,7 @@
   position: relative;
   flex: 0 0 34rem;
   display: flex;
-  margin: .5rem 1rem;
+  margin: .5rem 1rem .5rem 0;
   box-shadow: $box-shadow-primary;
   cursor: pointer;
 
@@ -47,5 +47,20 @@
   .more-options {
     top: 3rem;
     right: 0;
+  }
+
+  .favorite-icon,
+  .non-favorite-icon {
+    height: 1em;
+    width: 1em;
+    margin-right: .5rem;
+    opacity: 0;
+  }
+
+  &:hover {
+    .favorite-icon,
+    .non-favorite-icon {
+      opacity: 1;
+    } 
   }
 }
