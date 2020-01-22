@@ -7,7 +7,7 @@ import ChartContainer from './charts-container.component';
 import BoardLists from './board-lists.component';
 import getBoardLists from '../utils/getBoardLists';
 import useListFilters from '../hooks/useListFilters';
-import { calculateGroupsFromLists } from '../utils/helper';
+import { getChartData, getGroupedListsData } from '../utils/helper';
 import './board-container.styles.scss';
 
 const BoardContainer = () => {
@@ -25,21 +25,27 @@ const BoardContainer = () => {
     })
     : [];
 
+  let allTasks = [];
+  for (const list of lists) {
+    allTasks = [...allTasks, ...list.tasks];
+  }
 
   const {
     tasksByProgressArray,
     tasksByPriorityArray,
     tasksByAssigneeArray,
-    tasksByList,
     tasksRemaining,
-    tasksCount,
     allAssignees,
-    allLists,
+    allLists
+  } = getChartData(allTasks);
+
+  const {
+    tasksByList,
     listsByProgressArray,
     listsByPriorityArray,
     listsByAssigneeArray,
     listsByDueDateArray
-  } = calculateGroupsFromLists(lists);
+  } = getGroupedListsData(lists, allTasks);
 
   const filteredLists = useListFilters(lists);
 
@@ -56,7 +62,7 @@ const BoardContainer = () => {
                 tasksByAssigneeArray={tasksByAssigneeArray}
                 tasksByList={tasksByList}
                 tasksRemaining={tasksRemaining}
-                tasksCount={tasksCount}
+                tasksCount={allTasks.length}
               />
               :
               boardState.groupBy === 'List'

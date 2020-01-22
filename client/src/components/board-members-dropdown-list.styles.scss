@@ -3,7 +3,6 @@
 
 .board-members-dropdown-list {
   position: relative;
-  padding: 0 1.5rem .5rem;
   max-height: 28rem;
   overflow-y: auto;
 
@@ -11,6 +10,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 0 1.5rem;
+
+    &:hover {
+      background-color: $color-gray-extra-light;
+    }
   
     .member-profile-item {
       flex: 1;

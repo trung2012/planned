@@ -3,9 +3,11 @@ const auth = require('../../middleware/auth');
 const router = new express.Router();
 const mongoose = require('mongoose');
 
+const Task = require('../../models/Task');
 const List = require('../../models/List');
 const Project = require('../../models/Project');
 const getRandomColor = require('../../utils/getRandomColor')
+const populateProjectTasks = require('../../utils/populateProjectTasks');
 
 // Create new project
 router.post('/create', auth, async (req, res) => {
@@ -50,18 +52,25 @@ router.post('/create', auth, async (req, res) => {
 
 router.get('/all', auth, async (req, res) => {
   try {
-    if (req.user) {
-      const { user } = req;
-      await user.populate('projects').execPopulate();
+    const { user } = req;
+    await user
+      .populate('projects')
+      .populate('favoriteProjects')
+      .execPopulate();
 
-      const projects = await Project.find().or([
-        { _id: { $in: user.projects } },
-        { isPublic: true }
-      ])
+    const projects = await Project.find().lean().or([
+      { _id: { $in: user.projects } },
+      { isPublic: true }
+    ])
 
-      res.send(projects);
-    }
+    const favoriteProjects = await populateProjectTasks(user.favoriteProjects);
+
+    res.send({
+      projects,
+      favoriteProjects
+    });
   } catch (err) {
+    console.log(err);
     res.status(500).send('Internal Server Error. Please try again')
   }
 })
@@ -83,6 +92,27 @@ router.delete('/:_id', auth, async (req, res) => {
       res.status(401).send('You are not authorized to perform this action');
     }
   } catch (err) {
+    res.status(500).send('Internal Server Error. Please try again')
+  }
+})
+
+router.post('/favorite/add', auth, async (req, res) => {
+  try {
+    const { project } = req.body;
+    req.user.favoriteProjects.push(project._id);
+    await req.user.save();
+    const tasks = await Task.find({ project: project._id }).lean().populate({
+      path: 'assignee',
+      select: '-password'
+    })
+
+    res.send({
+      ...project,
+      tasks
+    })
+
+  } catch (err) {
+    console.log(err);
     res.status(500).send('Internal Server Error. Please try again')
   }
 })

@@ -6,7 +6,9 @@ import CustomChartLegends from './custom-chart-legends.component';
 import './chart-by-priority.styles.scss';
 
 const ChartByPriority = ({ data, tasksCount }) => {
-  const filteredData = data.every(entry => entry.value === 0) ? data.map(entry => ({ ...entry, value: 1 })) : data.filter(entry => entry.value !== 0);
+  const filteredData = data.every(entry => entry.value === 0)
+    ? data.map(entry => entry.name === 'Low' ? ({ ...entry, value: 1 }) : ({ ...entry, value: 0 })).filter(entry => entry.value !== 0)
+    : data.filter(entry => entry.value !== 0);
 
   return (
     <div className='chart-container chart-left'>

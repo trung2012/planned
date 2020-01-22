@@ -71,160 +71,7 @@ const updateListKeyWithTask = (obj, key, task, type) => {
   }
 }
 
-export const calculateGroupsFromLists = lists => {
-  let allTasks = [];
-  for (const list of lists) {
-    allTasks = [...allTasks, ...list.tasks];
-  }
-
-  const tasksRemaining = allTasks.reduce((count, task) => {
-    if (task.progress !== 'Completed') {
-      count++;
-    }
-    return count;
-  }, 0)
-
-  //Group by list
-  const tasksByList = lists.map(list => {
-    const listObject = {};
-    listObject.name = list.name;
-
-    for (const task of list.tasks) {
-      if (moment(task.due).isBefore(Date.now(), 'day') && task.progress !== 'Completed') {
-        if (listObject['Late'] === undefined) {
-          listObject['Late'] = 1;
-        } else {
-          listObject['Late']++;
-        }
-      } else {
-        if (listObject[task.progress] === undefined) {
-          listObject[task.progress] = 1;
-        } else {
-          listObject[task.progress]++;
-        }
-      }
-    }
-
-    return listObject;
-  });
-
-  // Group by progress
-  const tasksByProgress = {
-    'Not started': {
-      _id: new ObjectID().toString(),
-      name: 'Not started',
-      value: 0
-    },
-    'In progress': {
-      _id: new ObjectID().toString(),
-      name: 'In progress',
-      value: 0
-    },
-    'Completed': {
-      _id: new ObjectID().toString(),
-      name: 'Completed',
-      value: 0
-    },
-    'Late': {
-      _id: new ObjectID().toString(),
-      name: 'Late',
-      value: 0
-    }
-  };
-
-  const tasksByProgressArray = [];
-
-  for (const task of allTasks) {
-    if (moment(task.due).isBefore(Date.now(), 'day') && task.progress !== 'Completed') {
-      updateKeyWithCount(tasksByProgress, 'Late');
-    } else {
-      updateKeyWithCount(tasksByProgress, task.progress);
-    }
-  }
-
-  for (const key in tasksByProgress) {
-    tasksByProgress[key]['color'] = getLegendColor(key);
-    tasksByProgressArray.push(tasksByProgress[key]);
-  }
-
-  // Group by priority  
-  const tasksByPriority = {
-    'Low': {
-      _id: new ObjectID().toString(),
-      name: 'Low',
-      value: 0
-    },
-    'Medium': {
-      _id: new ObjectID().toString(),
-      name: 'Medium',
-      value: 0
-    },
-    'High': {
-      _id: new ObjectID().toString(),
-      name: 'High',
-      value: 0
-    },
-    'Urgent': {
-      _id: new ObjectID().toString(),
-      name: 'Urgent',
-      value: 0
-    }
-  };
-  const tasksByPriorityArray = [];
-
-  for (const task of allTasks) {
-    updateKeyWithCount(tasksByPriority, task.priority);
-  }
-
-  for (const key in tasksByPriority) {
-    tasksByPriority[key]['color'] = getLegendColor(key);
-    tasksByPriorityArray.push(tasksByPriority[key]);
-  }
-
-  // Group by assignee
-  const tasksByAssignee = {};
-  const tasksByAssigneeArray = [];
-
-  for (const task of allTasks) {
-    if (!task.assignee) {
-      updateKeyWithoutCount(tasksByAssignee, 'Unassigned');
-
-      if (moment(task.due).isBefore(Date.now(), 'day') && task.progress !== 'Completed') {
-        if (tasksByAssignee['Unassigned']['Late'] === undefined) {
-          tasksByAssignee['Unassigned']['Late'] = 1;
-        } else {
-          tasksByAssignee['Unassigned']['Late']++;
-        }
-      } else {
-        if (tasksByAssignee['Unassigned'][task.progress] === undefined) {
-          tasksByAssignee['Unassigned'][task.progress] = 1;
-        } else {
-          tasksByAssignee['Unassigned'][task.progress]++;
-        }
-      }
-    } else {
-      updateKeyWithoutCount(tasksByAssignee, task.assignee.name);
-
-      if (moment(task.due).isBefore(Date.now(), 'day') && task.progress !== 'Completed') {
-        if (tasksByAssignee[task.assignee.name]['Late'] === undefined) {
-          tasksByAssignee[task.assignee.name]['Late'] = 1;
-        } else {
-          tasksByAssignee[task.assignee.name]['Late']++;
-        }
-      } else {
-        if (tasksByAssignee[task.assignee.name][task.progress] === undefined) {
-          tasksByAssignee[task.assignee.name][task.progress] = 1;
-        } else {
-          tasksByAssignee[task.assignee.name][task.progress]++;
-        }
-      }
-    }
-  }
-
-  for (const key in tasksByAssignee) {
-    tasksByAssigneeArray.push(tasksByAssignee[key]);
-  }
-
+export const getGroupedListsData = (lists, allTasks) => {
 
   const listsByProgress = {
     'Not started': {
@@ -358,6 +205,30 @@ export const calculateGroupsFromLists = lists => {
     }
   }
 
+  //Group by list
+  const tasksByList = lists.map(list => {
+    const listObject = {};
+    listObject.name = list.name;
+
+    for (const task of list.tasks) {
+      if (moment(task.due).isBefore(Date.now(), 'day') && task.progress !== 'Completed') {
+        if (listObject['Late'] === undefined) {
+          listObject['Late'] = 1;
+        } else {
+          listObject['Late']++;
+        }
+      } else {
+        if (listObject[task.progress] === undefined) {
+          listObject[task.progress] = 1;
+        } else {
+          listObject[task.progress]++;
+        }
+      }
+    }
+
+    return listObject;
+  });
+
   const allAssignees = listsByAssigneeArray.map(assignee => {
     const { tasks: _, ...rest } = assignee;
     return rest;
@@ -369,18 +240,147 @@ export const calculateGroupsFromLists = lists => {
   });
 
   return {
-    tasksByProgressArray,
-    tasksByPriorityArray,
-    tasksByAssigneeArray,
-    tasksByList,
-    tasksRemaining,
     allAssignees,
     allLists,
-    tasksCount: allTasks.length,
     listsByProgressArray,
     listsByPriorityArray,
     listsByAssigneeArray,
-    listsByDueDateArray
+    listsByDueDateArray,
+    tasksByList
+  }
+}
+
+export const getChartData = allTasks => {
+
+  const tasksRemaining = allTasks.reduce((count, task) => {
+    if (task.progress !== 'Completed') {
+      count++;
+    }
+    return count;
+  }, 0)
+
+  // Group by progress
+  const tasksByProgress = {
+    'Not started': {
+      _id: new ObjectID().toString(),
+      name: 'Not started',
+      value: 0
+    },
+    'In progress': {
+      _id: new ObjectID().toString(),
+      name: 'In progress',
+      value: 0
+    },
+    'Completed': {
+      _id: new ObjectID().toString(),
+      name: 'Completed',
+      value: 0
+    },
+    'Late': {
+      _id: new ObjectID().toString(),
+      name: 'Late',
+      value: 0
+    }
+  };
+
+  const tasksByProgressArray = [];
+
+  for (const task of allTasks) {
+    if (moment(task.due).isBefore(Date.now(), 'day') && task.progress !== 'Completed') {
+      updateKeyWithCount(tasksByProgress, 'Late');
+    } else {
+      updateKeyWithCount(tasksByProgress, task.progress);
+    }
+  }
+
+  for (const key in tasksByProgress) {
+    tasksByProgress[key]['color'] = getLegendColor(key);
+    tasksByProgressArray.push(tasksByProgress[key]);
+  }
+
+  // Group by priority  
+  const tasksByPriority = {
+    'Low': {
+      _id: new ObjectID().toString(),
+      name: 'Low',
+      value: 0
+    },
+    'Medium': {
+      _id: new ObjectID().toString(),
+      name: 'Medium',
+      value: 0
+    },
+    'High': {
+      _id: new ObjectID().toString(),
+      name: 'High',
+      value: 0
+    },
+    'Urgent': {
+      _id: new ObjectID().toString(),
+      name: 'Urgent',
+      value: 0
+    }
+  };
+  const tasksByPriorityArray = [];
+
+  for (const task of allTasks) {
+    updateKeyWithCount(tasksByPriority, task.priority);
+  }
+
+  for (const key in tasksByPriority) {
+    tasksByPriority[key]['color'] = getLegendColor(key);
+    tasksByPriorityArray.push(tasksByPriority[key]);
+  }
+
+  // Group by assignee
+  const tasksByAssignee = {};
+  const tasksByAssigneeArray = [];
+
+  for (const task of allTasks) {
+    if (!task.assignee) {
+      updateKeyWithoutCount(tasksByAssignee, 'Unassigned');
+
+      if (moment(task.due).isBefore(Date.now(), 'day') && task.progress !== 'Completed') {
+        if (tasksByAssignee['Unassigned']['Late'] === undefined) {
+          tasksByAssignee['Unassigned']['Late'] = 1;
+        } else {
+          tasksByAssignee['Unassigned']['Late']++;
+        }
+      } else {
+        if (tasksByAssignee['Unassigned'][task.progress] === undefined) {
+          tasksByAssignee['Unassigned'][task.progress] = 1;
+        } else {
+          tasksByAssignee['Unassigned'][task.progress]++;
+        }
+      }
+    } else {
+      updateKeyWithoutCount(tasksByAssignee, task.assignee.name);
+
+      if (moment(task.due).isBefore(Date.now(), 'day') && task.progress !== 'Completed') {
+        if (tasksByAssignee[task.assignee.name]['Late'] === undefined) {
+          tasksByAssignee[task.assignee.name]['Late'] = 1;
+        } else {
+          tasksByAssignee[task.assignee.name]['Late']++;
+        }
+      } else {
+        if (tasksByAssignee[task.assignee.name][task.progress] === undefined) {
+          tasksByAssignee[task.assignee.name][task.progress] = 1;
+        } else {
+          tasksByAssignee[task.assignee.name][task.progress]++;
+        }
+      }
+    }
+  }
+
+  for (const key in tasksByAssignee) {
+    tasksByAssigneeArray.push(tasksByAssignee[key]);
+  }
+
+  return {
+    tasksByProgressArray,
+    tasksByPriorityArray,
+    tasksByAssigneeArray,
+    tasksRemaining
   }
 }
 

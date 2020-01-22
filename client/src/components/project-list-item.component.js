@@ -10,7 +10,7 @@ import './project-list-item.styles.scss';
 
 
 const ProjectListItem = ({ project }) => {
-  const { deleteProject } = useContext(ProjectContext);
+  const { deleteProject, addProjectToFavorite } = useContext(ProjectContext);
   const [showProjectOptions, setShowProjectOptions] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
@@ -53,7 +53,7 @@ const ProjectListItem = ({ project }) => {
         showProjectOptions &&
         <MoreOptions dismiss={() => setShowProjectOptions(false)}>
           <div className='more-options-item' onClick={handleDeleteClick}>Delete</div>
-          <div className='more-options-item'>Add to favorite</div>
+          <div className='more-options-item' onClick={() => addProjectToFavorite(project)}>Add to favorite</div>
         </MoreOptions>
       }
       {

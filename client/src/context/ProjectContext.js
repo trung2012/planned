@@ -8,9 +8,9 @@ const projectReducer = (state, action) => {
     case 'fetch_projects':
       return {
         ...state,
-        projects: action.payload,
+        ...action.payload,
         isLoading: false
-      }
+      };
     case 'fetching_projects':
       return {
         ...state,
@@ -21,10 +21,15 @@ const projectReducer = (state, action) => {
         ...state,
         projects: [...state.projects, action.payload]
       }
+    case 'add_project_to_favorite':
+      return {
+        ...state,
+        favoriteProjects: [...state.favoriteProjects, action.payload]
+      }
     case 'delete_project':
       return {
         ...state,
-        projects: [...state.projects].filter(project => project._id !== action.payload)
+        projects: state.projects.filter(project => project._id !== action.payload)
       }
     case 'add_project_error':
       return {
@@ -46,6 +51,7 @@ export const ProjectContext = React.createContext();
 export const ProjectProvider = ({ children }) => {
   const [projectState, dispatch] = useReducer(projectReducer, {
     projects: [],
+    favoriteProjects: [],
     errorMessage: null,
     isLoading: false
   });
@@ -56,9 +62,9 @@ export const ProjectProvider = ({ children }) => {
       try {
         dispatch({ type: 'fetching_projects' });
         const response = await axios.get('/api/projects/all', requestConfig);
-        dispatch({ type: 'fetch_projects', payload: response.data })
+        dispatch({ type: 'fetch_projects', payload: response.data });
       } catch (err) {
-        addProjectError(err.response.data)
+        addProjectError(err.response.data);
       }
     }
   }, [])
@@ -78,6 +84,19 @@ export const ProjectProvider = ({ children }) => {
         dispatch({ type: 'create_project', payload: response.data })
       } catch (err) {
         addProjectError(err.response.data)
+      }
+    }
+  }
+
+  const addProjectToFavorite = async project => {
+    const requestConfig = generateRequestConfig();
+
+    if (requestConfig) {
+      try {
+        const response = await axios.post('/api/projects/favorite/add', JSON.stringify({ project }), requestConfig);
+        dispatch({ type: 'add_project_to_favorite', payload: response.data })
+      } catch (err) {
+        addProjectError(err.response.data);
       }
     }
   }
@@ -105,7 +124,7 @@ export const ProjectProvider = ({ children }) => {
 
   return (
     <ProjectContext.Provider
-      value={{ projectState, fetchProjects, createProject, deleteProject, addProjectError, clearProjectErrorMessage }}
+      value={{ projectState, fetchProjects, createProject, deleteProject, addProjectError, clearProjectErrorMessage, addProjectToFavorite }}
     >
       {children}
     </ProjectContext.Provider>

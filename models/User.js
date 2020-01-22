@@ -33,7 +33,13 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'File'
-  }
+  },
+  favoriteProjects: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Project'
+    }
+  ]
 }, { id: false })
 
 userSchema.virtual('projects', {

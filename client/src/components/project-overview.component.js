@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import Snackbar from './snackbar.component';
 import { ProjectContext } from '../context/ProjectContext';
 import ProjectList from './project-list.component';
+import FavoriteProjectsList from './favorite-projects-list.component';
 import Modal from './modal.component';
 import Spinner from './spinner.component';
 import ProjectAddForm from './project-add-form.component';
@@ -12,7 +13,7 @@ import './project-overview.styles.scss';
 
 const ProjectOverview = () => {
   const { projectState, fetchProjects, clearProjectErrorMessage } = useContext(ProjectContext);
-  const { projects, isLoading } = projectState;
+  const { projects, favoriteProjects, isLoading } = projectState;
   const [showCreateProjectModal, setShowCreateProjectModal] = useState(false);
 
   useEffect(() => {
@@ -49,7 +50,17 @@ const ProjectOverview = () => {
           <h1 className='project-overview__heading'>Your projects</h1>
           <CustomButton text='New project' onClick={() => setShowCreateProjectModal(true)} />
         </div>
-        <ProjectList projects={projects} />
+        {
+          favoriteProjects.length > 0 &&
+          <div className='project-overview__list'>
+            <h3 className='project-overview__list-header'>Favorite projects</h3>
+            <FavoriteProjectsList projects={favoriteProjects} />
+          </div>
+        }
+        <div className='project-overview__list'>
+          <h3 className='project-overview__list-header'>All projects</h3>
+          <ProjectList projects={projects} />
+        </div>
       </div>
   );
 }

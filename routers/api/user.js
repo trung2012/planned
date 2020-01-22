@@ -194,7 +194,7 @@ router.post('/avatar/:fileName', [auth, parser.single('file')], async (req, res)
         await req.user.save();
 
         res.send({
-          ...req.user.toObject(),
+          ...req.user.toJSON(),
           avatar: newFile
         });
       })

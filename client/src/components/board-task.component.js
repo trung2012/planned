@@ -136,7 +136,10 @@ const BoardTask = ({ task, index }) => {
             </div>
             {
               task.completedBy ?
-                <div className={`${taskClassName}__assignee`}>
+                <div
+                  className={`${taskClassName}__assignee`}
+                  title={`Completed by ${task.completedBy.name} on ${moment(task.updatedAt).format('MM/DD/YYYY')}`}
+                >
                   <div className={`${taskClassName}__completed-by`}>
                     <UserProfilePicture
                       backgroundColor={task.completedBy.color}
@@ -144,7 +147,7 @@ const BoardTask = ({ task, index }) => {
                       name={task.completedBy.name}
                       avatarUrl={task.completedBy.avatar && task.completedBy.avatar.url}
                     />
-                    <div className='completed-by-text' title={`Completed by ${task.completedBy.name} on ${moment(task.updatedAt).format('MM/DD/YYYY')}`}>
+                    <div className='completed-by-text'>
                       {`Completed by ${task.completedBy.name} on ${moment(task.updatedAt).format('MM/DD/YYYY')}`}
                     </div>
                   </div>

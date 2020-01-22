@@ -17,4 +17,12 @@
     font-weight: 300;
     margin-bottom: 3rem;
   }
+
+  &__list {
+    &-header {
+      color: $color-gray-dark;
+      padding-left: 1rem;
+      margin-bottom: 2rem;
+    }
+  }
 }

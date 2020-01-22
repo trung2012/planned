@@ -3,6 +3,7 @@
 .project-add-form {
   display: flex;
   flex-direction: column;
+  padding-top: 1rem;
 
   input {
     -webkit-appearance: none;
@@ -19,12 +20,11 @@
   }
 
   &__name {
-    color: #333;
-    font-size: 2.2rem;
-    font-weight: 100;
+    color: $color-gray-dark;
+    font-size: 2rem;
+    font-weight: 500;
     border: none;
-    border-bottom: 1px solid rgba($color-gray-dark,.7);
-    border-width: thin;
+    border-bottom: 1px solid $color-gray-medium;
     margin-bottom: 3rem;
   }
 
