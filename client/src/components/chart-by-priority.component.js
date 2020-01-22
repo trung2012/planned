@@ -24,8 +24,9 @@ const ChartByPriority = ({ data, tasksCount }) => {
                 dataKey='value'
                 innerRadius={70}
                 outerRadius={80}
-                paddingAngle={2}
+                paddingAngle={tasksCount > 0 ? 2 : 0}
                 animationDuration={1000}
+                blendStroke={true}
               >
                 <Label
                   value={tasksCount} position="centerBottom" className='center-text-top' fontSize='24px'

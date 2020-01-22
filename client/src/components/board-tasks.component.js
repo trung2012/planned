@@ -11,10 +11,12 @@ const BoardTasks = ({ list, isGrouped }) => {
   const listHasTasks = list && list.tasks && list.tasks.length > 0;
   const listWithRealIndexes = {
     ...list,
-    tasks: list.tasks.map((task, index) => {
-      const newTask = { ...task, realIndex: index };
-      return newTask;
-    })
+    tasks: list.tasks
+      ? list.tasks.map((task, index) => {
+        const newTask = { ...task, realIndex: index };
+        return newTask;
+      })
+      : []
   }
   const unfinishedTasks = listHasTasks ? listWithRealIndexes.tasks.filter(task => task.progress !== 'Completed') : [];
   const completedTasks = listHasTasks ? listWithRealIndexes.tasks.filter(task => task.progress === 'Completed') : [];

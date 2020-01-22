@@ -2,8 +2,8 @@
 
 .project-overview {
   margin-top: 3rem;
-  padding: 0 4rem;
-  padding-bottom: 5rem;
+  padding: 4rem;
+  padding-top: 0;
 
   &__header {
     display: flex;
@@ -20,7 +20,7 @@
   }
 
   &__list {
-    margin-bottom: 4rem;
+    margin-bottom: 3rem;
     padding-left: 1rem;
 
     &-header {

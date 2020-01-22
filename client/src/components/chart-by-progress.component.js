@@ -24,8 +24,9 @@ const ChartByProgress = ({ data, tasksRemaining }) => {
                 dataKey='value'
                 innerRadius={70}
                 outerRadius={80}
-                paddingAngle={2}
+                paddingAngle={tasksRemaining > 0 ? 2 : 0}
                 animationDuration={1000}
+                blendStroke={true}
               >
                 <Label
                   value={tasksRemaining} position="centerBottom" className='center-text-top' fontSize='24px'
