@@ -89,7 +89,6 @@ const SignIn = () => {
               </span>
           </div>
           <div className='more-auth-options'>
-            <span className='no-account'>Or</span>
             <span
               className='register-link'
               onClick={handleSubmitGuest}

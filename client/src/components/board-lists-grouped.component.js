@@ -11,7 +11,7 @@ import { AuthContext } from '../context/AuthContext';
 
 import './board-lists-grouped.styles.scss';
 
-const BoardListsGrouped = ({ lists }) => {
+const BoardListsGrouped = ({ lists, isViewingMyTasks }) => {
   const { socket } = useContext(SocketContext);
   const { authState } = useContext(AuthContext);
   const {
@@ -91,7 +91,7 @@ const BoardListsGrouped = ({ lists }) => {
           lists && lists.length > 0 &&
           lists.map((list, index) => {
             return (
-              <BoardList key={list._id} list={list} index={index} isGrouped={true} />
+              <BoardList key={list._id} list={list} index={index} isGrouped={true} isViewingMyTasks={isViewingMyTasks} />
             );
           })
         }

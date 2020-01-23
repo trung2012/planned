@@ -147,6 +147,7 @@ const ProjectDetails = () => {
       socket.off('attachment_deleted');
       socket.off('single_list_replaced');
       socket.off('multiple_lists_replaced')
+      socket.off('lists_reordered')
       socket.off('new_error');
     }
 

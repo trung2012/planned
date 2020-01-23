@@ -6,6 +6,7 @@ const fs = require('fs');
 const parser = require('../../middleware/multer');
 const cloudinary = require('cloudinary');
 
+const Task = require('../../models/Task');
 const File = require('../../models/File');
 const auth = require('../../middleware/auth');
 const User = require('../../models/User');
@@ -199,6 +200,49 @@ router.post('/avatar/:fileName', [auth, parser.single('file')], async (req, res)
         });
       })
     }
+  } catch (err) {
+    console.log(err)
+    res.status(500).send(err);
+  }
+})
+
+router.get('/mytasks', auth, async (req, res) => {
+  try {
+    const tasks = await Task.find({ assignee: req.user._id })
+      .lean().populate({
+        path: 'assignee',
+        select: '-password',
+        populate: {
+          path: 'avatar'
+        }
+      })
+      .populate({
+        path: 'createdBy',
+        select: '-password'
+      })
+      .populate({
+        path: 'updatedBy',
+        select: '-password'
+      })
+      .populate({
+        path: 'completedBy',
+        select: '-password'
+      })
+      .populate({
+        path: 'comments',
+        options: {
+          sort: {
+            'createdAt': -1
+          }
+        },
+        populate: {
+          path: 'author',
+          select: '-password'
+        }
+      })
+      .populate('attachments');
+
+    res.send(tasks);
   } catch (err) {
     console.log(err)
     res.status(500).send(err);

@@ -14,7 +14,7 @@ import BoardTaskAdd from './board-task-add.component';
 import { ReactComponent as AddIcon } from '../assets/add.svg';
 import './board-list.styles.scss';
 
-const BoardList = ({ list, index, isGrouped }) => {
+const BoardList = ({ list, index, isGrouped, isViewingMyTasks }) => {
   const { projectId } = useParams();
   const { socket } = useContext(SocketContext);
   const { deleteList, addTask, updateListName } = useContext(BoardContext);
@@ -58,19 +58,25 @@ const BoardList = ({ list, index, isGrouped }) => {
               {list.name}
             </h4>
           </div>
-          <div className='board-task-add-button' onClick={() => setShowTaskAdd(!showTaskAdd)}>
-            <AddIcon className='add-icon' />
-            Add task
-              </div>
           {
-            showTaskAdd &&
-            <BoardTaskAdd submit={handleAddSubmit} list={list} dismiss={() => setShowTaskAdd(false)} isGrouped={true} />
+            isViewingMyTasks
+              ? null
+              : <React.Fragment>
+                <div className='board-task-add-button' onClick={() => setShowTaskAdd(!showTaskAdd)}>
+                  <AddIcon className='add-icon' />
+                  Add task
+                </div>
+                {
+                  showTaskAdd &&
+                  <BoardTaskAdd submit={handleAddSubmit} list={list} dismiss={() => setShowTaskAdd(false)} isGrouped={true} />
+                }
+              </React.Fragment>
           }
         </div>
         <div
           className='board-list__bottom'
         >
-          <BoardTasks list={list} isGrouped={true} />
+          <BoardTasks list={list} isGrouped={true} isViewingMyTasks={isViewingMyTasks} />
         </div>
       </div>
     );

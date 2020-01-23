@@ -6,7 +6,7 @@ import BoardTasksComleted from './board-tasks-completed.component';
 import { BoardContext } from '../context/BoardContext';
 import './board-tasks.styles.scss';
 
-const BoardTasks = ({ list, isGrouped }) => {
+const BoardTasks = ({ list, isGrouped, isViewingMyTasks }) => {
   const { boardState } = useContext(BoardContext);
   const listHasTasks = list && list.tasks && list.tasks.length > 0;
   const listWithRealIndexes = {
@@ -21,7 +21,7 @@ const BoardTasks = ({ list, isGrouped }) => {
   const unfinishedTasks = listHasTasks ? listWithRealIndexes.tasks.filter(task => task.progress !== 'Completed') : [];
   const completedTasks = listHasTasks ? listWithRealIndexes.tasks.filter(task => task.progress === 'Completed') : [];
 
-  if (boardState.groupBy === 'Progress') {
+  if (boardState.groupBy === 'Progress' || isViewingMyTasks) {
     return <Droppable droppableId={list._id} isDropDisabled={list._id === boardState.disabledDroppableId}>
       {
         (provided, snapshot) => (

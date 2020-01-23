@@ -1,0 +1,150 @@
+@import '../sass/variables';
+
+.side-navbar,
+.side-navbar--collapsed {
+  position: sticky;
+  top: 0;
+  display: block;
+  background-color: $color-black-light;
+  color: #fff;
+  height: 100vh;
+  font-size: 1.4rem;
+  font-weight: 100;
+  padding-top: 2rem;
+  transition: flex-basis .2s ease-out;
+
+  a {
+    color: #fff;
+  }
+
+  &__nav {
+    margin-bottom: 3rem;
+  }
+
+  &__nav-item {
+    display: flex;
+    align-items: center;
+    padding: 1.5rem;
+    transition: all .1s ease-out;
+    cursor: pointer;
+    
+    &:hover {
+      background-color: $color-black-extra-light;
+    }
+
+    &__icon {
+      height: 1.5em;
+      width: 1.5em;
+      flex: 0 0 1.5em;
+      
+      path {
+        fill: #fff;
+      }
+    }
+
+    &__text {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      min-height: 0;
+      min-width: 0;
+      padding-left: 1.75rem;
+    }
+
+    &--active {
+      background-color: $color-black-extra-light;
+    }
+  }
+
+  &__favorite-projects {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+
+    &__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem 0 1.5rem 2rem;
+      cursor: pointer;
+
+      span {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        min-height: 0;
+        min-width: 0;
+      }
+      
+      &:hover {
+        background-color: $color-black-extra-light;
+      }
+
+      .dropdown-icon {
+        height: 2em;
+        width: 2em;
+        fill: #fff;
+        margin: 0 1.5rem;
+        flex: 0 0 2em;
+      }
+    }
+  }
+
+  .collapse-button {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 22.5rem;
+    display: flex;
+    justify-content: flex-end;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all .2s ease-out;
+    
+    &:hover {
+      background-color: $color-black-extra-light;
+    }
+
+    .chevron-right-icon,
+    .chevron-left-icon {    
+      height: 1.75em;
+      width: 1.75em;
+      stroke: #fff;
+    }
+  }
+}
+
+.side-navbar {
+  flex: 0 0 22.5rem;
+  overflow: hidden;
+}
+
+.side-navbar--collapsed {
+  overflow: hidden;
+  flex: 0 0 5.5rem;
+
+  &__nav-item {
+    justify-content: center;
+    padding: 1.5rem;
+    
+    &__text {
+      transform: scaleX(0);
+      display: none;
+    }
+  }
+
+  &__favorite-projects__header {
+    padding: 1.25rem;
+
+    span {
+      transform: scaleX(0);
+      display: none;
+    }
+
+    .dropdown-icon {
+      margin: 0 auto;
+    }
+  }
+
+  .collapse-button {
+    width: 5.5rem;
+    justify-content: center;
+  }
+}
