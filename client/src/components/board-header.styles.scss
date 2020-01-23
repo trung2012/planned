@@ -9,14 +9,14 @@
   &__project-info {
     display: flex;
     cursor: default;
+    margin-right: 2rem;
+    flex: 1 0 22rem;
 
     &--details {
       display: flex;
       flex-direction: column;
       margin-left: .5rem;
       padding-top: 1rem;
-      min-width: 19rem;
-      width: 20rem;
       
       &__name-container {
         display: flex;
@@ -27,12 +27,20 @@
         font-size: 1.5rem;
         font-weight: 500;
         margin-bottom: .5rem;
-        margin-right: 1.5rem;
+        margin-right: 1rem;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+
       }
 
       &__description {
         font-size: 1.3rem;
         color: $color-gray-dark;
+      }
+
+      .favorite-icon,
+      .non-favorite-icon {
+        transform: none;
       }
     }
   }
@@ -42,7 +50,6 @@
     justify-content: space-between;
     align-items: flex-start;
     font-size: 1.4rem;
-    margin-left: 2rem;
     padding: 1rem 0;
     width: 100%;
 

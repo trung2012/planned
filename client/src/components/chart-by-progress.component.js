@@ -24,7 +24,7 @@ const ChartByProgress = ({ data, tasksRemaining }) => {
                 dataKey='value'
                 innerRadius={70}
                 outerRadius={80}
-                paddingAngle={tasksRemaining > 0 ? 2 : 0}
+                paddingAngle={tasksRemaining > 0 ? 3 : 0}
                 animationDuration={1000}
                 blendStroke={true}
               >

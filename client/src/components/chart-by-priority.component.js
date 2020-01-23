@@ -24,7 +24,7 @@ const ChartByPriority = ({ data, tasksCount }) => {
                 dataKey='value'
                 innerRadius={70}
                 outerRadius={80}
-                paddingAngle={tasksCount > 0 ? 2 : 0}
+                paddingAngle={tasksCount > 0 ? 3 : 0}
                 animationDuration={1000}
                 blendStroke={true}
               >
