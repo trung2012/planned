@@ -3,11 +3,16 @@ import { DragDropContext } from 'react-beautiful-dnd';
 
 import BoardList from './board-list.component';
 import { SocketContext } from '../context/SocketContext';
-
+import { MyTasksContext } from '../context/MyTasksContext';
 import './my-tasks-lists.styles.scss';
 
-const MyTaskLists = ({ lists, listsOrder, updateSingleList, updateMultipleLists }) => {
+const MyTaskLists = () => {
   const { socket } = useContext(SocketContext);
+  const {
+    myTasksState: { lists, listsOrder },
+    updateSingleList,
+    updateMultipleLists,
+  } = useContext(MyTasksContext);
 
   const renderedLists = listsOrder.length > 0
     && listsOrder.map(listId => lists[listId]);

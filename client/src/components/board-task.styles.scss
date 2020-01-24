@@ -158,7 +158,7 @@
 
 .board-task--completed {
   &__heading {
-    span {
+    p {
       text-decoration: line-through;
     }
   }

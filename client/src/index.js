@@ -8,15 +8,18 @@ import { ProjectProvider } from './context/ProjectContext';
 // import * as serviceWorker from './serviceWorker';
 import { BoardProvider } from './context/BoardContext';
 import { SocketProvider } from './context/SocketContext';
+import { MyTasksProvider } from './context/MyTasksContext';
 
 ReactDOM.render(
   <SocketProvider>
     <BoardProvider>
       <AuthProvider>
         <ProjectProvider>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
+          <MyTasksProvider>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </MyTasksProvider>
         </ProjectProvider>
       </AuthProvider>
     </BoardProvider>

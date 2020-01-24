@@ -1,19 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 
-
-
 import { ReactComponent as PaperClipIcon } from '../assets/paper_clip.svg';
 import { ReactComponent as CommentIcon } from '../assets/comment.svg';
 import { progressOptions, priorityOptions } from '../utils/dropdownOptions';
-
 import CustomDatePicker from './custom-date-picker.component';
-
-import './board-task-icons.styles.scss';
 import ActionIcon from './action-icon.component';
 import CustomDatePickerIcon from './custom-date-picker-icon.component';
 
-const BoardTaskIcons = ({ task, taskClassName, handleAttributeUpdate }) => {
+import './board-task-icons.styles.scss';
+
+const BoardTaskIcons = ({ task, taskClassName, updateTask }) => {
   const [newDueDate, setNewDueDate] = useState(task.due);
 
   const todaysDate = new Date();
@@ -25,7 +22,7 @@ const BoardTaskIcons = ({ task, taskClassName, handleAttributeUpdate }) => {
 
   const handleSetNewDueDate = date => {
     setNewDueDate(date);
-    handleAttributeUpdate({ due: date });
+    updateTask({ due: date });
   }
 
   return (
@@ -35,7 +32,7 @@ const BoardTaskIcons = ({ task, taskClassName, handleAttributeUpdate }) => {
         && <ActionIcon
           defaultValue={task.priority}
           attributeName='priority'
-          submit={handleAttributeUpdate}
+          submit={updateTask}
           selectOptions={priorityOptions}
         />
       }
@@ -44,7 +41,7 @@ const BoardTaskIcons = ({ task, taskClassName, handleAttributeUpdate }) => {
         && <ActionIcon
           defaultValue={task.progress}
           attributeName='progress'
-          submit={handleAttributeUpdate}
+          submit={updateTask}
           selectOptions={progressOptions}
         />
       }

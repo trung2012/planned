@@ -40,7 +40,7 @@ const BoardTasks = ({ list, isGrouped, isViewingMyTasks }) => {
               listHasTasks &&
               list.tasks.map((task, index) => (
                 task ?
-                  <BoardTask key={task._id} task={task} index={index} isGrouped={isGrouped} />
+                  <BoardTask key={task._id} task={task} listId={list._id} index={index} isGrouped={isGrouped} isViewingMyTasks={isViewingMyTasks} />
                   : null
               ))
             }

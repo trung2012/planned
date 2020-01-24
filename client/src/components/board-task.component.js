@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import moment from 'moment';
-import { useParams, useHistory, useRouteMatch } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import { Draggable } from 'react-beautiful-dnd';
 
 import { SocketContext } from '../context/SocketContext';
@@ -14,12 +14,12 @@ import getSelectIcon from '../utils/getSelectIcon';
 import { handleTaskAssignment, handleTaskUpdate } from '../utils/updateTasks';
 import { AuthContext } from '../context/AuthContext';
 import UserProfilePicture from './user-profile-picture.component';
+import { MyTasksContext } from '../context/MyTasksContext';
 
 import './board-task.styles.scss';
 
-const BoardTask = ({ task, index }) => {
+const BoardTask = ({ task, index, listId, isViewingMyTasks }) => {
   const { url } = useRouteMatch();
-  const { projectId } = useParams();
   const history = useHistory();
   const { socket } = useContext(SocketContext);
   const { authState } = useContext(AuthContext);
@@ -32,11 +32,16 @@ const BoardTask = ({ task, index }) => {
     setCurrentlyOpenedTask,
     updateTaskAttributes,
   } = useContext(BoardContext);
+  const {
+    deleteTaskFromMyTasks,
+    updateTaskInMyTasks,
+    toggleTaskCompletion
+  } = useContext(MyTasksContext);
 
   const [showTaskOptions, setShowTaskOptions] = useState(false);
   const [showAssignmentDropdown, setShowAssignmentDropdown] = useState(false);
-  const { handleAssignTask, handleUnassignTask } = handleTaskAssignment(socket, task._id, projectId, { assignUserToTask, unassignUserFromTask });
-  const { handleCompletionToggle, handleAttributeUpdate } = handleTaskUpdate(socket, task._id, projectId, { updateTaskAttributes });
+  const { handleAssignTask, handleUnassignTask } = handleTaskAssignment(socket, task._id, task.project, { assignUserToTask, unassignUserFromTask });
+  const { handleCompletionToggle, handleAttributeUpdate } = handleTaskUpdate(socket, task._id, task.project, { updateTaskAttributes });
 
   const highlighted = boardState.highlightedMemberId
     && task.assignee
@@ -48,8 +53,12 @@ const BoardTask = ({ task, index }) => {
 
   const handleDeleteClick = event => {
     event.stopPropagation();
-    deleteTask({ taskId: task._id, listId: task.list });
-    socket.emit('delete_task', { taskId: task._id, listId: task.list, projectId });
+    if (isViewingMyTasks) {
+      deleteTaskFromMyTasks({ taskId: task._id, listId });
+    } else {
+      deleteTask({ taskId: task._id, listId: task.list });
+    }
+    socket.emit('delete_task', { taskId: task._id, listId: task.list, projectId: task.project });
     setShowTaskOptions(false);
   }
 
@@ -67,12 +76,26 @@ const BoardTask = ({ task, index }) => {
 
   const handleSetComplete = event => {
     event.stopPropagation();
+    toggleTaskCompletion({ progress: task.progress, completedBy: authState.user, updatedAt: moment().format() });
     handleCompletionToggle(task.progress);
     if (task.progress === 'Completed') {
       handleAttributeUpdate({ completedBy: null });
     } else {
       handleAttributeUpdate({ completedBy: authState.user });
     }
+  }
+
+  const updateTask = updatedData => {
+    const newTask = {
+      ...task,
+      ...updatedData,
+      updatedAt: moment().format()
+    }
+    if (isViewingMyTasks) {
+      updateTaskInMyTasks({ newTask, listId });
+    }
+
+    handleAttributeUpdate(updatedData);
   }
 
   return (
@@ -111,7 +134,7 @@ const BoardTask = ({ task, index }) => {
                 </div>
               </div>
               <div className={`${taskClassName}__content`}>
-                <BoardTaskIcons task={task} taskClassName={taskClassName} handleAttributeUpdate={handleAttributeUpdate} />
+                <BoardTaskIcons task={task} taskClassName={taskClassName} updateTask={updateTask} isViewingMyTasks={isViewingMyTasks} />
                 <OptionsIcon className='options-icon' onClick={handleOptionsIconClick} title='More options'>...</OptionsIcon>
               </div>
               {
