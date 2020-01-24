@@ -39,6 +39,7 @@ const BoardFiltersGroup = ({ groupName, options, filterList }) => {
         </div>
         <div className={`${groupClassname}__items`}>
           {
+            options &&
             options.map(assignee => (
               <div
                 key={assignee._id}
@@ -64,6 +65,7 @@ const BoardFiltersGroup = ({ groupName, options, filterList }) => {
         </div>
         <div className={`${groupClassname}__items`}>
           {
+            options &&
             options.map(option => (
               <BoardFiltersItem
                 key={option._id}
@@ -88,6 +90,7 @@ const BoardFiltersGroup = ({ groupName, options, filterList }) => {
       </div>
       <div className={`${groupClassname}__items`}>
         {
+          options &&
           options.map(option => (
             <BoardFiltersItem
               key={option._id}

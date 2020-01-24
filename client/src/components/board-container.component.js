@@ -34,9 +34,7 @@ const BoardContainer = () => {
     tasksByProgressArray,
     tasksByPriorityArray,
     tasksByAssigneeArray,
-    tasksRemaining,
-    allAssignees,
-    allLists
+    tasksRemaining
   } = getChartData(allTasks);
 
   const {
@@ -44,7 +42,9 @@ const BoardContainer = () => {
     listsByProgressArray,
     listsByPriorityArray,
     listsByAssigneeArray,
-    listsByDueDateArray
+    listsByDueDateArray,
+    allAssignees,
+    allLists
   } = getGroupedListsData(lists, allTasks);
 
   const filteredLists = useListFilters(lists);

@@ -24,7 +24,7 @@
   &__nav-item {
     display: flex;
     align-items: center;
-    padding: 1.5rem;
+    padding: 2rem;
     transition: all .1s ease-out;
     cursor: pointer;
     
@@ -56,14 +56,14 @@
   }
 
   &__favorite-projects {
-    font-size: 1.5rem;
     margin-bottom: 2rem;
 
     &__header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 1.5rem 0 1.5rem 2rem;
+      padding: 1.5rem;
+      padding-right: 0;
       cursor: pointer;
 
       span {
@@ -78,8 +78,8 @@
       }
 
       .dropdown-icon {
-        height: 2em;
-        width: 2em;
+        height: 1.75em;
+        width: 1.75em;
         fill: #fff;
         margin: 0 1.5rem;
         flex: 0 0 2em;
@@ -118,11 +118,10 @@
 
 .side-navbar--collapsed {
   overflow: hidden;
-  flex: 0 0 5.5rem;
+  flex: 0 0 6rem;
 
   &__nav-item {
     justify-content: center;
-    padding: 1.5rem;
     
     &__text {
       transform: scaleX(0);
@@ -131,7 +130,8 @@
   }
 
   &__favorite-projects__header {
-    padding: 1.25rem;
+    padding-left: 0;
+    padding-right: 0;
 
     span {
       transform: scaleX(0);
@@ -144,7 +144,7 @@
   }
 
   .collapse-button {
-    width: 5.5rem;
+    width: 6rem;
     justify-content: center;
   }
 }

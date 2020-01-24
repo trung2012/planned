@@ -1,0 +1,35 @@
+@import '../sass/variables';
+
+.side-navbar-favorites-item {
+  display: flex;
+  align-items: center;
+  font-size: 1.2rem;
+  padding: 1rem 0;
+  cursor: pointer;
+
+  &--active {
+    background-color: $color-black-extra-light;
+  }
+
+  &:hover {
+    background-color: $color-black-extra-light;
+  }
+
+  .project-picture-container {
+    flex: 0 0 4rem;
+    height: 4rem;
+    padding: 1rem;
+  }
+
+  .project-picture {
+    height: 4rem;
+    width: 4rem;
+    font-size: 1.2em;
+    font-weight: 400;
+  }
+
+  .favorite-project-name {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}

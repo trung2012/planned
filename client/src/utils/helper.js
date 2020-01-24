@@ -92,6 +92,7 @@ export const getGroupedListsData = (lists, allTasks) => {
   };
 
   const listsByProgressArray = [];
+  const listsByProgressIds = [];
 
   for (const task of allTasks) {
     updateListKeyWithTask(listsByProgress, task.progress, task);
@@ -99,6 +100,7 @@ export const getGroupedListsData = (lists, allTasks) => {
 
   for (const key in listsByProgress) {
     listsByProgressArray.push(listsByProgress[key]);
+    listsByProgressIds.push(key);
   }
 
   const listsByPriority = {
@@ -246,7 +248,9 @@ export const getGroupedListsData = (lists, allTasks) => {
     listsByPriorityArray,
     listsByAssigneeArray,
     listsByDueDateArray,
-    tasksByList
+    tasksByList,
+    listsByProgress,
+    listsByProgressIds
   }
 }
 

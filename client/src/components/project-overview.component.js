@@ -9,7 +9,7 @@ import Spinner from './spinner.component';
 import './project-overview.styles.scss';
 
 const ProjectOverview = () => {
-  const { projectState, fetchProjects, clearProjectErrorMessage } = useContext(ProjectContext);
+  const { projectState, clearProjectErrorMessage } = useContext(ProjectContext);
   const { projects, favoriteProjects, isLoading } = projectState;
 
   useEffect(() => {
@@ -19,10 +19,6 @@ const ProjectOverview = () => {
       }, 3000)
     }
   }, [projectState.errorMessage, clearProjectErrorMessage])
-
-  useEffect(() => {
-    fetchProjects();
-  }, [fetchProjects])
 
   return (
     isLoading ? <Spinner />

@@ -72,6 +72,12 @@
       border-radius: .2rem;
     }
     
+    .icon-text {
+      font-size: 1.2rem;
+      color: $color-gray-medium;
+      padding-left: .25rem;
+    }
+
     .due-icon-container--late {
       background-color: $color-red-light;
       color: #fff;
@@ -86,11 +92,6 @@
       .icon-text {
         color: #fff;
       }
-    }
-  
-    .icon-text {
-      font-size: 1.2rem;
-      color: $color-gray-medium;
     }
   }
 }
