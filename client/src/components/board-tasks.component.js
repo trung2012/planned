@@ -6,7 +6,7 @@ import BoardTasksComleted from './board-tasks-completed.component';
 import { BoardContext } from '../context/BoardContext';
 import './board-tasks.styles.scss';
 
-const BoardTasks = ({ list, isGrouped, isViewingMyTasks }) => {
+const BoardTasks = ({ list, isGrouped, isViewingMyTasks, disabledDroppableId }) => {
   const { boardState } = useContext(BoardContext);
   const listHasTasks = list && list.tasks && list.tasks.length > 0;
   const listWithRealIndexes = {
@@ -22,7 +22,7 @@ const BoardTasks = ({ list, isGrouped, isViewingMyTasks }) => {
   const completedTasks = listHasTasks ? listWithRealIndexes.tasks.filter(task => task.progress === 'Completed') : [];
 
   if (boardState.groupBy === 'Progress' || isViewingMyTasks) {
-    return <Droppable droppableId={list._id} isDropDisabled={list._id === boardState.disabledDroppableId}>
+    return <Droppable droppableId={list._id} isDropDisabled={list._id === disabledDroppableId}>
       {
         (provided, snapshot) => (
           <div
@@ -40,7 +40,7 @@ const BoardTasks = ({ list, isGrouped, isViewingMyTasks }) => {
               listHasTasks &&
               list.tasks.map((task, index) => (
                 task ?
-                  <BoardTask key={task._id} task={task} listId={list._id} index={index} isGrouped={isGrouped} isViewingMyTasks={isViewingMyTasks} />
+                  <BoardTask key={task._id} task={task} list={list} index={index} isGrouped={isGrouped} isViewingMyTasks={isViewingMyTasks} />
                   : null
               ))
             }
@@ -53,7 +53,7 @@ const BoardTasks = ({ list, isGrouped, isViewingMyTasks }) => {
 
   return (
     <div className='board-tasks-container'>
-      <Droppable droppableId={list._id} isDropDisabled={list._id === boardState.disabledDroppableId}>
+      <Droppable droppableId={list._id} isDropDisabled={list._id === disabledDroppableId}>
         {
           (provided, snapshot) => (
             <div
@@ -70,7 +70,7 @@ const BoardTasks = ({ list, isGrouped, isViewingMyTasks }) => {
               {
                 unfinishedTasks.map(task => (
                   task ?
-                    <BoardTask key={task._id} task={task} index={task.realIndex} isGrouped={isGrouped} />
+                    <BoardTask key={task._id} list={list} task={task} index={task.realIndex} isGrouped={isGrouped} />
                     : null
                 ))
               }
@@ -81,7 +81,7 @@ const BoardTasks = ({ list, isGrouped, isViewingMyTasks }) => {
       </Droppable>
       {
         completedTasks.length > 0 &&
-        <BoardTasksComleted tasks={completedTasks} listId={list._id} />
+        <BoardTasksComleted tasks={completedTasks} list={list} />
       }
     </div>
   );

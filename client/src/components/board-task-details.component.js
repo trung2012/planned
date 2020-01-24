@@ -22,7 +22,7 @@ import getSelectIcon from '../utils/getSelectIcon';
 
 import './board-task-details.styles.scss';
 
-const BoardTaskDetails = ({ task, list, dismiss }) => {
+const BoardTaskDetails = ({ task, dismiss }) => {
   const { projectId } = useParams();
   const { socket } = useContext(SocketContext);
   const { authState } = useContext(AuthContext);
@@ -45,6 +45,8 @@ const BoardTaskDetails = ({ task, list, dismiss }) => {
   const listSelectOptions = boardState.currentProject.lists.map(listId => {
     return boardState.lists[listId];
   })
+  
+  const list = boardState.lists[task.list];
 
   useEffect(() => {
     setNewDescription(description);

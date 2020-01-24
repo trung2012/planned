@@ -24,7 +24,20 @@ const myTaskReducer = (state, action) => {
         isLoading: false
       }
     case 'toggle_task_completion': {
-      const { progress, completedBy }
+      const { listId, newTask } = action.payload;
+      const newState = { ...state };
+
+      newState.lists[listId] = {
+        ...newState.lists[listId], 
+        tasks: newState.lists[listId].tasks.filter(task => task._id !== newTask._id)
+      }
+
+      newState.lists[newTask.progress] = {
+        ...newState.lists[newTask.progress],
+        tasks: [newTask, ...newState.lists[newTask.progress].tasks]
+      }
+      
+      return newState;
     }
     case 'update_task': {
       const { newTask, listId } = action.payload;
@@ -67,6 +80,18 @@ const myTaskReducer = (state, action) => {
         }
       }
     }
+    case 'unassign_task':
+      const { taskId, listId } = action.payload;
+      return {
+        ...state,
+        lists: {
+          ...state.lists,
+          [listId]: {
+            ...state.lists[listId],
+            tasks: state.lists[listId].tasks.filter(task => task._id !== taskId)
+          }
+        }
+      }
     case 'update_single_list': {
       const list = action.payload;
       return {
@@ -139,8 +164,12 @@ export const MyTasksProvider = ({ children }) => {
     dispatch({ type: 'update_task', payload: data });
   }
 
-  const toggleTaskCompletion = ({ progress, completedBy }) => {
-    dispatch({ type: 'toggle_task_completion', payload: { progress, completedBy } });
+  const toggleTaskCompletion = data => {
+    dispatch({ type: 'toggle_task_completion', payload: data });
+  }
+
+  const unassignTaskInMyTasks = data => {
+    dispatch({ type: 'unassign_task', payload: data });
   }
 
   const clearMyTasksError = useCallback(() => {
@@ -157,7 +186,8 @@ export const MyTasksProvider = ({ children }) => {
         clearMyTasksError,
         deleteTaskFromMyTasks,
         updateTaskInMyTasks,
-        toggleTaskCompletion
+        toggleTaskCompletion,
+        unassignTaskInMyTasks
       }}
     >
       {children}

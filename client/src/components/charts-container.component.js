@@ -13,10 +13,10 @@ const ChartContainer = ({ tasksByProgressArray, tasksByPriorityArray, tasksByAss
     <div className='charts'>
       <div className='charts-top'>
         <ChartByProgress data={tasksByProgressArray} tasksRemaining={tasksRemaining} />
-        <ChartByList data={tasksByList} />
+        <ChartByPriority data={tasksByPriorityArray} tasksCount={tasksCount} />
       </div>
       <div className='charts-bottom'>
-        <ChartByPriority data={tasksByPriorityArray} tasksCount={tasksCount} />
+        <ChartByList data={tasksByList} />
         <ChartByAssignee data={tasksByAssigneeArray} />
       </div>
     </div>

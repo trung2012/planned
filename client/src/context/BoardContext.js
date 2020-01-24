@@ -23,8 +23,7 @@ const initialState = {
   filterConditionList: [],
   filterConditionDue: [],
   expandedFilters: [],
-  groupBy: 'List',
-  disabledDroppableId: null
+  groupBy: 'List'
 }
 
 const boardReducer = (state, action) => {
@@ -567,9 +566,9 @@ export const BoardProvider = ({ children }) => {
     dispatch({ type: 'set_show_task_details', payload: value });
   }
 
-  const clearBoard = () => {
+  const clearBoard = useCallback(() => {
     dispatch({ type: 'clear_board' })
-  }
+  }, [])
 
   return (
     <BoardContext.Provider

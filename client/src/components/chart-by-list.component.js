@@ -14,16 +14,16 @@ const ChartByList = ({ data }) => {
         <ResponsiveContainer>
           <BarChart
             data={data}
-            layout='vertical'
           >
-            <XAxis type='number' allowDecimals={false} tick={<CustomizedAxisTick />} />
-            <YAxis
+            <YAxis type='number' allowDecimals={false} tick={{
+                fontSize: 14,
+                transform: 'translate(-10,0)'
+              }}/>
+            <XAxis
               dataKey='name'
               type='category'
-              tick={{
-                fontSize: 14
-              }} />
-            <CartesianGrid vertical={true} horizontal={false} />
+              tick={<CustomizedAxisTick />} />
+            <CartesianGrid vertical={false} horizontal={true} />
             <Tooltip cursor={{ fill: 'transparent' }} />
             <Bar dataKey='Late' stackId='status' fill='#db0033' barSize={10} />
             <Bar dataKey='Not started' stackId='status' fill='#5f5f5f' barSize={10} />

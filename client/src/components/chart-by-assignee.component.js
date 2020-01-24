@@ -15,7 +15,10 @@ const ChartByAssignee = ({ data }) => {
           <BarChart
             data={data}
           >
-            <YAxis type='number' allowDecimals={false} tick={{ transform: 'translate(-10,0)' }} />
+            <YAxis type='number' allowDecimals={false} tick={{ 
+              fontSize: 14,
+              transform: 'translate(-10,0)' 
+              }} />
             <XAxis
               dataKey='name'
               type='category'

@@ -5,16 +5,22 @@ import BoardTaskDetailsContainer from './board-task-details-container.component'
 import Spinner from './spinner.component';
 import MyTasksLists from './my-tasks-lists.component';
 import { MyTasksContext } from '../context/MyTasksContext';
+import { BoardContext } from '../context/BoardContext';
 
 import './my-tasks.styles.scss';
 
 const MyTasks = () => {
   const match = useRouteMatch();
+  const { clearBoard } = useContext(BoardContext);
   const {
     myTasksState,
     fetchUserTasks,
     clearMyTasksError
   } = useContext(MyTasksContext);
+
+  useEffect(() => {
+    clearBoard();
+  }, [clearBoard])
 
   useEffect(() => {
     fetchUserTasks();

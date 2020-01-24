@@ -18,7 +18,7 @@ import { MyTasksContext } from '../context/MyTasksContext';
 
 import './board-task.styles.scss';
 
-const BoardTask = ({ task, index, listId, isViewingMyTasks }) => {
+const BoardTask = ({ task, index, list, isViewingMyTasks }) => {
   const { url } = useRouteMatch();
   const history = useHistory();
   const { socket } = useContext(SocketContext);
@@ -35,7 +35,9 @@ const BoardTask = ({ task, index, listId, isViewingMyTasks }) => {
   const {
     deleteTaskFromMyTasks,
     updateTaskInMyTasks,
-    toggleTaskCompletion
+    toggleTaskCompletion,
+    unassignTaskInMyTasks,
+    setMyTasksCurrentlyOpenedTask
   } = useContext(MyTasksContext);
 
   const [showTaskOptions, setShowTaskOptions] = useState(false);
@@ -54,18 +56,23 @@ const BoardTask = ({ task, index, listId, isViewingMyTasks }) => {
   const handleDeleteClick = event => {
     event.stopPropagation();
     if (isViewingMyTasks) {
-      deleteTaskFromMyTasks({ taskId: task._id, listId });
+      deleteTaskFromMyTasks({ taskId: task._id, listId: list._id });
     } else {
-      deleteTask({ taskId: task._id, listId: task.list });
+      deleteTask({ taskId: task._id, listId: list._id });
     }
-    socket.emit('delete_task', { taskId: task._id, listId: task.list, projectId: task.project });
+    socket.emit('delete_task', { taskId: task._id, listId: list._id, projectId: task.project });
     setShowTaskOptions(false);
   }
 
   const handleTaskDetailsToggle = event => {
     event.stopPropagation();
-    setCurrentlyOpenedTask(task._id);
-    history.push(`${url}/${task._id}`);
+    if (isViewingMyTasks) {
+      setMyTasksCurrentlyOpenedTask(task._id);
+      history.push(`${url}/${task._id}`);
+    } else {
+      setCurrentlyOpenedTask(task._id);
+      history.push(`${url}/${task._id}`);
+    }
     setShowTaskDetails(true);
   }
 
@@ -76,12 +83,33 @@ const BoardTask = ({ task, index, listId, isViewingMyTasks }) => {
 
   const handleSetComplete = event => {
     event.stopPropagation();
-    toggleTaskCompletion({ progress: task.progress, completedBy: authState.user, updatedAt: moment().format() });
+    
+    const newTask = {
+      ...task,
+      updatedAt: moment().format()
+    }
+
     handleCompletionToggle(task.progress);
     if (task.progress === 'Completed') {
       handleAttributeUpdate({ completedBy: null });
+      toggleTaskCompletion({
+        listId: list._id,
+        newTask: {
+          ...newTask,
+          progress: 'Not started',
+          completedBy: null
+        }
+      });
     } else {
       handleAttributeUpdate({ completedBy: authState.user });
+      toggleTaskCompletion({
+        listId: list._id,
+        newTask: {
+          ...newTask,
+          progress: 'Completed',
+          completedBy: authState.user
+        }
+      });
     }
   }
 
@@ -92,10 +120,18 @@ const BoardTask = ({ task, index, listId, isViewingMyTasks }) => {
       updatedAt: moment().format()
     }
     if (isViewingMyTasks) {
-      updateTaskInMyTasks({ newTask, listId });
+      updateTaskInMyTasks({ newTask, listId: list._id });
     }
 
     handleAttributeUpdate(updatedData);
+  }
+
+  const handleTaskAssignmentRemove = () => {
+    if (isViewingMyTasks) {
+      unassignTaskInMyTasks({ taskId: task._id, listId: list._id});
+    }
+
+    handleUnassignTask();
   }
 
   return (
@@ -134,7 +170,7 @@ const BoardTask = ({ task, index, listId, isViewingMyTasks }) => {
                 </div>
               </div>
               <div className={`${taskClassName}__content`}>
-                <BoardTaskIcons task={task} taskClassName={taskClassName} updateTask={updateTask} isViewingMyTasks={isViewingMyTasks} />
+                <BoardTaskIcons task={task} taskClassName={taskClassName} updateTask={updateTask}/>
                 <OptionsIcon className='options-icon' onClick={handleOptionsIconClick} title='More options'>...</OptionsIcon>
               </div>
               {
@@ -181,7 +217,7 @@ const BoardTask = ({ task, index, listId, isViewingMyTasks }) => {
                     assignee={task.assignee}
                     members={boardState.members}
                     handleAssignTask={handleAssignTask}
-                    handleUnassignTask={handleUnassignTask}
+                    handleUnassignTask={handleTaskAssignmentRemove}
                   />
                 </div>
             }
@@ -191,7 +227,7 @@ const BoardTask = ({ task, index, listId, isViewingMyTasks }) => {
                 dismiss={() => setShowAssignmentDropdown(false)}
                 members={boardState.members}
                 assignee={task.assignee}
-                removeMember={handleUnassignTask}
+                removeMember={handleTaskAssignmentRemove}
                 onMemberClick={handleAssignTask}
               />
             }
@@ -199,7 +235,6 @@ const BoardTask = ({ task, index, listId, isViewingMyTasks }) => {
         )
       }
     </Draggable>
-
   );
 }
 

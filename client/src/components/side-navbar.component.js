@@ -7,6 +7,7 @@ import { ReactComponent as AddHeavyIcon } from '../assets/add_heavy.svg';
 import { ReactComponent as OrganizeIcon } from '../assets/organize.svg';
 import { ReactComponent as UserIcon } from '../assets/user.svg';
 import { ReactComponent as DropdownIcon } from '../assets/dropdown.svg';
+import { ReactComponent as DropdownUpIcon } from '../assets/dropdown_up.svg';
 import Modal from './modal.component';
 import ProjectAddForm from './project-add-form.component';
 import SideNavbarFavorites from './side-navbar-favorites.component';
@@ -49,7 +50,11 @@ const SideNavbar = () => {
         <div className={`${sideNavClassname}__favorite-projects`}>
           <div className={`${sideNavClassname}__favorite-projects__header`} onClick={() => setShowFavoriteProjects(!showFavoriteProjects)}>
             <span>Favorite projects</span>
-            <DropdownIcon className='dropdown-icon' />
+            {
+              showFavoriteProjects
+              ? <DropdownUpIcon className='dropdown-icon' title='Collapse all items'/>
+              : <DropdownIcon className='dropdown-icon' title='Expand all items'/>
+            }
           </div>
           {
             showFavoriteProjects &&
@@ -59,8 +64,8 @@ const SideNavbar = () => {
         <footer className='collapse-button' onClick={() => setIsCollapsed(!isCollapsed)}>
           {
             isCollapsed
-              ? <ChevronRightIcon className='chevron-right-icon' />
-              : <ChevronLeftIcon className='chevron-left-icon' />
+              ? <ChevronRightIcon className='chevron-right-icon' title='Expand left navigation pane'/>
+              : <ChevronLeftIcon className='chevron-left-icon' title='Collapse left navigation pane'/>
           }
         </footer>
       </div>

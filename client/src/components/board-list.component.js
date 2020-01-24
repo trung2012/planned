@@ -14,7 +14,7 @@ import BoardTaskAdd from './board-task-add.component';
 import { ReactComponent as AddIcon } from '../assets/add.svg';
 import './board-list.styles.scss';
 
-const BoardList = ({ list, index, isGrouped, isViewingMyTasks }) => {
+const BoardList = ({ list, index, isGrouped, isViewingMyTasks, disabledDroppableId }) => {
   const { projectId } = useParams();
   const { socket } = useContext(SocketContext);
   const { deleteList, addTask, updateListName } = useContext(BoardContext);
@@ -76,7 +76,7 @@ const BoardList = ({ list, index, isGrouped, isViewingMyTasks }) => {
         <div
           className='board-list__bottom'
         >
-          <BoardTasks list={list} isGrouped={true} isViewingMyTasks={isViewingMyTasks} />
+          <BoardTasks list={list} isGrouped={true} isViewingMyTasks={isViewingMyTasks} disabledDroppableId={disabledDroppableId}/>
         </div>
       </div>
     );

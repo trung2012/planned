@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { DragDropContext } from 'react-beautiful-dnd';
@@ -21,17 +21,18 @@ const BoardListsGrouped = ({ lists, isViewingMyTasks }) => {
     },
     assignUserToTask,
     unassignUserFromTask,
-    updateTaskAttributes,
-    setDisabledDroppable
+    updateTaskAttributes
   } = useContext(BoardContext);
   const { projectId } = useParams();
 
+  const [disabledDroppableId, setDisabledDroppableId] = useState(null);
+
   const onDragStart = ({ source }) => {
-    setDisabledDroppable(source.droppableId);
+    setDisabledDroppableId(source.droppableId);
   }
 
   const onDragEnd = ({ destination, source, draggableId }) => {
-    setDisabledDroppable(null);
+    setDisabledDroppableId(null);
     const { handleAssignTask, handleUnassignTask } = handleTaskAssignment(socket, draggableId, projectId, { assignUserToTask, unassignUserFromTask });
     const { handleAttributeUpdate, handleCompletionToggle } = handleTaskUpdate(socket, draggableId, projectId, { updateTaskAttributes });
 
@@ -91,7 +92,14 @@ const BoardListsGrouped = ({ lists, isViewingMyTasks }) => {
           lists && lists.length > 0 &&
           lists.map((list, index) => {
             return (
-              <BoardList key={list._id} list={list} index={index} isGrouped={true} isViewingMyTasks={isViewingMyTasks} />
+              <BoardList 
+                key={list._id} 
+                list={list}
+                index={index}
+                isGrouped={true}
+                isViewingMyTasks={isViewingMyTasks}
+                disabledDroppableId={disabledDroppableId}
+                />
             );
           })
         }
