@@ -110,5 +110,18 @@ module.exports = io => {
       }
     })
 
+    socket.on('fetch_all_lists_by_project', async projectId => {
+      try {
+        const lists = await List.find({ project: projectId })
+          .lean()
+          .select('-tasks');
+
+        socket.emit('get_all_lists_by_project', lists);
+      } catch (err) {
+        console.log(err)
+        socket.emit('new_error', 'Error ordering lists');
+      }
+    })
+
   })
 }

@@ -284,7 +284,7 @@ const boardReducer = (state, action) => {
         currentlyOpenedTask: action.payload
       }
     case 'remove_currently_opened_task': {
-      if (action.payload === state.currentlyOpenedTask) {
+      if (action.payload === state.currentlyOpenedTask._id) {
         return {
           ...state,
           currentlyOpenedTask: null,
@@ -510,10 +510,6 @@ export const BoardProvider = ({ children }) => {
     dispatch({ type: 'rename_attachment', payload: data });
   }, [])
 
-  const setCurrentlyOpenedTask = taskId => {
-    dispatch({ type: 'set_currently_opened_task', payload: taskId });
-  }
-
   const replaceSingleList = useCallback(data => {
     dispatch({ type: 'replace_single_list', payload: data });
   }, [])
@@ -556,6 +552,10 @@ export const BoardProvider = ({ children }) => {
 
   const updateUserAvatar = user => {
     dispatch({ type: 'updated_user_avatar', payload: user });
+  }
+
+  const setCurrentlyOpenedTask = task => {
+    dispatch({ type: 'set_currently_opened_task', payload: task });
   }
 
   const setIsCurrentlyOpenedTaskDeleted = (value) => {

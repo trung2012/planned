@@ -88,9 +88,9 @@ const ProjectDetails = () => {
       addTask(newTask);
     })
 
-    socket.on('task_deleted', deletedTask => {
-      removeCurrentlyOpenedTask(deletedTask.taskId);
-      deleteTask(deletedTask);
+    socket.on('task_deleted', data => {
+      removeCurrentlyOpenedTask(data.taskId);
+      deleteTask(data);
     })
 
     socket.on('task_assigned_to_new_list', data => {

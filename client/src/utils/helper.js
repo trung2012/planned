@@ -43,10 +43,7 @@ const updateListKeyWithTask = (obj, key, task, type) => {
   if (obj[key] === undefined) {
     if (type === 'assignee') {
       obj[key] = {
-        _id: task.assignee._id,
-        name: key,
-        initials: task.assignee.initials,
-        color: task.assignee.color,
+        ...task.assignee,
         tasks: [task]
       }
     } else {
@@ -455,5 +452,14 @@ const getDueCategory = date => {
 
   if (moment(date).subtract(1, 'weeks').isAfter(moment().endOf('week'))) {
     return 'Future';
+  }
+}
+
+
+export function debounce(func, delay) {
+  let timeout;
+  return function (...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), delay);
   }
 }

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useRef, useLayoutEffect, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Draggable } from 'react-beautiful-dnd';
 
@@ -13,6 +13,7 @@ import { BoardContext } from '../context/BoardContext';
 import BoardTaskAdd from './board-task-add.component';
 import { ReactComponent as AddIcon } from '../assets/add.svg';
 import './board-list.styles.scss';
+import { debounce } from '../utils/helper';
 
 const BoardList = ({ list, index, isGrouped, isViewingMyTasks, disabledDroppableId }) => {
   const { projectId } = useParams();
@@ -22,6 +23,33 @@ const BoardList = ({ list, index, isGrouped, isViewingMyTasks, disabledDroppable
   const [showListNameEdit, setShowListNameEdit] = useState(false);
   const [showListDeleteConfirm, setShowListDeleteConfirm] = useState(false);
   const [showTaskAdd, setShowTaskAdd] = useState(false);
+  const [dimensions, setDimensions] = useState({
+    height: window.innerHeight
+  })
+
+  const boardTasksRef = useRef();
+  const [boardTasksStyle, setBoardTasksStyle] = useState(null);
+
+  useEffect(() => {
+    const handleWindowResize = () => {
+      debounce(setDimensions({
+        height: window.innerHeight,
+        width: window.innerWidth
+      }), 1000)
+    }
+
+    window.addEventListener('resize', handleWindowResize);
+
+    return () => {
+      window.removeEventListener('resize', handleWindowResize);
+    }
+  })
+
+  useLayoutEffect(() => {
+    const { top } = boardTasksRef.current.getBoundingClientRect();
+    console.log(top)
+    setBoardTasksStyle({ height: `${(dimensions.height || document.documentElement.clientHeight) - top}px` })
+  }, [dimensions.height])
 
   const handleDeleteClick = () => {
     deleteList({ _id: list._id });
@@ -75,8 +103,10 @@ const BoardList = ({ list, index, isGrouped, isViewingMyTasks, disabledDroppable
         </div>
         <div
           className='board-list__bottom'
+          ref={boardTasksRef}
+          style={boardTasksStyle}
         >
-          <BoardTasks list={list} isGrouped={true} isViewingMyTasks={isViewingMyTasks} disabledDroppableId={disabledDroppableId}/>
+          <BoardTasks list={list} isGrouped={true} isViewingMyTasks={isViewingMyTasks} disabledDroppableId={disabledDroppableId} />
         </div>
       </div>
     );
@@ -157,6 +187,8 @@ const BoardList = ({ list, index, isGrouped, isViewingMyTasks, disabledDroppable
             </div>
             <div
               className='board-list__bottom'
+              ref={boardTasksRef}
+              style={boardTasksStyle}
             >
               <BoardTasks list={list} />
             </div>

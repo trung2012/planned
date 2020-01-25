@@ -70,7 +70,7 @@ const BoardHeader = ({ showChart, allAssignees, allLists }) => {
             Board
           </Link>
         </div>
-        <div className='board-header__project-options--filters'>
+        <div className='board-header__project-options__filters'>
           <BoardMembersDisplay members={members} showMembersDropdown={() => setShowMembersListDropdown(!showMembersListDropdown)} />
           <div className='project-filters'>
             <div className='project-filters__item project-filters__item--members' onClick={() => {

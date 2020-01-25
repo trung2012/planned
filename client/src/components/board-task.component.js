@@ -37,7 +37,8 @@ const BoardTask = ({ task, index, list, isViewingMyTasks }) => {
     updateTaskInMyTasks,
     toggleTaskCompletion,
     unassignTaskInMyTasks,
-    setMyTasksCurrentlyOpenedTask
+    setMyTasksCurrentlyOpenedTask,
+    setMyTasksShowTaskDetails
   } = useContext(MyTasksContext);
 
   const [showTaskOptions, setShowTaskOptions] = useState(false);
@@ -67,10 +68,11 @@ const BoardTask = ({ task, index, list, isViewingMyTasks }) => {
   const handleTaskDetailsToggle = event => {
     event.stopPropagation();
     if (isViewingMyTasks) {
-      setMyTasksCurrentlyOpenedTask(task._id);
+      setMyTasksCurrentlyOpenedTask(task);
       history.push(`${url}/${task._id}`);
+      setMyTasksShowTaskDetails(true);
     } else {
-      setCurrentlyOpenedTask(task._id);
+      setCurrentlyOpenedTask(task);
       history.push(`${url}/${task._id}`);
     }
     setShowTaskDetails(true);
@@ -83,33 +85,40 @@ const BoardTask = ({ task, index, list, isViewingMyTasks }) => {
 
   const handleSetComplete = event => {
     event.stopPropagation();
-    
+
     const newTask = {
       ...task,
-      updatedAt: moment().format()
+      updatedAt: Date.now()
+    }
+
+    if (isViewingMyTasks) {
+      if (task.progress === 'Completed') {
+        toggleTaskCompletion({
+          listId: list._id,
+          newTask: {
+            ...newTask,
+            progress: 'Not started',
+            completedBy: null
+          }
+        });
+      } else {
+        toggleTaskCompletion({
+          listId: list._id,
+          newTask: {
+            ...newTask,
+            progress: 'Completed',
+            completedBy: authState.user
+          }
+        });
+      }
     }
 
     handleCompletionToggle(task.progress);
+
     if (task.progress === 'Completed') {
       handleAttributeUpdate({ completedBy: null });
-      toggleTaskCompletion({
-        listId: list._id,
-        newTask: {
-          ...newTask,
-          progress: 'Not started',
-          completedBy: null
-        }
-      });
     } else {
       handleAttributeUpdate({ completedBy: authState.user });
-      toggleTaskCompletion({
-        listId: list._id,
-        newTask: {
-          ...newTask,
-          progress: 'Completed',
-          completedBy: authState.user
-        }
-      });
     }
   }
 
@@ -117,7 +126,7 @@ const BoardTask = ({ task, index, list, isViewingMyTasks }) => {
     const newTask = {
       ...task,
       ...updatedData,
-      updatedAt: moment().format()
+      updatedAt: Date.now()
     }
     if (isViewingMyTasks) {
       updateTaskInMyTasks({ newTask, listId: list._id });
@@ -128,7 +137,7 @@ const BoardTask = ({ task, index, list, isViewingMyTasks }) => {
 
   const handleTaskAssignmentRemove = () => {
     if (isViewingMyTasks) {
-      unassignTaskInMyTasks({ taskId: task._id, listId: list._id});
+      unassignTaskInMyTasks({ taskId: task._id, listId: list._id });
     }
 
     handleUnassignTask();
@@ -170,7 +179,7 @@ const BoardTask = ({ task, index, list, isViewingMyTasks }) => {
                 </div>
               </div>
               <div className={`${taskClassName}__content`}>
-                <BoardTaskIcons task={task} taskClassName={taskClassName} updateTask={updateTask}/>
+                <BoardTaskIcons task={task} taskClassName={taskClassName} updateTask={updateTask} />
                 <OptionsIcon className='options-icon' onClick={handleOptionsIconClick} title='More options'>...</OptionsIcon>
               </div>
               {

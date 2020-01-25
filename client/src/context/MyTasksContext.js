@@ -7,7 +7,10 @@ const initialState = {
   lists: {},
   listsOrder: [],
   errorMessage: null,
-  isLoading: false
+  isLoading: false,
+  showTaskDetails: false,
+  currentlyOpenedTask: null,
+  isCurrentlyOpenedTaskDeleted: false
 }
 
 const myTaskReducer = (state, action) => {
@@ -28,7 +31,7 @@ const myTaskReducer = (state, action) => {
       const newState = { ...state };
 
       newState.lists[listId] = {
-        ...newState.lists[listId], 
+        ...newState.lists[listId],
         tasks: newState.lists[listId].tasks.filter(task => task._id !== newTask._id)
       }
 
@@ -36,12 +39,16 @@ const myTaskReducer = (state, action) => {
         ...newState.lists[newTask.progress],
         tasks: [newTask, ...newState.lists[newTask.progress].tasks]
       }
-      
+
       return newState;
     }
     case 'update_task': {
       const { newTask, listId } = action.payload;
       const newState = { ...state };
+
+      if (state.currentlyOpenedTask && newTask._id === state.currentlyOpenedTask._id) {
+        newState.currentlyOpenedTask = newTask;
+      }
 
       if (newTask.progress !== listId) {
         const startList = { ...state.lists[listId] };
@@ -55,16 +62,14 @@ const myTaskReducer = (state, action) => {
 
         return newState;
       } else {
-        return {
-          ...state,
-          lists: {
-            ...state.lists,
-            [listId]: {
-              ...state.lists[listId],
-              tasks: state.lists[listId].tasks.map(task => task._id === newTask._id ? newTask : task)
-            }
+        newState.lists = {
+          ...state.lists,
+          [listId]: {
+            ...state.lists[listId],
+            tasks: state.lists[listId].tasks.map(task => task._id === newTask._id ? newTask : task)
           }
         }
+        return newState;
       }
     }
     case 'delete_task': {
@@ -113,6 +118,27 @@ const myTaskReducer = (state, action) => {
         }
       }
     }
+    case 'set_currently_opened_task':
+      return {
+        ...state,
+        currentlyOpenedTask: action.payload
+      }
+    case 'remove_currently_opened_task': {
+      return {
+        ...state,
+        isCurrentlyOpenedTaskDeleted: true
+      }
+    }
+    case 'set_is_currently_deleted':
+      return {
+        ...state,
+        isCurrentlyOpenedTaskDeleted: action.payload
+      }
+    case 'set_show_task_details':
+      return {
+        ...state,
+        showTaskDetails: action.payload
+      }
     case 'add_error':
       return {
         ...state,
@@ -156,9 +182,9 @@ export const MyTasksProvider = ({ children }) => {
     dispatch({ type: 'update_multiple_lists', payload: lists });
   }
 
-  const deleteTaskFromMyTasks = data => {
+  const deleteTaskFromMyTasks = useCallback(data => {
     dispatch({ type: 'delete_task', payload: data });
-  }
+  }, [])
 
   const updateTaskInMyTasks = data => {
     dispatch({ type: 'update_task', payload: data });
@@ -172,6 +198,26 @@ export const MyTasksProvider = ({ children }) => {
     dispatch({ type: 'unassign_task', payload: data });
   }
 
+  const setMyTasksCurrentlyOpenedTask = task => {
+    dispatch({ type: 'set_currently_opened_task', payload: task });
+  }
+
+  const removeMyTasksCurrentlyOpenedTask = useCallback(() => {
+    dispatch({ type: 'remove_currently_opened_task' });
+  }, [])
+
+  const setMyTasksIsCurrentlyOpenedTaskDeleted = (value) => {
+    dispatch({ type: 'set_is_currently_deleted', payload: value });
+  }
+
+  const setMyTasksShowTaskDetails = (value) => {
+    dispatch({ type: 'set_show_task_details', payload: value });
+  }
+
+  const addMyTasksError = useCallback(errorMessage => {
+    dispatch({ type: 'add_error', payload: errorMessage });
+  }, [])
+
   const clearMyTasksError = useCallback(() => {
     dispatch({ type: 'clear_error' });
   }, [])
@@ -183,11 +229,16 @@ export const MyTasksProvider = ({ children }) => {
         fetchUserTasks,
         updateSingleList,
         updateMultipleLists,
+        addMyTasksError,
         clearMyTasksError,
         deleteTaskFromMyTasks,
         updateTaskInMyTasks,
         toggleTaskCompletion,
-        unassignTaskInMyTasks
+        unassignTaskInMyTasks,
+        setMyTasksCurrentlyOpenedTask,
+        setMyTasksShowTaskDetails,
+        removeMyTasksCurrentlyOpenedTask,
+        setMyTasksIsCurrentlyOpenedTaskDeleted
       }}
     >
       {children}

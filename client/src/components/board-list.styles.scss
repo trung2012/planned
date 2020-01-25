@@ -2,21 +2,23 @@
 
 .board-list {
   font-size: 1.4rem;
-  width: 30rem;
+  width: 31rem;
   border-radius: .1rem;
-  flex-shrink: 0;
   margin-left: 1rem;
   margin-right: 1.5rem;
   min-height: 0;
   max-height: 100%;
+  display: block;
 
   &__top {
-    padding-right: 1rem;
+    padding-right: 2rem;
     padding-left: 1rem;
   }
 
   &__bottom {
-    padding: 1rem 1rem 2rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 1rem;
   }
 
   &__header {

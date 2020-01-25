@@ -19,10 +19,11 @@ import { handleTaskAssignment, handleTaskUpdate } from '../utils/updateTasks';
 import FileUpload from './file-upload.component';
 import TaskAttachmentList from './task-attachment-list.component';
 import getSelectIcon from '../utils/getSelectIcon';
+import { MyTasksContext } from '../context/MyTasksContext';
 
 import './board-task-details.styles.scss';
 
-const BoardTaskDetails = ({ task, dismiss }) => {
+const BoardTaskDetails = ({ task, list, listSelectOptions, dismiss, isViewingMyTasks }) => {
   const { projectId } = useParams();
   const { socket } = useContext(SocketContext);
   const { authState } = useContext(AuthContext);
@@ -35,18 +36,16 @@ const BoardTaskDetails = ({ task, dismiss }) => {
     addComment
   } = useContext(BoardContext);
 
+  const {
+    updateTaskInMyTasks
+  } = useContext(MyTasksContext);
+
   const { _id, name, description, assignee, progress, priority, due, updatedAt, comments, createdBy, attachments } = task;
   const [showTaskNameEdit, setShowTaskNameEdit] = useState(false);
   const [showTaskDescriptionEdit, setShowTaskDescriptionEdit] = useState(false);
   const [newCommentText, setNewCommentText] = useState('');
   const [newDueDate, setNewDueDate] = useState(due);
   const [newDescription, setNewDescription] = useState(description);
-
-  const listSelectOptions = boardState.currentProject.lists.map(listId => {
-    return boardState.lists[listId];
-  })
-  
-  const list = boardState.lists[task.list];
 
   useEffect(() => {
     setNewDescription(description);
@@ -60,9 +59,24 @@ const BoardTaskDetails = ({ task, dismiss }) => {
 
   const { handleAttributeUpdate, handleCompletionToggle } = handleTaskUpdate(socket, _id, projectId, { updateTaskAttributes })
 
+  const updateTask = updatedData => {
+    const newTask = {
+      ...task,
+      ...updatedData,
+      updatedAt: Date.now(),
+      updatedBy: authState.user
+    }
+    if (isViewingMyTasks) {
+      updateTaskInMyTasks({ newTask, listId: task.progress });
+    }
+
+    handleAttributeUpdate(updatedData);
+  }
+
   const handleSetNewDueDate = date => {
     setNewDueDate(date);
-    handleAttributeUpdate({ due: date });
+
+    updateTask({ due: date });
   }
 
   const handleMoveTaskToNewList = (newListId) => {
@@ -74,7 +88,13 @@ const BoardTaskDetails = ({ task, dismiss }) => {
         updatedAt: Date.now(),
         updatedBy: authState.user
       };
-      assignTaskToNewList(data);
+
+      if (isViewingMyTasks) {
+        updateTask({ list: newListId });
+      } else {
+        assignTaskToNewList(data);
+      }
+
       socket.emit('assign_task_to_new_list', { data, projectId });
     }
   }
@@ -90,14 +110,14 @@ const BoardTaskDetails = ({ task, dismiss }) => {
     }
 
     addComment(commentData);
-    handleAttributeUpdate({ updatedAt: Date.now() });
+    updateTask({ updatedAt: Date.now() });
     setNewCommentText('');
     socket.emit('add_comment', commentData);
   }
 
   const handleTaskEditName = taskName => {
     if (name !== taskName) {
-      handleAttributeUpdate({ name: taskName })
+      updateTask({ name: taskName })
     }
     setShowTaskNameEdit(false);
   }
@@ -136,10 +156,10 @@ const BoardTaskDetails = ({ task, dismiss }) => {
         </div>
         <div className='board-task-details__dropdowns'>
           <CustomSelect label='List' inputDefault={list} selectOptions={listSelectOptions} submit={handleMoveTaskToNewList} />
-          <CustomSelect label='Progress' inputDefault={progress} selectOptions={progressOptions} submit={handleAttributeUpdate} />
-          <CustomSelect label='Priority' inputDefault={priority} selectOptions={priorityOptions} submit={handleAttributeUpdate} />
+          <CustomSelect label='Progress' inputDefault={progress} selectOptions={progressOptions} submit={updateTask} />
+          <CustomSelect label='Priority' inputDefault={priority} selectOptions={priorityOptions} submit={updateTask} />
           <CustomDatePicker date={Date.parse(newDueDate)} setDate={handleSetNewDueDate}>
-            <CustomDatePickerSelect />
+            <CustomDatePickerSelect style={{ width: '22rem' }} />
           </CustomDatePicker>
         </div>
         <div className='board-task-details__description'>

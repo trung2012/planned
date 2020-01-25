@@ -7,10 +7,10 @@
   padding: 0 1.5rem;
   
   &__project-info {
-    display: flex;
+    display: inline-flex;
     cursor: default;
     margin-right: 2rem;
-    flex: 1 0 22rem;
+    min-width: 22rem;
     padding-top: 1rem;
 
     &--details {
@@ -52,12 +52,12 @@
     align-items: flex-start;
     font-size: 1.4rem;
     padding: 1rem 0;
-    width: 100%;
+    flex: 1;
 
     &__nav {
-      flex: 1 0 15rem;
-      display: flex;
-      margin-left: 3rem;
+      display: inline-flex;
+      margin-left: 2.5rem;
+      margin-right: 2.5rem;
       padding-top: 1rem;
 
       &__item,
@@ -96,8 +96,10 @@
       }
     }
 
-    &--filters {
+    &__filters {
+      flex: 1 1 auto;
       display: flex;
+      justify-content: flex-end;
     }
   }
 }

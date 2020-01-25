@@ -97,7 +97,8 @@
     padding: 1.5rem;
     cursor: pointer;
     transition: all .2s ease-out;
-    
+    background-color: $color-black-light;
+
     &:hover {
       background-color: $color-black-extra-light;
     }

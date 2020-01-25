@@ -8,11 +8,16 @@ import './board-task-details-container.styles.scss';
 
 const BoardTaskDetailsContainer = () => {
   const history = useHistory();
-  const { projectId } = useParams();
-  const { taskId } = useParams();
-  const { boardState, setShowTaskDetails, setIsCurrentlyOpenedTaskDeleted } = useContext(BoardContext);
+  const { projectId, taskId } = useParams();
+  const { boardState, setShowTaskDetails, setIsCurrentlyOpenedTaskDeleted, setCurrentlyOpenedTask } = useContext(BoardContext);
   const task = boardState.tasks && boardState.tasks[taskId];
   const list = task && boardState.lists && boardState.lists[task.list];
+
+  const listSelectOptions = boardState.currentProject.lists
+    ? boardState.currentProject.lists.map(listId => {
+      return boardState.lists[listId];
+    })
+    : [];
 
   return (
     boardState.isCurrentlyOpenedTaskDeleted ?
@@ -31,7 +36,9 @@ const BoardTaskDetailsContainer = () => {
       <BoardTaskDetails
         task={task}
         list={list}
+        listSelectOptions={listSelectOptions}
         dismiss={() => {
+          setCurrentlyOpenedTask(null);
           setShowTaskDetails(false);
           history.push(`/projects/${projectId}`)
         }} />

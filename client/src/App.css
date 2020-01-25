@@ -7,4 +7,6 @@
 
 .app-main-content {
   display: flex;
+  height: calc(100vh - 5.25rem);
+  overflow: hidden;
 }

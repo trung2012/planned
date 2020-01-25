@@ -27,7 +27,10 @@ module.exports = io => {
         const [project, lists, tasks] = await Promise.all([
           Project.findById(projectId).lean().populate({
             path: 'members',
-            select: '-password'
+            select: '-password',
+            populate: {
+              path: 'avatar'
+            }
           }),
           List.find({ project: projectId }).lean(),
           Task.find({ project: projectId }).lean().populate({

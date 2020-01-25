@@ -16,7 +16,7 @@ const BoardMembersDropdown = ({ members, dismiss }) => {
   const { boardState, fetchUsers, addMember, deleteMember } = useContext(BoardContext);
   const [memberName, setMemberName] = useState('');
   const [showMemberSearchResults, setShowMemberSearchResults] = useState(false);
-  const debouncedSearchInput = useDebounce(memberName, 350);
+  const debouncedSearchInput = useDebounce(memberName, 300);
 
   const handleChange = event => {
     setMemberName(event.target.value);

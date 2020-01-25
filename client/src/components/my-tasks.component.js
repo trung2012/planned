@@ -1,13 +1,14 @@
 import React, { useEffect, useContext } from 'react';
 import { Route, useRouteMatch } from 'react-router-dom';
 
-import BoardTaskDetailsContainer from './board-task-details-container.component';
+import Snackbar from './snackbar.component';
 import Spinner from './spinner.component';
 import MyTasksLists from './my-tasks-lists.component';
 import { MyTasksContext } from '../context/MyTasksContext';
 import { BoardContext } from '../context/BoardContext';
 
 import './my-tasks.styles.scss';
+import MyTasksTaskDetailsContainer from './my-tasks-task-details-container.component';
 
 const MyTasks = () => {
   const match = useRouteMatch();
@@ -42,7 +43,11 @@ const MyTasks = () => {
           :
           <MyTasksLists />
       }
-      <Route path={`${match.path}/:taskId`} component={BoardTaskDetailsContainer} />
+      <Route path={`${match.path}/:taskId`} component={MyTasksTaskDetailsContainer} />
+      {
+        myTasksState.errorMessage &&
+        <Snackbar text={myTasksState.errorMessage} />
+      }
     </div>
   );
 }
