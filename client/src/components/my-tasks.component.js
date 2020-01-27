@@ -41,7 +41,9 @@ const MyTasks = () => {
         myTasksState.isLoading
           ? <Spinner />
           :
-          <MyTasksLists />
+          myTasksState.tasksCount > 0
+            ? <MyTasksLists />
+            : <h2 className='no-task-message'>No assigned tasks</h2>
       }
       <Route path={`${match.path}/:taskId`} component={MyTasksTaskDetailsContainer} />
       {

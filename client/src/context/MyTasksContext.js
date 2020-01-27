@@ -6,6 +6,7 @@ import { getGroupedListsData, generateRequestConfig } from '../utils/helper';
 const initialState = {
   lists: {},
   listsOrder: [],
+  tasksCount: 0,
   errorMessage: null,
   isLoading: false,
   showTaskDetails: false,
@@ -167,7 +168,7 @@ export const MyTasksProvider = ({ children }) => {
       try {
         const response = await axios.get('/api/users/mytasks', requestConfig);
         const { listsByProgress, listsByProgressIds } = getGroupedListsData([], response.data);
-        dispatch({ type: 'fetch_mytasks', payload: { lists: listsByProgress, listsOrder: listsByProgressIds } });
+        dispatch({ type: 'fetch_mytasks', payload: { lists: listsByProgress, listsOrder: listsByProgressIds, tasksCount: response.data.length } });
       } catch (err) {
         dispatch({ type: 'add_error', payload: err.response.data });
       }
