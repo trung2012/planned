@@ -136,6 +136,13 @@
     }
   }
 
+  &__main-content {
+    &::-webkit-scrollbar {
+      width: .3rem;
+      height: .3rem;
+    }
+  }
+
   &__favorite-projects__header {
     padding-left: 0;
     padding-right: 0;
