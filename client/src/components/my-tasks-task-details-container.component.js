@@ -65,8 +65,6 @@ const MyTasksTaskDetailsContainer = () => {
     addMyTasksError
   ])
 
-  console.log(myTasksState.isCurrentlyOpenedTaskDeleted)
-
   if (task && list) {
 
     return (

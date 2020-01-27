@@ -30,37 +30,39 @@ const SideNavbar = () => {
   return (
     <React.Fragment>
       <div className={sideNavClassname}>
-        <div className={`${sideNavClassname}__nav`}>
-          <div className={`${sideNavClassname}__nav-item`} onClick={() => {
-            if (!showCreateProjectModal) {
-              setShowCreateProjectModal(true);
-            }
-          }}>
-            <AddHeavyIcon className={`${sideNavClassname}__nav-item__icon`} title='Create a new project' />
-            <span className={`${sideNavClassname}__nav-item__text`}>New project</span>
+        <div className={`${sideNavClassname}__main-content`}>
+          <div className={`${sideNavClassname}__nav`}>
+            <div className={`${sideNavClassname}__nav-item`} onClick={() => {
+              if (!showCreateProjectModal) {
+                setShowCreateProjectModal(true);
+              }
+            }}>
+              <AddHeavyIcon className={`${sideNavClassname}__nav-item__icon`} title='Create a new project' />
+              <span className={`${sideNavClassname}__nav-item__text`}>New project</span>
+            </div>
+            <NavLink to='/home' activeClassName={`${sideNavClassname}__nav-item--active`} className={`${sideNavClassname}__nav-item`} title='View your projects'>
+              <OrganizeIcon className={`${sideNavClassname}__nav-item__icon`} />
+              <span className={`${sideNavClassname}__nav-item__text`}>My projects</span>
+            </NavLink>
+            <NavLink to='/mytasks' activeClassName={`${sideNavClassname}__nav-item--active`} className={`${sideNavClassname}__nav-item`} title='View tasks assigned to you'>
+              <UserIcon className={`${sideNavClassname}__nav-item__icon`} />
+              <span className={`${sideNavClassname}__nav-item__text`}>My tasks</span>
+            </NavLink>
           </div>
-          <NavLink to='/home' activeClassName={`${sideNavClassname}__nav-item--active`} className={`${sideNavClassname}__nav-item`} title='View your projects'>
-            <OrganizeIcon className={`${sideNavClassname}__nav-item__icon`} />
-            <span className={`${sideNavClassname}__nav-item__text`}>My projects</span>
-          </NavLink>
-          <NavLink to='/mytasks' activeClassName={`${sideNavClassname}__nav-item--active`} className={`${sideNavClassname}__nav-item`} title='View tasks assigned to you'>
-            <UserIcon className={`${sideNavClassname}__nav-item__icon`} />
-            <span className={`${sideNavClassname}__nav-item__text`}>My tasks</span>
-          </NavLink>
-        </div>
-        <div className={`${sideNavClassname}__favorite-projects`}>
-          <div className={`${sideNavClassname}__favorite-projects__header`} onClick={() => setShowFavoriteProjects(!showFavoriteProjects)}>
-            <span>Favorite projects</span>
+          <div className={`${sideNavClassname}__favorite-projects`}>
+            <div className={`${sideNavClassname}__favorite-projects__header`} onClick={() => setShowFavoriteProjects(!showFavoriteProjects)}>
+              <span>Favorite projects</span>
+              {
+                showFavoriteProjects
+                  ? <DropdownUpIcon className='dropdown-icon' title='Collapse all items' />
+                  : <DropdownIcon className='dropdown-icon' title='Expand all items' />
+              }
+            </div>
             {
-              showFavoriteProjects
-                ? <DropdownUpIcon className='dropdown-icon' title='Collapse all items' />
-                : <DropdownIcon className='dropdown-icon' title='Expand all items' />
+              showFavoriteProjects &&
+              <SideNavbarFavorites />
             }
           </div>
-          {
-            showFavoriteProjects &&
-            <SideNavbarFavorites />
-          }
         </div>
         <footer className='collapse-button' onClick={() => resizeSideNavbar()}>
           {

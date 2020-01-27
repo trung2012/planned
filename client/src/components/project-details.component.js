@@ -185,7 +185,8 @@ const ProjectDetails = () => {
     <React.Fragment>
       <div
         className='project-details'
-        style={{ width: isSidebarCollapsed ? `calc(100vw - ${sidebarWidthCollapsed}rem)` : `calc(100vw - ${sidebarWidth}rem)` }}>
+        style={{ width: isSidebarCollapsed ? `calc(100vw - ${sidebarWidthCollapsed}rem)` : `calc(100vw - ${sidebarWidth}rem)` }}
+      >
         {
           boardState.isLoading ?
             <Spinner />

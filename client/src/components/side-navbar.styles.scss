@@ -13,6 +13,11 @@
   padding-top: 2rem;
   transition: flex-basis .2s ease-out;
 
+  &__main-content {
+    height: calc(100% - 6rem);
+    overflow-y: auto;
+  }
+
   a {
     color: #fff;
   }
@@ -88,10 +93,10 @@
   }
 
   .collapse-button {
-    // position: fixed;
-    // left: 0;
-    // bottom: 0;
-    // width: 22.5rem;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 22.5rem;
     display: flex;
     justify-content: flex-end;
     padding: 1.5rem;
