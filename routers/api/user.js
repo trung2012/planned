@@ -174,7 +174,7 @@ router.post('/avatar/:fileName', [auth, parser.single('file')], async (req, res)
 
         const newFile = new File({
           name: req.params.fileName,
-          url: result.url,
+          url: result.secure_url,
           public_id: result.public_id
         });
 

@@ -22,7 +22,7 @@ const returnRouter = (io) => {
 
           const newFile = new File({
             name: req.params.fileName,
-            url: result.url,
+            url: result.secure_url,
             public_id: result.public_id,
             task: req.params.taskId
           });
