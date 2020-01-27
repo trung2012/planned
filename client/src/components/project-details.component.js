@@ -1,12 +1,14 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { Route, useParams, useRouteMatch } from 'react-router-dom';
 
+import { NavContext } from '../context/NavContext';
 import { BoardContext } from '../context/BoardContext';
 import { SocketContext } from '../context/SocketContext';
 import BoardContainer from './board-container.component';
 import Spinner from './spinner.component';
 import Snackbar from './snackbar.component';
 import BoardTaskDetailsContainer from './board-task-details-container.component';
+
 import './project-details.styles.scss';
 
 const ProjectDetails = () => {
@@ -37,6 +39,8 @@ const ProjectDetails = () => {
   } = useContext(BoardContext);
   const [showErrorSnackbar, setShowErrorSnackbar] = useState(false);
   const { projectId } = useParams();
+
+  const { navState: { isSidebarCollapsed, sidebarWidth, sidebarWidthCollapsed } } = useContext(NavContext);
 
   useEffect(() => {
     if (boardState.errorMessage) {
@@ -179,7 +183,9 @@ const ProjectDetails = () => {
 
   return (
     <React.Fragment>
-      <div className='project-details'>
+      <div
+        className='project-details'
+        style={{ width: isSidebarCollapsed ? `calc(100vw - ${sidebarWidthCollapsed}rem)` : `calc(100vw - ${sidebarWidth}rem)` }}>
         {
           boardState.isLoading ?
             <Spinner />

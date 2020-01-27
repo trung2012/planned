@@ -7,6 +7,7 @@
 
 .app-main-content {
   display: flex;
-  height: calc(100vh - 5.25rem);
-  overflow: hidden;
+  width: 100%;
+  overflow-y: hidden;
+  overflow-x: auto;
 }

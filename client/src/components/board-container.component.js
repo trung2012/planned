@@ -53,7 +53,7 @@ const BoardContainer = () => {
     lists.length > 0 ?
       <React.Fragment>
         <BoardHeader showChart={showChart} allLists={allLists} allAssignees={allAssignees} />
-        <div className='board-container'>
+        <div className='board-container' id='board-container'>
           {
             showChart
               ? <ChartContainer

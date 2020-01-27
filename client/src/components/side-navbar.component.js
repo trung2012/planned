@@ -12,15 +12,16 @@ import Modal from './modal.component';
 import ProjectAddForm from './project-add-form.component';
 import SideNavbarFavorites from './side-navbar-favorites.component';
 import { ProjectContext } from '../context/ProjectContext';
+import { NavContext } from '../context/NavContext';
 
 import './side-navbar.styles.scss';
 
 const SideNavbar = () => {
   const { fetchProjects } = useContext(ProjectContext);
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const { navState: { isSidebarCollapsed }, resizeSideNavbar } = useContext(NavContext);
   const [showCreateProjectModal, setShowCreateProjectModal] = useState(false);
   const [showFavoriteProjects, setShowFavoriteProjects] = useState(true);
-  const sideNavClassname = isCollapsed ? 'side-navbar--collapsed' : 'side-navbar'
+  const sideNavClassname = isSidebarCollapsed ? 'side-navbar--collapsed' : 'side-navbar'
 
   useEffect(() => {
     fetchProjects();
@@ -52,8 +53,8 @@ const SideNavbar = () => {
             <span>Favorite projects</span>
             {
               showFavoriteProjects
-              ? <DropdownUpIcon className='dropdown-icon' title='Collapse all items'/>
-              : <DropdownIcon className='dropdown-icon' title='Expand all items'/>
+                ? <DropdownUpIcon className='dropdown-icon' title='Collapse all items' />
+                : <DropdownIcon className='dropdown-icon' title='Expand all items' />
             }
           </div>
           {
@@ -61,11 +62,11 @@ const SideNavbar = () => {
             <SideNavbarFavorites />
           }
         </div>
-        <footer className='collapse-button' onClick={() => setIsCollapsed(!isCollapsed)}>
+        <footer className='collapse-button' onClick={() => resizeSideNavbar()}>
           {
-            isCollapsed
-              ? <ChevronRightIcon className='chevron-right-icon' title='Expand left navigation pane'/>
-              : <ChevronLeftIcon className='chevron-left-icon' title='Collapse left navigation pane'/>
+            isSidebarCollapsed
+              ? <ChevronRightIcon className='chevron-right-icon' title='Expand left navigation pane' />
+              : <ChevronLeftIcon className='chevron-left-icon' title='Collapse left navigation pane' />
           }
         </footer>
       </div>

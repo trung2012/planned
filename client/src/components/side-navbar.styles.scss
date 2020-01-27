@@ -7,7 +7,7 @@
   display: block;
   background-color: $color-black-light;
   color: #fff;
-  height: 100vh;
+  height: calc(100vh - 5.25rem);
   font-size: 1.4rem;
   font-weight: 100;
   padding-top: 2rem;
@@ -88,10 +88,10 @@
   }
 
   .collapse-button {
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    width: 22.5rem;
+    // position: fixed;
+    // left: 0;
+    // bottom: 0;
+    // width: 22.5rem;
     display: flex;
     justify-content: flex-end;
     padding: 1.5rem;

@@ -5,10 +5,11 @@ import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { ProjectProvider } from './context/ProjectContext';
-// import * as serviceWorker from './serviceWorker';
 import { BoardProvider } from './context/BoardContext';
 import { SocketProvider } from './context/SocketContext';
 import { MyTasksProvider } from './context/MyTasksContext';
+import { NavProvider } from './context/NavContext';
+// import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   <SocketProvider>
@@ -16,9 +17,11 @@ ReactDOM.render(
       <AuthProvider>
         <ProjectProvider>
           <MyTasksProvider>
-            <BrowserRouter>
-              <App />
-            </BrowserRouter>
+            <NavProvider>
+              <BrowserRouter>
+                <App />
+              </BrowserRouter>
+            </NavProvider>
           </MyTasksProvider>
         </ProjectProvider>
       </AuthProvider>

@@ -12,8 +12,9 @@ import { ReactComponent as OptionsIcon } from '../assets/options.svg';
 import { BoardContext } from '../context/BoardContext';
 import BoardTaskAdd from './board-task-add.component';
 import { ReactComponent as AddIcon } from '../assets/add.svg';
-import './board-list.styles.scss';
 import { debounce } from '../utils/helper';
+
+import './board-list.styles.scss';
 
 const BoardList = ({ list, index, isGrouped, isViewingMyTasks, disabledDroppableId }) => {
   const { projectId } = useParams();
@@ -47,7 +48,6 @@ const BoardList = ({ list, index, isGrouped, isViewingMyTasks, disabledDroppable
 
   useLayoutEffect(() => {
     const { top } = boardTasksRef.current.getBoundingClientRect();
-    console.log(top)
     setBoardTasksStyle({ height: `${(dimensions.height || document.documentElement.clientHeight) - top}px` })
   }, [dimensions.height])
 
