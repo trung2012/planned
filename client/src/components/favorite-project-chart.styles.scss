@@ -1,6 +1,7 @@
 @import '../sass/variables';
 
 .favorite-project-chart {
+  flex: 0 0 44rem;
   display: inline-flex;
   flex-direction: column;
   border: 1px solid $color-gray-light;
