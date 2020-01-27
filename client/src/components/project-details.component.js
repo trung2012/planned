@@ -93,6 +93,7 @@ const ProjectDetails = () => {
     })
 
     socket.on('task_deleted', data => {
+      console.log(data)
       removeCurrentlyOpenedTask(data.taskId);
       deleteTask(data);
     })

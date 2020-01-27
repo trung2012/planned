@@ -100,6 +100,4 @@ module.exports = io => {
       console.log(`${socket.decoded_token.name} disconnected`);
     })
   })
-
-
 }

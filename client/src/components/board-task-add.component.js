@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import { useParams } from 'react-router-dom';
 import { ObjectID } from 'bson';
 
 import { BoardContext } from '../context/BoardContext';
@@ -14,6 +15,7 @@ import { getDueDate } from '../utils/helper';
 import './board-task-add.styles.scss';
 
 const BoardTaskAdd = ({ submit, list, dismiss, isGrouped }) => {
+  const { projectId } = useParams();
   const { authState } = useContext(AuthContext);
   const { boardState } = useContext(BoardContext);
   const [newTaskName, setNewTaskName] = useState('');
@@ -32,6 +34,7 @@ const BoardTaskAdd = ({ submit, list, dismiss, isGrouped }) => {
       name: newTaskName,
       due: dueDate,
       list: newTaskList._id,
+      project: projectId,
       description: '',
       progress: 'Not started',
       priority: 'Low',
@@ -81,6 +84,7 @@ const BoardTaskAdd = ({ submit, list, dismiss, isGrouped }) => {
         name: newTaskName,
         due: dueDate,
         list: list._id,
+        project: projectId,
         description: '',
         progress: 'Not started',
         priority: 'Low',

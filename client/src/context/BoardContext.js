@@ -15,7 +15,7 @@ const initialState = {
   updateMessage: null,
   isLoading: false,
   showTaskDetails: false,
-  currentlyOpenedTask: null,
+  currentlyOpenedTask: {},
   isCurrentlyOpenedTaskDeleted: false,
   filterConditionName: '',
   filterConditionPriority: [],

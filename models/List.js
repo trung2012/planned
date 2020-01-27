@@ -7,7 +7,8 @@ const listSchema = new mongoose.Schema({
   },
   name: {
     type: String,
-    required: true
+    required: true,
+    trim: true
   },
   project: {
     type: mongoose.Schema.Types.ObjectId,
