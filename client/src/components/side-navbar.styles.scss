@@ -16,6 +16,7 @@
   &__main-content {
     height: calc(100% - 6rem);
     overflow-y: auto;
+    overflow-x: hidden;
   }
 
   a {
