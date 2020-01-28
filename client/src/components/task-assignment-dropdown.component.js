@@ -38,7 +38,16 @@ const TaskAssignmentDropdown = ({ dismiss, onMemberClick, assignee, removeMember
   return (
     <React.Fragment>
       <div className='overlay' onClick={dismiss}></div>
-      <div className='task-assignment-dropdown' ref={taskAssignmentDropdownRef} style={style}>
+      <div 
+        className='task-assignment-dropdown' 
+        ref={taskAssignmentDropdownRef} 
+        style={style}
+        onKeyDown={event => {
+        if (event.keyCode === 27) {
+          dismiss();
+        }
+      }}
+      >
         <div className='task-assignment-dropdown__header'>
           <h3>Assign</h3>
           <CustomInput
