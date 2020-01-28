@@ -4,11 +4,13 @@ import axios from 'axios';
 import Progress from './progress.component';
 import { BoardContext } from '../context/BoardContext';
 import { generateRequestConfig } from '../utils/helper';
+import { MyTasksContext } from '../context/MyTasksContext';
 
 import './file-upload.styles.scss';
 
-const FileUpload = ({ text, url }) => {
+const FileUpload = ({ text, url, isViewingMyTasks }) => {
   const { addBoardError } = useContext(BoardContext);
+  const { addMyTasksError } = useContext(MyTasksContext);
   const [uploadPercentage, setUploadPercentage] = useState(0);
 
   const handleImageUpload = async (event) => {
@@ -41,7 +43,11 @@ const FileUpload = ({ text, url }) => {
         }
 
       } catch (err) {
-        addBoardError('Error uploading file. Please try again')
+        setUploadPercentage(0);
+        addBoardError(err.response.data);
+        if (isViewingMyTasks) {
+          addMyTasksError(err.response.data)
+        }
       }
     }
   }

@@ -186,7 +186,7 @@ router.post('/avatar/:fileName', [auth, parser.single('file')], async (req, res)
         if (oldFile) {
           cloudinary.v2.uploader.destroy(oldFile.public_id, (error, result) => {
             if (error) {
-              throw new Error(error)
+              throw new Error(error.message)
             }
           })
           await oldFile.remove();

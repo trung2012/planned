@@ -47,6 +47,7 @@ const UserAccountDetails = ({ setShowPasswordChange, setShowAccountDetails }) =>
         }
 
       } catch (err) {
+        setUploadPercentage(0);
         addAuthError(err.response.data);
       }
     }

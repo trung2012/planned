@@ -35,8 +35,7 @@ const BoardTask = ({ task, index, list, isViewingMyTasks }) => {
   const {
     deleteTaskFromMyTasks,
     updateTaskInMyTasks,
-    toggleTaskCompletion,
-    unassignTaskInMyTasks,
+    toggleTaskCompletionMyTasks,
     setMyTasksCurrentlyOpenedTask,
     setMyTasksShowTaskDetails
   } = useContext(MyTasksContext);
@@ -93,7 +92,7 @@ const BoardTask = ({ task, index, list, isViewingMyTasks }) => {
 
     if (isViewingMyTasks) {
       if (task.progress === 'Completed') {
-        toggleTaskCompletion({
+        toggleTaskCompletionMyTasks({
           listId: list._id,
           newTask: {
             ...newTask,
@@ -102,7 +101,7 @@ const BoardTask = ({ task, index, list, isViewingMyTasks }) => {
           }
         });
       } else {
-        toggleTaskCompletion({
+        toggleTaskCompletionMyTasks({
           listId: list._id,
           newTask: {
             ...newTask,
@@ -124,12 +123,16 @@ const BoardTask = ({ task, index, list, isViewingMyTasks }) => {
 
   const updateTask = updatedData => {
     const newTask = {
-      ...task,
       ...updatedData,
-      updatedAt: Date.now()
+      updatedAt: Date.now(),
+      updatedBy: authState.user
     }
     if (isViewingMyTasks) {
-      updateTaskInMyTasks({ newTask, listId: list._id });
+      updateTaskInMyTasks({ 
+        taskId: task._id, 
+        listId: task.progress,
+        data: { ...newTask }
+       });
     }
 
     handleAttributeUpdate(updatedData);
@@ -137,7 +140,7 @@ const BoardTask = ({ task, index, list, isViewingMyTasks }) => {
 
   const handleTaskAssignmentRemove = () => {
     if (isViewingMyTasks) {
-      unassignTaskInMyTasks({ taskId: task._id, listId: list._id });
+      deleteTaskFromMyTasks({ taskId: task._id, listId: list._id });
     }
 
     handleUnassignTask();

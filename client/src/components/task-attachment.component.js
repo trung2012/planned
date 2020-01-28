@@ -9,26 +9,37 @@ import { ReactComponent as OptionsIcon } from '../assets/options.svg';
 import { BoardContext } from '../context/BoardContext';
 import { SocketContext } from '../context/SocketContext';
 import NameChangeForm from './name-change-form.component';
+import { MyTasksContext } from '../context/MyTasksContext';
 
 import './task-attachment.styles.scss';
 
-const TaskAttachment = ({ file }) => {
+const TaskAttachment = ({ file, isViewingMyTasks }) => {
   const { projectId } = useParams();
   const { socket } = useContext(SocketContext);
   const { deleteTaskAttachment, renameTaskAttachment } = useContext(BoardContext);
+  const { deleteTaskAttachmentMyTasks, renameTaskAttachmentMyTasks } = useContext(MyTasksContext);
   const [showAttachmentOptions, setShowAttachmentOptions] = useState(false);
   const [showAttachmentRename, setShowAttachmentRename] = useState(false);
   const [showAttachmentDeleteConfirm, setShowAttachmentDeleteConfirm] = useState(false);
 
   const handleAttachmentDelete = () => {
     socket.emit('delete_attachment', { file, projectId })
-    deleteTaskAttachment(file);
+    if (isViewingMyTasks) {
+      deleteTaskAttachmentMyTasks(file);
+    } else {
+      deleteTaskAttachment(file);
+    }
+    setShowAttachmentDeleteConfirm(false);
   }
 
   const handleAttachmentRename = newName => {
     if (file.name !== newName) {
       socket.emit('change_filename', { file, newName, projectId });
-      renameTaskAttachment({ file, newName });
+      if (isViewingMyTasks) {
+        renameTaskAttachmentMyTasks({ file, newName });
+      } else {
+        renameTaskAttachment({ file, newName });
+      }
     }
     setShowAttachmentRename(false);
   }

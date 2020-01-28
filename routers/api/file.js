@@ -15,7 +15,11 @@ const returnRouter = (io) => {
 
         cloudinary.v2.uploader.upload(file.path, { resource_type: 'raw', use_filename: true, folder: 'planned_files' }, async (error, result) => {
           if (error) {
-            throw new Error(error);
+            if (error.message.toLowerCase().includes('too large')) {
+              return res.status(400).send('File size too large. Maximum allowed is 10MB.')
+            } else {
+              return res.status(400).send('Invalid file input');
+            }
           }
 
           fs.unlinkSync(file.path);

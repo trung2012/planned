@@ -36,10 +36,12 @@ const BoardTaskDetails = ({ task, list, listSelectOptions, dismiss, isViewingMyT
 
   const {
     updateTaskInMyTasks,
-    addCommentMyTasks
+    deleteTaskFromMyTasks,
+    addCommentMyTasks,
+    toggleTaskCompletionMyTasks
   } = useContext(MyTasksContext);
 
-  const { _id, name, description, assignee, progress, priority, due, updatedAt, comments, createdBy, attachments } = task;
+  const { _id, name, description, assignee, progress, priority, due, updatedAt, comments, createdBy, attachments, project } = task;
   const [showTaskNameEdit, setShowTaskNameEdit] = useState(false);
   const [showTaskDescriptionEdit, setShowTaskDescriptionEdit] = useState(false);
   const [newCommentText, setNewCommentText] = useState('');
@@ -54,22 +56,33 @@ const BoardTaskDetails = ({ task, list, listSelectOptions, dismiss, isViewingMyT
     setNewDueDate(due);
   }, [due])
 
-  const { handleAssignTask, handleUnassignTask } = handleTaskAssignment(socket, _id, task.project, { assignUserToTask, unassignUserFromTask });
+  const { handleAssignTask, handleUnassignTask } = handleTaskAssignment(socket, _id, project, { assignUserToTask, unassignUserFromTask });
 
-  const { handleAttributeUpdate, handleCompletionToggle } = handleTaskUpdate(socket, _id, task.project, { updateTaskAttributes })
+  const { handleAttributeUpdate, handleCompletionToggle } = handleTaskUpdate(socket, _id, project, { updateTaskAttributes })
 
   const updateTask = updatedData => {
     const newTask = {
-      ...task,
       ...updatedData,
       updatedAt: Date.now(),
       updatedBy: authState.user
     }
     if (isViewingMyTasks) {
-      updateTaskInMyTasks({ newTask, listId: task.progress });
+      updateTaskInMyTasks({
+        taskId: _id,
+        listId: progress,
+        data: { ...newTask }
+      });
     }
 
     handleAttributeUpdate(updatedData);
+  }
+
+  const handleTaskAssignmentRemove = () => {
+    if (isViewingMyTasks) {
+      deleteTaskFromMyTasks({ taskId: _id, listId: progress });
+    }
+
+    handleUnassignTask();
   }
 
   const handleSetNewDueDate = date => {
@@ -104,12 +117,12 @@ const BoardTaskDetails = ({ task, list, listSelectOptions, dismiss, isViewingMyT
       text: newCommentText,
       author: authState.user,
       task: _id,
-      project: task.project,
+      project: project,
       createdAt: Date.now()
     }
 
     if (isViewingMyTasks) {
-      addCommentMyTasks({ comment: commentData, listId: task.progress });
+      addCommentMyTasks(commentData);
     } else {
       addComment(commentData);
     }
@@ -125,6 +138,45 @@ const BoardTaskDetails = ({ task, list, listSelectOptions, dismiss, isViewingMyT
     setShowTaskNameEdit(false);
   }
 
+  const handleSetComplete = event => {
+    event.stopPropagation();
+
+    const newTask = {
+      ...task,
+      updatedAt: Date.now()
+    }
+
+    if (isViewingMyTasks) {
+      if (progress === 'Completed') {
+        toggleTaskCompletionMyTasks({
+          listId: task.progress,
+          newTask: {
+            ...newTask,
+            progress: 'Not started',
+            completedBy: null
+          }
+        });
+      } else {
+        toggleTaskCompletionMyTasks({
+          listId: task.progress,
+          newTask: {
+            ...newTask,
+            progress: 'Completed',
+            completedBy: authState.user
+          }
+        });
+      }
+    }
+
+    handleCompletionToggle(progress);
+
+    if (progress === 'Completed') {
+      handleAttributeUpdate({ completedBy: null });
+    } else {
+      handleAttributeUpdate({ completedBy: authState.user });
+    }
+  }
+
   return (
     <div className='board-task-details-container'>
       <div className='modal__overlay' onClick={dismiss}></div>
@@ -134,7 +186,7 @@ const BoardTaskDetails = ({ task, list, listSelectOptions, dismiss, isViewingMyT
           </span>
         <div className='board-task-details__header'>
           <div className='board-task-details__name'>
-            <span onClick={() => handleCompletionToggle(progress)}>
+            <span onClick={handleSetComplete}>
               {
                 (progress === 'In progress')
                   ? getSelectIcon('Not started')
@@ -154,7 +206,7 @@ const BoardTaskDetails = ({ task, list, listSelectOptions, dismiss, isViewingMyT
             assignee={assignee}
             members={boardState.members}
             handleAssignTask={handleAssignTask}
-            handleUnassignTask={handleUnassignTask}
+            handleUnassignTask={handleTaskAssignmentRemove}
           />
         </div>
         <div className='board-task-details__dropdowns'>
@@ -184,7 +236,7 @@ const BoardTaskDetails = ({ task, list, listSelectOptions, dismiss, isViewingMyT
                 }}
                 onBlur={() => {
                   if (description !== newDescription) {
-                    handleAttributeUpdate({ description: newDescription });
+                    updateTask({ description: newDescription });
                   }
                   setShowTaskDescriptionEdit(false);
                 }}
@@ -197,8 +249,8 @@ const BoardTaskDetails = ({ task, list, listSelectOptions, dismiss, isViewingMyT
         </div>
         <div className='board-task-details__attachments'>
           <h4>Attachments</h4>
-          <FileUpload url={`/api/files/upload/${task.project}/${_id}`} text='Add attachment' />
-          <TaskAttachmentList attachments={attachments} />
+          <FileUpload url={`/api/files/upload/${task.project}/${_id}`} text='Add attachment' isViewingMyTasks={isViewingMyTasks}/>
+          <TaskAttachmentList attachments={attachments} isViewingMyTasks={isViewingMyTasks}/>
         </div>
         <div className='board-task-details__comments'>
           <div className='board-task-details__comment-input'>

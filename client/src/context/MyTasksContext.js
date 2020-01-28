@@ -1,7 +1,7 @@
 import React, { useCallback, useReducer } from 'react';
 import axios from 'axios';
 
-import { getGroupedListsData, generateRequestConfig } from '../utils/helper';
+import { getGroupedListsData, generateRequestConfig, removeObjectProperty } from '../utils/helper';
 
 const initialState = {
   lists: {},
@@ -32,100 +32,100 @@ const myTaskReducer = (state, action) => {
       const { listId, newTask } = action.payload;
       const newState = { ...state };
 
+      if (state.currentlyOpenedTask && newTask._id === state.currentlyOpenedTask._id) {
+        newState.currentlyOpenedTask = {...newState.currentlyOpenedTask,...newTask};  
+      }
+
       newState.lists[listId] = {
         ...newState.lists[listId],
-        tasks: newState.lists[listId].tasks.filter(task => task._id !== newTask._id)
+        tasks: newState.lists[listId].tasks.filter(taskId => taskId !== newTask._id)
       }
 
       newState.lists[newTask.progress] = {
         ...newState.lists[newTask.progress],
-        tasks: [newTask, ...newState.lists[newTask.progress].tasks]
+        tasks: [newTask._id, ...newState.lists[newTask.progress].tasks]
       }
+
+      newState.tasks[newTask._id] = {...newState.tasks[newTask._id],...newTask};
 
       return newState;
     }
     case 'update_task_attributes': {
-      const { taskId, data } = action.payload;
-      console.log(action.payload)
-      return {
-        ...state,
-        tasks: {
-          ...state.tasks,
-          [taskId]: { ...state.tasks[taskId], ...data }
-        }
-      }
-    }
-    case 'delete_task': {
-      const { taskId, listId } = action.payload;
-      return {
-        ...state,
-        lists: {
-          ...state.lists,
-          [listId]: {
-            ...state.lists[listId],
-            tasks: state.lists[listId].tasks.filter(task => task._id !== taskId)
-          }
-        }
-      }
-    }
-    case 'unassign_task': {
-      const { taskId, listId } = action.payload;
-
-      return {
-        ...state,
-        lists: {
-          ...state.lists,
-          [listId]: {
-            ...state.lists[listId],
-            tasks: state.lists[listId].tasks.filter(task => task._id !== taskId)
-          }
-        }
-      }
-    }
-    case 'add_comment': {
-      const { comment, listId } = action.payload;
+      const { taskId, listId, data } = action.payload;
       const newState = { ...state };
-      const newList = { ...newState.lists[listId] };
-      newList.tasks = newList.tasks.map(task => {
-        if (task._id === comment.task) {
-          return {
-            ...task,
-            comments: [comment, ...task.comments],
-            updatedAt: Date.now()
-          };
-        } else {
-          return task;
-        }
-      })
-      newState.lists[listId] = newList;
 
-      newState.currentlyOpenedTask = {
-        ...state.currentlyOpenedTask,
-        comments: [comment, ...state.currentlyOpenedTask.comments],
-        updatedAt: Date.now()
+      if (state.currentlyOpenedTask && taskId === state.currentlyOpenedTask._id) {
+        newState.currentlyOpenedTask = {...state.tasks[taskId], ...data };
+      }
+
+      if (data.progress) {
+        newState.lists[listId] = {
+          ...newState.lists[listId],
+          tasks: newState.lists[listId].tasks.filter(_id => _id !== taskId)
+        }
+
+        newState.lists[data.progress] = {
+          ...newState.lists[data.progress],
+          tasks: [taskId,...newState.lists[data.progress].tasks]
+        }
+      }
+
+      newState.tasks =  {
+        ...state.tasks,
+        [taskId]: { ...state.tasks[taskId], ...data }
       }
 
       return newState;
     }
-    case 'add_task_attachment': {
-      const { file, listId } = action.payload;
-      return {
+    case 'delete_task': {
+      const { taskId, listId } = action.payload;
+      const newState = {
         ...state,
+        tasks: removeObjectProperty(state.tasks, taskId),
         lists: {
           ...state.lists,
           [listId]: {
             ...state.lists[listId],
-            tasks: state.lists[listId].tasks.map(task => {
-              if (task._id === file.task) {
-                return {
-                  ...task,
-                  attachments: [task.attachments, file],
-                  updatedAt: Date.now()
-                }
-              } else {
-                return task;
-              }
-            })
+            tasks: state.lists[listId].tasks.filter(_id => _id !== taskId)
+          }
+        }
+      }
+
+      if (state.currentlyOpenedTask && taskId === state.currentlyOpenedTask._id) {
+        newState.isCurrentlyOpenedTaskDeleted = true
+      }
+
+      return newState;
+    }
+    case 'add_comment': {
+      const comment = action.payload;
+      return {
+        ...state,
+        tasks: {
+          ...state.tasks,
+          [comment.task]: {
+            ...state.tasks[comment.task],
+            comments: [comment, ...state.tasks[comment.task].comments],
+            updatedAt: Date.now()
+          }
+        },
+        currentlyOpenedTask: {
+          ...state.currentlyOpenedTask,
+          comments: [comment, ...state.currentlyOpenedTask.comments],
+          updatedAt: Date.now()
+        }
+      }
+    }
+    case 'add_task_attachment': {
+      const file = action.payload;
+      return {
+        ...state,
+        tasks: {
+          ...state.tasks,
+          [file.task]: {
+            ...state.tasks[file.task],
+            attachments: [...state.tasks[file.task].attachments, file],
+            updatedAt: Date.now()
           }
         },
         currentlyOpenedTask: {
@@ -147,6 +147,11 @@ const myTaskReducer = (state, action) => {
             attachments: state.tasks[taskId].attachments.filter(attachment => attachment._id !== file._id),
             updatedAt: Date.now()
           }
+        },
+        currentlyOpenedTask: {
+          ...state.currentlyOpenedTask,
+          attachments: state.currentlyOpenedTask.attachments.filter(attachment => attachment._id !== file._id),
+          updatedAt: Date.now()
         }
       }
     }
@@ -280,12 +285,16 @@ export const MyTasksProvider = ({ children }) => {
     dispatch({ type: 'add_task_attachment', payload: data });
   }, [])
 
-  const toggleTaskCompletion = data => {
-    dispatch({ type: 'toggle_task_completion', payload: data });
-  }
+  const deleteTaskAttachmentMyTasks = useCallback(data => {
+    dispatch({ type: 'delete_task_attachment', payload: data });
+  }, [])
 
-  const unassignTaskInMyTasks = data => {
-    dispatch({ type: 'unassign_task', payload: data });
+  const renameTaskAttachmentMyTasks = useCallback(data => {
+    dispatch({ type: 'rename_attachment', payload: data });
+  }, [])
+
+  const toggleTaskCompletionMyTasks = data => {
+    dispatch({ type: 'toggle_task_completion', payload: data });
   }
 
   const setMyTasksCurrentlyOpenedTask = task => {
@@ -296,9 +305,9 @@ export const MyTasksProvider = ({ children }) => {
     dispatch({ type: 'remove_currently_opened_task' });
   }, [])
 
-  const setMyTasksIsCurrentlyOpenedTaskDeleted = (value) => {
+  const setMyTasksIsCurrentlyOpenedTaskDeleted = useCallback((value) => {
     dispatch({ type: 'set_is_currently_deleted', payload: value });
-  }
+  }, [])
 
   const setMyTasksShowTaskDetails = (value) => {
     dispatch({ type: 'set_show_task_details', payload: value });
@@ -323,14 +332,15 @@ export const MyTasksProvider = ({ children }) => {
         clearMyTasksError,
         deleteTaskFromMyTasks,
         updateTaskInMyTasks,
-        toggleTaskCompletion,
-        unassignTaskInMyTasks,
+        toggleTaskCompletionMyTasks,
         setMyTasksCurrentlyOpenedTask,
         setMyTasksShowTaskDetails,
         removeMyTasksCurrentlyOpenedTask,
         setMyTasksIsCurrentlyOpenedTaskDeleted,
         addCommentMyTasks,
-        addTaskAttachmentMyTasks
+        addTaskAttachmentMyTasks,
+        deleteTaskAttachmentMyTasks,
+        renameTaskAttachmentMyTasks
       }}
     >
       {children}

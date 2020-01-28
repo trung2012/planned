@@ -31,7 +31,7 @@ const MyTasks = () => {
     if (myTasksState.errorMessage) {
       setTimeout(() => {
         clearMyTasksError();
-      }, 3000)
+      }, 4000)
     }
   }, [myTasksState.errorMessage, clearMyTasksError])
 

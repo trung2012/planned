@@ -47,7 +47,7 @@ const ProjectDetails = () => {
       setShowErrorSnackbar(true);
       setTimeout(() => {
         document.location.reload();
-      }, 3000)
+      }, 4000)
     }
   }, [boardState.errorMessage])
 

@@ -136,7 +136,8 @@ module.exports = io => {
 
       socket.on('delete_attachment', async ({ file, projectId }) => {
         try {
-          await Promise.all([
+          const [task] = await Promise.all([
+            Task.findById(file.task),
             File.findByIdAndDelete(file._id),
             Task.updateOne(
               { _id: file.task },
@@ -144,12 +145,12 @@ module.exports = io => {
             ),
             cloudinary.v2.uploader.destroy(file.public_id, { resource_type: 'raw' }, (error, result) => {
               if (error) {
-                throw new Error(error)
+                throw new Error(error.message)
               }
             })
           ])
 
-          socket.to(projectId.toString()).emit('attachment_deleted', file);
+          socket.to(task.project.toString()).emit('attachment_deleted', file);
         } catch (err) {
           console.log(err)
           socket.emit('new_error', 'Error deleting attachment');

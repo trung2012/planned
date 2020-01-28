@@ -36,12 +36,12 @@ const MyTasksTaskDetailsContainer = () => {
     socket.on('task_deleted', data => {
       if (data.taskId === task._id) {
         setMyTasksIsCurrentlyOpenedTaskDeleted(true);
-        deleteTaskFromMyTasks({ taskId: task._id, listId: task.progress });
+        deleteTaskFromMyTasks({ taskId: task._id });
       }
     })
 
     socket.on('file_uploaded', file => {
-      addTaskAttachmentMyTasks({ file, listId: task.progress });
+      addTaskAttachmentMyTasks(file);
     })
 
     socket.on('new_error', errorMessage => {
@@ -79,7 +79,7 @@ const MyTasksTaskDetailsContainer = () => {
           }}
           modalTitle='Error: Task deleted'
         >
-          <span className='deleted-task-message'>This task has recently been deleted. Please return to My Tasks or reload the page</span>
+          <span className='deleted-task-message'>This task has recently been deleted or reassigned. Please return to My Tasks or reload the page</span>
         </Modal>
         :
         myTasksState.showTaskDetails &&

@@ -80,6 +80,7 @@ const MyTaskLists = () => {
         && destination.droppableId !== 'Completed') {
         updateTaskInMyTasks({
           taskId: draggableId,
+          listId: source.droppableId,
           data: {
             ...taskData
           }
@@ -96,6 +97,7 @@ const MyTaskLists = () => {
       if (source.droppableId === 'Completed') {
         updateTaskInMyTasks({
           taskId: draggableId,
+          listId: source.droppableId,
           data: {
             ...taskData,
             completedBy: null
@@ -114,6 +116,7 @@ const MyTaskLists = () => {
       if (destination.droppableId === 'Completed') {
         updateTaskInMyTasks({
           taskId: draggableId,
+          listId: source.droppableId,
           data: {
             ...taskData,
             completedBy: authState.user
