@@ -6,7 +6,7 @@ export const SocketContext = React.createContext();
 export const SocketProvider = ({ children }) => {
   const token = localStorage.getItem('token');
 
-  const socket = io('/', {
+  const socket = io('http://localhost:5000/', {
     transports: ['websocket'],
     query: `token=${token}`,
   })

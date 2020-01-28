@@ -16,20 +16,15 @@ const MyTasksTaskDetailsContainer = () => {
     setMyTasksIsCurrentlyOpenedTaskDeleted,
     deleteTaskFromMyTasks,
     addMyTasksError,
-    setMyTasksCurrentlyOpenedTask
+    setMyTasksCurrentlyOpenedTask,
+    addTaskAttachmentMyTasks
   } = useContext(MyTasksContext);
-  const task = myTasksState.currentlyOpenedTask || {};
+  const task = myTasksState.currentlyOpenedTask;
   const [lists, setLists] = useState([]);
-  const list = lists.find(list => list._id === task.list);
+  const list = task && lists.find(list => list._id === task.list);
 
   useEffect(() => {
-    if (!task) {
-      history.push('/mytasks');
-    }
-  }, [task, history])
-
-  useEffect(() => {
-    if (task.project) {
+    if (task) {
       socket.emit('join', task.project);
       socket.emit('fetch_all_lists_by_project', task.project);
     }
@@ -45,24 +40,30 @@ const MyTasksTaskDetailsContainer = () => {
       }
     })
 
+    socket.on('file_uploaded', file => {
+      addTaskAttachmentMyTasks({ file, listId: task.progress });
+    })
+
     socket.on('new_error', errorMessage => {
       addMyTasksError(errorMessage);
     })
 
     return () => {
-      if (task.project) {
+      if (task) {
         socket.emit('leave', task.project);
       }
       socket.off('new_error');
       socket.off('get_all_lists_by_project');
       socket.off('task_deleted');
+      socket.off('file_uploaded');
     }
   }, [
     task,
     socket,
     deleteTaskFromMyTasks,
     setMyTasksIsCurrentlyOpenedTaskDeleted,
-    addMyTasksError
+    addMyTasksError,
+    addTaskAttachmentMyTasks
   ])
 
   if (task && list) {

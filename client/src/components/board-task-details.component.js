@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import moment from 'moment';
 import { ObjectID } from 'bson';
-import { useParams } from 'react-router-dom';
 
 import MemberProfileItem from './member-profile-item.component';
 import NameChangeForm from './name-change-form.component';
@@ -24,7 +23,6 @@ import { MyTasksContext } from '../context/MyTasksContext';
 import './board-task-details.styles.scss';
 
 const BoardTaskDetails = ({ task, list, listSelectOptions, dismiss, isViewingMyTasks }) => {
-  const { projectId } = useParams();
   const { socket } = useContext(SocketContext);
   const { authState } = useContext(AuthContext);
   const {
@@ -37,7 +35,8 @@ const BoardTaskDetails = ({ task, list, listSelectOptions, dismiss, isViewingMyT
   } = useContext(BoardContext);
 
   const {
-    updateTaskInMyTasks
+    updateTaskInMyTasks,
+    addCommentMyTasks
   } = useContext(MyTasksContext);
 
   const { _id, name, description, assignee, progress, priority, due, updatedAt, comments, createdBy, attachments } = task;
@@ -55,9 +54,9 @@ const BoardTaskDetails = ({ task, list, listSelectOptions, dismiss, isViewingMyT
     setNewDueDate(due);
   }, [due])
 
-  const { handleAssignTask, handleUnassignTask } = handleTaskAssignment(socket, _id, projectId, { assignUserToTask, unassignUserFromTask });
+  const { handleAssignTask, handleUnassignTask } = handleTaskAssignment(socket, _id, task.project, { assignUserToTask, unassignUserFromTask });
 
-  const { handleAttributeUpdate, handleCompletionToggle } = handleTaskUpdate(socket, _id, projectId, { updateTaskAttributes })
+  const { handleAttributeUpdate, handleCompletionToggle } = handleTaskUpdate(socket, _id, task.project, { updateTaskAttributes })
 
   const updateTask = updatedData => {
     const newTask = {
@@ -95,7 +94,7 @@ const BoardTaskDetails = ({ task, list, listSelectOptions, dismiss, isViewingMyT
         assignTaskToNewList(data);
       }
 
-      socket.emit('assign_task_to_new_list', { data, projectId });
+      socket.emit('assign_task_to_new_list', { data, projectId: task.project });
     }
   }
 
@@ -105,12 +104,16 @@ const BoardTaskDetails = ({ task, list, listSelectOptions, dismiss, isViewingMyT
       text: newCommentText,
       author: authState.user,
       task: _id,
-      project: projectId,
+      project: task.project,
       createdAt: Date.now()
     }
 
-    addComment(commentData);
-    updateTask({ updatedAt: Date.now() });
+    if (isViewingMyTasks) {
+      addCommentMyTasks({ comment: commentData, listId: task.progress });
+    } else {
+      addComment(commentData);
+    }
+
     setNewCommentText('');
     socket.emit('add_comment', commentData);
   }
@@ -194,7 +197,7 @@ const BoardTaskDetails = ({ task, list, listSelectOptions, dismiss, isViewingMyT
         </div>
         <div className='board-task-details__attachments'>
           <h4>Attachments</h4>
-          <FileUpload url={`/api/files/upload/${projectId}/${_id}`} text='Add attachment' />
+          <FileUpload url={`/api/files/upload/${task.project}/${_id}`} text='Add attachment' />
           <TaskAttachmentList attachments={attachments} />
         </div>
         <div className='board-task-details__comments'>

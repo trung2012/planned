@@ -4,18 +4,26 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import BoardList from './board-list.component';
 import { SocketContext } from '../context/SocketContext';
 import { MyTasksContext } from '../context/MyTasksContext';
+import { AuthContext } from '../context/AuthContext';
+
 import './my-tasks-lists.styles.scss';
 
 const MyTaskLists = () => {
   const { socket } = useContext(SocketContext);
+  const { authState } = useContext(AuthContext);
   const {
-    myTasksState: { lists, listsOrder },
+    myTasksState: { lists, listsOrder, tasks },
     updateSingleList,
     updateMultipleLists,
+    updateTaskInMyTasks
   } = useContext(MyTasksContext);
 
   const renderedLists = listsOrder.length > 0
-    && listsOrder.map(listId => lists[listId]);
+    && listsOrder.map(listId => {
+      const list = { ...lists[listId] };
+      list.tasks = list.tasks.map(taskId => tasks[taskId]);
+      return list;
+    })
 
   const onDragEnd = ({ destination, source, draggableId }) => {
     if (!destination) {
@@ -34,27 +42,13 @@ const MyTaskLists = () => {
 
     if (startList === endList) {
       const newTasks = [...startList.tasks];
-      const task = newTasks.splice(source.index, 1)[0];
-      const movedTask = {
-        ...task,
-        progress: destination.droppableId
-      }
-
-      newTasks.splice(destination.index, 0, movedTask);
+      newTasks.splice(source.index, 1);
+      newTasks.splice(destination.index, 0, draggableId);
 
       const newList = {
         ...startList,
         tasks: newTasks
       };
-
-      socket.emit('update_task_attributes', {
-        taskId: movedTask._id,
-        data: {
-          progress: destination.droppableId,
-          updatedAt: Date.now()
-        },
-        projectId: movedTask.project
-      });
 
       updateSingleList(newList);
       return;
@@ -62,12 +56,7 @@ const MyTaskLists = () => {
     } else {
 
       const newStartTasks = [...startList.tasks];
-      const task = newStartTasks.splice(source.index, 1)[0];
-
-      const movedTask = {
-        ...task,
-        progress: destination.droppableId
-      }
+      newStartTasks.splice(source.index, 1);
 
       const newStartList = {
         ...startList,
@@ -75,21 +64,70 @@ const MyTaskLists = () => {
       }
 
       const newEndTasks = [...endList.tasks];
-      newEndTasks.splice(destination.index, 0, movedTask);
+      newEndTasks.splice(destination.index, 0, draggableId);
 
       const newEndList = {
         ...endList,
         tasks: newEndTasks
       }
 
-      socket.emit('update_task_attributes', {
-        taskId: movedTask._id,
-        data: {
-          progress: destination.droppableId,
-          updatedAt: Date.now()
-        },
-        projectId: movedTask.project
-      });
+      const taskData = {
+        progress: destination.droppableId,
+        updatedAt: Date.now()
+      }
+
+      if (source.droppableId !== 'Completed'
+        && destination.droppableId !== 'Completed') {
+        updateTaskInMyTasks({
+          taskId: draggableId,
+          data: {
+            ...taskData
+          }
+        })
+        socket.emit('update_task_attributes', {
+          taskId: draggableId,
+          data: {
+            ...taskData
+          },
+          projectId: tasks[draggableId].project
+        });
+      }
+
+      if (source.droppableId === 'Completed') {
+        updateTaskInMyTasks({
+          taskId: draggableId,
+          data: {
+            ...taskData,
+            completedBy: null
+          }
+        })
+        socket.emit('update_task_attributes', {
+          taskId: draggableId,
+          data: {
+            ...taskData,
+            completedBy: null
+          },
+          projectId: tasks[draggableId].project
+        });
+      }
+
+      if (destination.droppableId === 'Completed') {
+        updateTaskInMyTasks({
+          taskId: draggableId,
+          data: {
+            ...taskData,
+            completedBy: authState.user
+          }
+        });
+        socket.emit('update_task_attributes', {
+          taskId: draggableId,
+          data: {
+            ...taskData,
+            completedBy: authState.user
+          },
+          projectId: tasks[draggableId].project
+        });
+      }
 
       updateMultipleLists([newStartList, newEndList]);
       return;

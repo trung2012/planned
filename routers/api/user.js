@@ -12,7 +12,7 @@ const auth = require('../../middleware/auth');
 const User = require('../../models/User');
 const getInitials = require('../../utils/getInitials')
 const getRandomColor = require('../../utils/getRandomColor')
-
+const convertArrayToMap = require('../../utils/convertArrayToMap');
 
 //Register User
 router.post('/', async (req, res) => {
@@ -242,7 +242,9 @@ router.get('/mytasks', auth, async (req, res) => {
       })
       .populate('attachments');
 
-    res.send(tasks);
+    const tasksMap = convertArrayToMap(tasks);
+
+    res.send({ tasks, tasksMap });
   } catch (err) {
     console.log(err)
     res.status(500).send(err);

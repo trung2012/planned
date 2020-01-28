@@ -55,7 +55,7 @@ const BoardTaskIcons = ({ task, taskClassName, updateTask }) => {
         </div>
       }
       {
-        task.comments.length > 1 &&
+        task.comments.length > 0 &&
         <div className='icon-container' title='Has comments'>
           <CommentIcon className='select-option-icon select-option-icon--comment' />
         </div>

@@ -228,7 +228,11 @@ const boardReducer = (state, action) => {
         ...state,
         tasks: {
           ...state.tasks,
-          [comment.task]: { ...state.tasks[comment.task], comments: [comment, ...state.tasks[comment.task].comments] }
+          [comment.task]: {
+            ...state.tasks[comment.task],
+            comments: [comment, ...state.tasks[comment.task].comments],
+            updatedAt: Date.now()
+          }
         }
       }
     }
