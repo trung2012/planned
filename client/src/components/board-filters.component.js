@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 
 import CustomInput from './custom-input.component';
 import { priorityOptions, dueFilterOptions } from '../utils/dropdownOptions';
@@ -8,23 +8,17 @@ import { BoardContext } from '../context/BoardContext';
 import './board-filters.styles.scss';
 
 const BoardFilters = ({ dismiss, allAssignees, allLists }) => {
-  const [taskNameFilterKeyword, setTaskNameFilterKeyword] = useState('');
   const {
     boardState: {
       filterConditionPriority,
       filterConditionAssignee,
       filterConditionList,
-      filterConditionDue
+      filterConditionDue,
+      filterConditionName
     },
     changeBoardFilters,
     clearBoardFilters
   } = useContext(BoardContext);
-
-  const handleFilterTasksByName = event => {
-    const { value } = event.target;
-    setTaskNameFilterKeyword(value);
-    changeBoardFilters('name', value);
-  }
 
   return (
     <React.Fragment>
@@ -39,8 +33,8 @@ const BoardFilters = ({ dismiss, allAssignees, allLists }) => {
           </div>
           <CustomInput
             placeholder='Filter by task name'
-            value={taskNameFilterKeyword}
-            onChange={handleFilterTasksByName}
+            value={filterConditionName}
+            onChange={event => changeBoardFilters('name', event.target.value)}
             autoFocus
             required
           />
