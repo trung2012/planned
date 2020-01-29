@@ -174,6 +174,11 @@ export const getGroupedListsData = (lists, allTasks) => {
       name: 'Today',
       tasks: []
     },
+    'Tomorrow': {
+      _id: 'Tomorrow',
+      name: 'Tomorrow',
+      tasks: []
+    },
     'This week': {
       _id: 'This week',
       name: 'This week',
