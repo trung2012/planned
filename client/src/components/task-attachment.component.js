@@ -48,7 +48,9 @@ const TaskAttachment = ({ file, isViewingMyTasks }) => {
     <div className='task-attachment'>
       <div className='task-attachment__info'>
         {
-          getTaskAttachmentIcon(file.name)
+          file.url && (file.url.toLowerCase().includes('.jpg') || file.url.toLowerCase().includes('.png'))
+          ? <img src={file.url} alt='task attachment' className='attachment-icon'/>
+          : getTaskAttachmentIcon(file.name)
         }
         {
           showAttachmentRename ?
