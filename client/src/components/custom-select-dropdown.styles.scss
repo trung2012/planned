@@ -17,12 +17,15 @@
       background-color: $color-gray-extra-light;
       padding: .25rem;
       padding-left: 1.25rem;
+      min-width: 0;
+      min-height: 0;
     }
   }
-  
-  &__value {
+
+  &__option-value {
     display: flex;
     align-items: center;
+    max-width: 80%;
   }
 
   .priority-urgent {

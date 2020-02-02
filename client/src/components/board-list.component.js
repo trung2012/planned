@@ -55,7 +55,7 @@ const BoardList = ({ list, index, isGrouped, isViewingMyTasks, disabledDroppable
       <div className='board-list'>
         <div className='board-list__top'>
           <div className='board-list__header'>
-            <h4 className='board-list__name'>
+            <h4 className='board-list__name' title={list.name}>
               {list.name}
             </h4>
           </div>
@@ -127,6 +127,7 @@ const BoardList = ({ list, index, isGrouped, isViewingMyTasks, disabledDroppable
                         className='board-list__name'
                         onClick={() => setShowListNameEdit(true)}
                         style={{ cursor: 'pointer' }}
+                        title={list.name}
                       >
                         {list.name}
                       </h4>

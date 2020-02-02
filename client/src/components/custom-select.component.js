@@ -35,7 +35,7 @@ const CustomSelect = ({ label, inputDefault, selectOptions, submit }) => {
   }
 
   return (
-    <div className='custom-select' onClick={() => setShowDropdown(!showDropdown)}>
+    <div className='custom-select' onClick={() => setShowDropdown(!showDropdown)} title={selectedOption.name}>
       <h4 className='custom-select__label'>{label}</h4>
       <div
         className={`${inputClassname}`}

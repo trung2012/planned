@@ -249,8 +249,8 @@ const BoardTaskDetails = ({ task, list, listSelectOptions, dismiss, isViewingMyT
         </div>
         <div className='board-task-details__attachments'>
           <h4>Attachments</h4>
-          <FileUpload url={`/api/files/upload/${task.project}/${_id}`} text='Add attachment' isViewingMyTasks={isViewingMyTasks}/>
-          <TaskAttachmentList attachments={attachments} isViewingMyTasks={isViewingMyTasks}/>
+          <FileUpload url={`/api/files/upload/${task.project}/${_id}`} text='Add attachment' isViewingMyTasks={isViewingMyTasks} />
+          <TaskAttachmentList attachments={attachments} isViewingMyTasks={isViewingMyTasks} />
         </div>
         <div className='board-task-details__comments'>
           <div className='board-task-details__comment-input'>
