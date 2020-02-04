@@ -2,7 +2,8 @@
 @import '../sass/animations';
 
 .board-tasks-completed,
-.board-tasks-completed--active {
+.board-tasks-completed--active {  
+  margin-right: 1rem;
   &__header {
     display: flex;
     justify-content: space-between;
