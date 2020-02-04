@@ -1,4 +1,5 @@
 @import '../sass/variables';
+@import '../sass/mixins';
 
 .favorite-project-chart {
   flex: 0 0 44rem;
@@ -9,6 +10,12 @@
   margin-right: 2rem;
   margin-bottom: 2rem;
   cursor: pointer;
+
+  @include respond(phone) {
+    flex: 1 1 100%;
+    margin-right: 0;
+    margin-bottom: 2rem;
+  }
 
   .favorite-icon,
   .non-favorite-icon {

@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 
+import { ReactComponent as GroupByIcon } from '../assets/groupby.svg';
 import { ReactComponent as DropdownIcon } from '../assets/dropdown.svg';
 import { BoardContext } from '../context/BoardContext';
 import BoardGroupbyItem from './board-groupby-item.component';
@@ -22,6 +23,7 @@ const BoardGroupBy = () => {
           Group by {groupBy}
         </span>
         <DropdownIcon className='dropdown-icon' />
+        <GroupByIcon className='project-filters__nav-icon' />
       </div>
       {
         showGroupbyDropdown &&

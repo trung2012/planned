@@ -1,4 +1,5 @@
 @import '../sass/variables';
+@import '../sass/mixins';
 
 .side-navbar,
 .side-navbar--collapsed {
@@ -12,6 +13,10 @@
   font-weight: 100;
   padding-top: 2rem;
   transition: flex-basis .2s ease-out;
+
+  @include respond(tab-port) {
+    height: 100vh;
+  }
 
   &__main-content {
     height: calc(100% - 6rem);
@@ -121,6 +126,45 @@
 .side-navbar {
   flex: 0 0 22.5rem;
   overflow: hidden;
+
+  @include respond(tab-port) {
+    flex: 0 0 6rem;
+    overflow: hidden;
+
+    &__nav-item {
+      justify-content: center;
+      
+      &__text {
+        transform: scaleX(0);
+        display: none;
+      }
+    }
+  
+    &__main-content {
+      &::-webkit-scrollbar {
+        width: .3rem;
+        height: .3rem;
+      }
+    }
+  
+    &__favorite-projects__header {
+      padding-left: 0;
+      padding-right: 0;
+  
+      span {
+        transform: scaleX(0);
+        display: none;
+      }
+  
+      .dropdown-icon {
+        margin: 0 auto;
+      }
+    }
+  
+    .collapse-button {
+      display: none;
+    }
+  }
 }
 
 .side-navbar--collapsed {

@@ -3,3 +3,48 @@
   font-size: 1.3rem;
   color: rgb(73, 73, 73);
 }
+
+
+// Media queries
+
+/* 
+0 - 600px: phone
+600 - 900px: Tablet portrait
+900 - 1200px: tablet landscape
+1200 - 1800: normal styles
+1800px +: big desktop
+*/
+
+/* 
+$breakpoint argument choices:
+- phone 
+- tab-port
+- tab-land
+- big-desktop
+*/
+
+@mixin respond ($breakpoint) {
+  @if $breakpoint == phone {
+    @media (max-width: 37.5em) { 
+      @content 
+    };
+  }
+
+  @if $breakpoint == tab-port {
+    @media (max-width: 56.25em) { 
+      @content 
+    };
+  }
+
+  @if $breakpoint == tab-land {
+    @media (max-width: 75em) { 
+      @content 
+    };
+  }
+
+  @if $breakpoint == big-desktop {
+    @media (min-width: 112.5em) { 
+      @content 
+    };
+  }
+}

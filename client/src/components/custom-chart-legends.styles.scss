@@ -1,3 +1,5 @@
+@import '../sass/mixins';
+
 .custom-chart-legends {
   display: flex;
   flex-direction: column;
@@ -6,8 +8,8 @@
   padding: 2rem;
   margin-left: 3rem;
 
-  @media screen and (max-width: 1200px) {
-    margin-left: .5rem;
+  @include respond(tab-land) {
+    margin-left: .75rem;
   }
 }
 

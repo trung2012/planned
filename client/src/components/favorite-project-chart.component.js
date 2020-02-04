@@ -77,8 +77,8 @@ const FavoriteProjectChart = ({ data, tasksRemaining, project }) => {
               <Pie
                 data={filteredData}
                 dataKey='value'
-                innerRadius={70}
-                outerRadius={80}
+                innerRadius='87%'
+                outerRadius='99%'
                 paddingAngle={tasksRemaining > 0 ? 3 : 0}
                 animationDuration={1000}
                 blendStroke={true}

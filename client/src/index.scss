@@ -1,3 +1,5 @@
+@import './sass/_mixins.scss';
+
 * {
   margin: 0;
   padding: 0;
@@ -8,6 +10,18 @@ html {
   height: 100%;
   font-size: 62.5%;
   font-family: 'Roboto', sans-serif;
+
+  @include respond(tab-land) {
+    font-size: 56.25%;
+  }
+
+  @include respond(tab-port) {
+    font-size: 50%;
+  }
+
+  @include respond(big-desktop) {
+    font-size: 75%;
+  }
 }
 
 body {
@@ -40,6 +54,12 @@ textarea {
 ::-webkit-scrollbar {
   width: 1rem;
   height: 1rem;
+
+  @include respond(tab-port) {
+    width: 1px;
+    background: transparent;
+  }
+
 }
 
 ::-webkit-scrollbar-thumb {

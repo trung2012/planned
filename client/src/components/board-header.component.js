@@ -1,6 +1,10 @@
 import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import { ReactComponent as FilterIcon } from '../assets/filter.svg';
+import { ReactComponent as MembersIcon } from '../assets/members.svg';
+import { ReactComponent as BoardIcon } from '../assets/board.svg';
+import { ReactComponent as ChartsIcon } from '../assets/charts.svg';
 import { ReactComponent as NonFavoriteIcon } from '../assets/star-unfilled.svg';
 import { ReactComponent as FavoriteIcon } from '../assets/star-filled.svg';
 import { ReactComponent as DropdownIcon } from '../assets/dropdown.svg';
@@ -47,7 +51,11 @@ const BoardHeader = ({ showChart, allAssignees, allLists }) => {
         </div>
         <div className='board-header__project-info--details'>
           <div className='board-header__project-info--details__name-container'>
-            <h3 className='board-header__project-info--details__name'>{project.name || ''}</h3>
+            <h3 
+            className='board-header__project-info--details__name' 
+            title={project.name || null}
+            >{project.name || ''}
+            </h3>
             {
               isProjectFavorite
                 ? <FavoriteIcon className='favorite-icon' title='Remove from favorites' onClick={() => removeProjectFromFavorites(project._id)} />
@@ -62,12 +70,14 @@ const BoardHeader = ({ showChart, allAssignees, allLists }) => {
           <Link to={`/projects/${project._id}?view=chart`}
             className={showChart ? 'board-header__project-options__nav__item--active' : 'board-header__project-options__nav__item'}
           >
-            Charts
+            <span className='board-header__nav-text'>Charts</span>
+            <ChartsIcon className='board-header__nav-icon' />
           </Link>
           <Link to={`/projects/${project._id}`}
             className={showChart ? 'board-header__project-options__nav__item' : 'board-header__project-options__nav__item--active'}
           >
-            Board
+            <span className='board-header__nav-text'>Board</span>
+            <BoardIcon className='board-header__nav-icon' />
           </Link>
         </div>
         <div className='board-header__project-options__filters'>
@@ -80,6 +90,7 @@ const BoardHeader = ({ showChart, allAssignees, allLists }) => {
             }}>
               <span className='project-filters__item-title'>Members</span>
               <DropdownIcon className='dropdown-icon' />
+              <MembersIcon className='project-filters__nav-icon' />
               {
                 showMembersListDropdown &&
                 <BoardMembersDropdown members={members} dismiss={() => setShowMembersListDropdown(false)} />
@@ -92,6 +103,7 @@ const BoardHeader = ({ showChart, allAssignees, allLists }) => {
             }}>
               <span className='project-filters__item-title'>Filter</span>
               <DropdownIcon className='dropdown-icon' />
+              <FilterIcon className='project-filters__nav-icon' />
               {
                 showFiltersDropdown &&
                 <BoardFilters dismiss={() => setShowFiltersDropdown(false)} allAssignees={allAssignees} allLists={allLists} />

@@ -1,9 +1,15 @@
+@import '../sass/mixins';
+
 .board-members-display { 
   flex-shrink: 0; 
   display: flex;
   align-items: center;
   padding: .75rem;
   cursor: pointer;
+
+  @include respond(tab-land) {
+    display: none;
+  }
 
   &__member {
     margin: 0 .2rem;

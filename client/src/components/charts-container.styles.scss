@@ -1,4 +1,5 @@
 @import '../sass/variables';
+@import '../sass/_mixins.scss';
 
 .charts {
   flex: 0;
@@ -17,6 +18,10 @@
   flex: 1;
   width: 100%;
   margin-bottom: 3rem;
+
+  @include respond(tab-land) {
+    flex-direction: column;
+  }
 }
 
 .charts-bottom {
@@ -65,7 +70,7 @@
   height: 100%;
   padding: 2rem;
 
-  @media screen and (max-width: 1200px) {
+  @include respond(tab-land) {
     padding: 1rem;
   }
 }
@@ -78,8 +83,9 @@
   flex: 0 0 17rem;
   margin-left: 1.5rem;
 
-  @media screen and (max-width: 1200px) {
-    margin-left: 0;
+  @include respond(tab-land) {
+    flex-grow: 1;
+    flex-shrink: 1;
   }
 }
 

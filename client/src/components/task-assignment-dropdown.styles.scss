@@ -8,7 +8,7 @@
   width: 100%;
   box-shadow: $box-shadow-primary;
   animation: fadeFromTop .2s cubic-bezier(0.1, 0.9, 0.2, 1) both;
-  z-index: 1;
+  z-index: 1000;
 
   &__header {    
     position: relative;

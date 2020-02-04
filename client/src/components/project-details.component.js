@@ -1,7 +1,6 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { Route, useParams, useRouteMatch } from 'react-router-dom';
 
-import { NavContext } from '../context/NavContext';
 import { BoardContext } from '../context/BoardContext';
 import { SocketContext } from '../context/SocketContext';
 import BoardContainer from './board-container.component';
@@ -39,8 +38,6 @@ const ProjectDetails = () => {
   } = useContext(BoardContext);
   const [showErrorSnackbar, setShowErrorSnackbar] = useState(false);
   const { projectId } = useParams();
-
-  const { navState: { isSidebarCollapsed, sidebarWidth, sidebarWidthCollapsed } } = useContext(NavContext);
 
   useEffect(() => {
     if (boardState.errorMessage) {
@@ -185,7 +182,6 @@ const ProjectDetails = () => {
     <React.Fragment>
       <div
         className='project-details'
-        style={{ width: isSidebarCollapsed ? `calc(100vw - ${sidebarWidthCollapsed}rem)` : `calc(100vw - ${sidebarWidth}rem)` }}
       >
         {
           boardState.isLoading ?

@@ -1,6 +1,8 @@
 @import '../sass/variables';
+@import '../sass/mixins';
 
 .board-task-details-container {
+  height: 100%;
   position: fixed;
   top: 0;
   left: 0;
@@ -15,7 +17,7 @@
 .board-task-details {
   font-size: 1.4rem;
   position: relative;
-  max-height: 100vh;
+  max-height: 100%;
   max-width: 80rem;
   min-width: 40rem;
   width: 50%;
@@ -26,6 +28,10 @@
   overflow-y: auto;
   animation: fade .2s cubic-bezier(0.1, 0.9, 0.2, 1) both;
   z-index: 11;
+
+  @include respond(tab-port) {
+    width: 100%;
+  }
 
   .add-user-icon-after {
     display: none;
@@ -116,7 +122,7 @@
   }
 
   .description-placeholder {
-    color: $color-gray-medium;
+    color: $color-gray-medium-light;
   }
 
   &__attachments {
