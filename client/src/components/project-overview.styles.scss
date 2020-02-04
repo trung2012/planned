@@ -8,6 +8,12 @@
   padding-top: 0;
   overflow: auto;
 
+  @include respond(tab-port) {
+    padding: 1rem;
+    padding-top: 0;
+    padding-left: 2rem;
+  }
+
   @include respond(phone) {
     padding: 1rem;
     padding-top: 0;
