@@ -131,8 +131,37 @@
     flex: 0 0 6rem;
     overflow: hidden;
 
+    &:hover {
+      flex: 0 0 22.5rem;
+
+      .side-navbar {
+        &__nav-item {
+          justify-content: flex-start;
+          
+          &__text {
+            transform: scaleX(1);
+            display: block;
+          }
+        }
+      
+        &__favorite-projects__header {
+          padding: 1.5rem;
+          padding-right: 0;
+      
+          span {
+            transform: scaleX(1);
+            display: block;
+          }
+      
+          .dropdown-icon {
+            margin: 0 1.5rem;
+          }
+        }
+      }      
+    }
+
     &__nav-item {
-      justify-content: center;
+      justify-content: flex-start;
       
       &__text {
         transform: scaleX(0);
@@ -172,7 +201,7 @@
   flex: 0 0 6rem;
 
   &__nav-item {
-    justify-content: center;
+    justify-content: flex-start;
     
     &__text {
       transform: scaleX(0);
