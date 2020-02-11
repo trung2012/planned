@@ -112,6 +112,10 @@ const BoardTaskDetails = ({ task, list, listSelectOptions, dismiss, isViewingMyT
   }
 
   const handleCommentSubmit = () => {
+    if (newCommentText === '') {
+      return;
+    }
+
     const commentData = {
       _id: new ObjectID().toString(),
       text: newCommentText,
@@ -263,7 +267,7 @@ const BoardTaskDetails = ({ task, list, listSelectOptions, dismiss, isViewingMyT
               value={newCommentText}
               onChange={event => setNewCommentText(event.target.value)}
             />
-            <CustomButton text='Save' buttonType='save-text' onClick={handleCommentSubmit} />
+            <CustomButton text='Save' buttonType='save-text' onClick={handleCommentSubmit} disabled={newCommentText === ''} />
           </div>
           <CommentList comments={comments} />
           <div className='comment'>

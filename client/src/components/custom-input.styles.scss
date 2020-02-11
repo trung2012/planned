@@ -2,6 +2,7 @@
 
 .custom-input {
   border: none;
+  border-bottom: 2px solid transparent;
   font-family: inherit;
   font-size: inherit;
   font-weight: inherit;
@@ -9,4 +10,9 @@
   background-color: $color-gray-extra-light;
   width: 100%;
   outline: none;
+  transition: border .2s;
+
+  &:focus {
+    border-bottom: 2px solid $color-green-dark;
+  }
 }

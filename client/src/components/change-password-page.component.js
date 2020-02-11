@@ -81,7 +81,11 @@ const ChangePasswordPage = ({ setShowPasswordChange }) => {
         />
       </div>
       <div className='change-password__buttons'>
-        <CustomButton text='Confirm' onClick={handleSubmit} />
+        <CustomButton
+          text='Confirm'
+          onClick={handleSubmit}
+          buttonType='danger'
+        />
         <CustomButton
           type='button'
           text='Cancel'
