@@ -31,7 +31,7 @@
     padding-top: 1rem;
 
     @include respond(tab-port) {
-      min-width: 15rem;
+      min-width: 20rem;
     }
 
     &--details {
