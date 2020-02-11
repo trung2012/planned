@@ -5,6 +5,7 @@
   display: flex;
   justify-content: center;
   width: 100%;
+  margin-top: 2rem;
 
   input {
     -webkit-appearance: none;
@@ -14,10 +15,6 @@
   
   @media screen and (min-width: 600px) {
     margin-top: 6rem;
-  }
-
-  .custom-button {
-    width: 50%;
   }
 
   span {
@@ -52,7 +49,12 @@
   align-self: center;
   color: $color-gray-dark;
   font-weight: 500;
-  margin-bottom: 6rem;
+  margin-bottom: 3rem;
+
+  @media screen and (min-width: 600px) {
+    margin-bottom: 6rem;
+  }
+
 }
 
 .buttons-container {

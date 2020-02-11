@@ -30,7 +30,9 @@
   z-index: 11;
 
   @include respond(tab-port) {
+    min-width: 0;
     width: 100%;
+    padding: 1.5rem;
   }
 
   .add-user-icon-after {

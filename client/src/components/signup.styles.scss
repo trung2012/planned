@@ -5,6 +5,7 @@
   display: flex;
   justify-content: center;
   width: 100%;
+  margin-top: 2rem;
 
   input {
     -webkit-appearance: none;
@@ -44,14 +45,15 @@
   .sign-up-title {
     align-self: center;
     color: $color-gray-dark;
-    margin-bottom: 4rem;
     font-size: 170%;
     font-weight: 500;
+    margin-bottom: 2rem;
 
     @media screen and (min-width: 600px) {
       align-self: center;
       color: $color-gray-dark;
       font-size: 200%;
+      margin-bottom: 4rem;
     }
   }
   

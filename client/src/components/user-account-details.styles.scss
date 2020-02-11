@@ -1,5 +1,6 @@
 @import '../sass/variables';
 @import '../sass/components';
+@import '../sass/mixins';
 
 .navbar {
   .modal__title-text,
@@ -23,6 +24,15 @@
       display: flex;
       justify-content: flex-start;
       align-items: center;
+
+      @include respond(phone) {
+        flex-direction: column;
+        align-items: flex-start;
+
+        .file-upload {
+          margin-bottom: 1rem;
+        }
+      }
     }
   }
 
