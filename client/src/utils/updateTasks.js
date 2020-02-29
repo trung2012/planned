@@ -13,7 +13,7 @@ export const handleTaskAssignment = (socket, taskId, projectId, { assignUserToTa
 
   const handleUnassignTask = () => {
     unassignUserFromTask({ taskId });
-    socket.emit('unassign_task', { taskId, projectId });
+    socket.emit('unassign_task', { taskId, projectId, updatedAt: Date.now() });
   }
 
   return {

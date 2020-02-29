@@ -64,7 +64,7 @@ module.exports = io => {
         try {
           await Task.updateOne(
             { _id: taskId },
-            { $set: { assignee: undefined, updatedAt } },
+            { $set: { assignee: null, updatedAt } },
             { new: true }
           )
 
