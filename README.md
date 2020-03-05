@@ -3,7 +3,7 @@ Kanban project management app - inspired by Microsoft Planner, built with React,
 
 #### Click [here](https://planned-app.herokuapp.com/) to view a demo.
 
-![Planned Homepage](https://i.ibb.co/grryKLG/homepage.jpg)
+![Planned Homepage](https://i.ibb.co/qyJsqyT/homepage.jpg)
 
 <br/>
 
