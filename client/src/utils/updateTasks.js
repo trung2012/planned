@@ -32,6 +32,7 @@ export const handleTaskUpdate = (socket, taskId, projectId, { updateTaskAttribut
       },
       projectId
     }
+
     socket.emit('update_task_attributes', updatedTask);
     updateTaskAttributes(updatedTask);
   }
@@ -39,7 +40,8 @@ export const handleTaskUpdate = (socket, taskId, projectId, { updateTaskAttribut
   const handleCompletionToggle = currentProgress => {
     if (currentProgress.toLowerCase() === 'completed') {
       handleAttributeUpdate({
-        progress: 'Not started'
+        progress: 'Not started',
+        completedBy: null
       });
     } else {
       handleAttributeUpdate({

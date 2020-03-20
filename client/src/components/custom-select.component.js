@@ -19,19 +19,32 @@ const CustomSelect = ({ label, inputDefault, selectOptions, submit }) => {
   }, [inputDefault])
 
   const handleSelect = (option) => {
-    if (selectedOption !== option.name) {
-      setSelectedOption(option.name);
-      if (label === 'List') {
-        submit(option._id);
-      } else {
-        if (option.name === 'Completed') {
-          submit({ [label.toLowerCase()]: option.name, completedBy: authState.user });
-        } else {
-          submit({ [label.toLowerCase()]: option.name });
-        }
-      }
-      setShowDropdown(false);
+    if (selectedOption === option.name) {
+      return;
     }
+
+    setSelectedOption(option.name);
+
+    if (label === 'List') {
+      submit(option._id);
+    } else {
+      const data = {
+        [label.toLowerCase()]: option.name
+      }
+
+      if (selectedOption === 'Completed') {
+        data.completedBy = null;
+      }
+
+      if (option.name === 'Completed') {
+        submit({ ...data, completedBy: authState.user });
+      }
+      else {
+        submit({ ...data });
+      }
+    }
+
+    setShowDropdown(false);
   }
 
   return (
